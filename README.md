@@ -1,2 +1,3 @@
-# abyss3
-ABYSS version 3.0
+## ABYSS
+
+Advanced transport for deep social spatial computing
