@@ -20,3 +20,8 @@
 # Go workspace file
 go.work
 go.work.sum
+
+# C# project
+cli/AbyssCLI/.vs
+cli/AbyssCLI/bin
+cli/AbyssCLI/obj
