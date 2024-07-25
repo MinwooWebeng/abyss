@@ -54,6 +54,7 @@ func (h *Host) ListenAndServeAsync(ctx context.Context) error {
 			return err
 		}
 		h.QuicConf = defaultQuicConf
+		h.QuicConf.EnableDatagrams = true
 	}
 
 	ip, err := net.ResolveIPAddr("ip", h.Address)
@@ -71,11 +72,13 @@ func (h *Host) ListenAndServeAsync(ctx context.Context) error {
 		TLSClientConfig: h.TlsConf,  // set a TLS client config, if desired
 		QUICConfig:      h.QuicConf, // QUIC connection options
 		Dial: func(ctx context.Context, addr string, tlsConf *tls.Config, quicConf *quic.Config) (quic.EarlyConnection, error) {
+			//TODO: support abyssh3 address.
 			a, err := net.ResolveUDPAddr("udp", addr)
 			if err != nil {
 				return nil, err
 			}
 			return h.transport.DialEarly(ctx, a, tlsConf, quicConf)
+			//TODO: abyssh3 address identity check.
 		},
 	}
 	h.http3Client = &http.Client{
