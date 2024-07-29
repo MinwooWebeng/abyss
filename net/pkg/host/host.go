@@ -12,6 +12,7 @@ import (
 	"math/big"
 	"net"
 	"net/http"
+	"net/netip"
 	"time"
 
 	"github.com/quic-go/quic-go"
@@ -25,49 +26,65 @@ const (
 )
 
 type Host struct {
-	Address  string
-	Port     int
-	TlsConf  *tls.Config
-	QuicConf *quic.Config
+	LocalIdentity string //TODO: extend this to local secret key, TLS signed certificate for local public key, name, etc.
+	QuicTransport *quic.Transport
+	TlsConf       *tls.Config
+	QuicConf      *quic.Config
 
 	AhmpServer    *ahmp.Server
 	Http3Server   *http3.Server
 	HttpCookieJar http.CookieJar
 
 	//internal
-	transport   quic.Transport
 	http3Client *http.Client
 	error_log   chan error
 }
 
-func (h *Host) ListenAndServeAsync(ctx context.Context) error {
-	if h.TlsConf == nil {
-		defaultTlsConf, err := NewDefaultTlsConf()
-		if err != nil {
-			return err
-		}
-		h.TlsConf = defaultTlsConf
+func NewHost(ctx context.Context, local_identity string, ahmp_handler ahmp.AhmpHandler, http_handler http.Handler, cookie_jar http.CookieJar) (*Host, error) {
+	h := &Host{
+		LocalIdentity: local_identity,
 	}
-	if h.QuicConf == nil {
-		defaultQuicConf, err := NewDefaultQuicConf()
-		if err != nil {
-			return err
-		}
-		h.QuicConf = defaultQuicConf
-		h.QuicConf.EnableDatagrams = true
+	udpConn, err := net.ListenUDP("udp4", net.UDPAddrFromAddrPort(netip.MustParseAddrPort("0.0.0.0:0")))
+	if err != nil {
+		return nil, err
+	}
+	h.QuicTransport = &quic.Transport{Conn: udpConn}
+	defaultTlsConf, err := NewDefaultTlsConf()
+	if err != nil {
+		return nil, err
+	}
+	h.TlsConf = defaultTlsConf
+	defaultQuicConf, err := NewDefaultQuicConf()
+	if err != nil {
+		return nil, err
+	}
+	h.QuicConf = defaultQuicConf
+	h.AhmpServer = ahmp.NewServer(
+		ctx,
+		NewDefaultDialer(ctx, h.QuicTransport, h.TlsConf, h.QuicConf, h.LocalIdentity),
+		ahmp_handler,
+	)
+	h.Http3Server = &http3.Server{
+		Handler: http_handler,
+	}
+	h.HttpCookieJar = cookie_jar
+	return h, nil
+}
+
+func (h *Host) LocalAddr() net.Addr {
+	return h.QuicTransport.Conn.LocalAddr()
+}
+
+func (h *Host) ListenAndServeAsync(ctx context.Context) error {
+	if h.QuicTransport == nil ||
+		h.TlsConf == nil ||
+		h.QuicConf == nil ||
+		h.AhmpServer == nil ||
+		h.Http3Server == nil {
+		return errors.New("ListenAndServeAsync: incomplete server")
 	}
 
-	ip, err := net.ResolveIPAddr("ip", h.Address)
-	if err != nil {
-		return err
-	}
-	udpConn, err := net.ListenUDP("udp4", &net.UDPAddr{IP: ip.IP, Port: h.Port})
-	if err != nil {
-		return err
-	}
-	h.transport = quic.Transport{
-		Conn: udpConn,
-	}
+	//initialize http3 client
 	roundTripper := &http3.RoundTripper{
 		TLSClientConfig: h.TlsConf,  // set a TLS client config, if desired
 		QUICConfig:      h.QuicConf, // QUIC connection options
@@ -77,7 +94,7 @@ func (h *Host) ListenAndServeAsync(ctx context.Context) error {
 			if err != nil {
 				return nil, err
 			}
-			return h.transport.DialEarly(ctx, a, tlsConf, quicConf)
+			return h.QuicTransport.DialEarly(ctx, a, tlsConf, quicConf)
 			//TODO: abyssh3 address identity check.
 		},
 	}
@@ -95,7 +112,7 @@ func (h *Host) ListenAndServeAsync(ctx context.Context) error {
 	}
 	h.error_log = make(chan error, 32)
 	go func() {
-		listener, err := h.transport.ListenEarly(h.TlsConf, h.QuicConf)
+		listener, err := h.QuicTransport.ListenEarly(h.TlsConf, h.QuicConf)
 		if err != nil {
 			select {
 			case h.error_log <- err:
@@ -160,7 +177,7 @@ func NewDefaultTlsConf() (*tls.Config, error) {
 				PrivateKey:  ed25519_private_key,
 			},
 		},
-		NextProtos:         []string{http3.NextProtoH3, ahmp.NextProtoAhmp},
+		NextProtos:         []string{ahmp.NextProtoAhmp, http3.NextProtoH3},
 		InsecureSkipVerify: true,
 	}
 	return result, nil

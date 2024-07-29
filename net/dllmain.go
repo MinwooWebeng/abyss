@@ -10,8 +10,6 @@ import (
 	"io"
 	"net/http"
 	"runtime/cgo"
-
-	"github.com/quic-go/quic-go/http3"
 )
 
 func init() {
@@ -33,15 +31,9 @@ type HostExport struct {
 //export NewAbyssHost
 func NewAbyssHost() C.uintptr_t {
 	ctx, cancelFunc := context.WithCancel(context.Background())
+	hostA, _ := host.NewHost(context.Background(), "hostA", ahmp.NewANDHandler("hostA"), &cpb.PlayerBackend{}, http.DefaultClient.Jar)
 	result := &HostExport{
-		Host: &host.Host{
-			Address:    "127.0.0.1",
-			Port:       1906,
-			AhmpServer: &ahmp.Server{},
-			Http3Server: &http3.Server{
-				Handler: &cpb.PlayerBackend{},
-			},
-		},
+		Host:  hostA,
 		Close: cancelFunc,
 	}
 	result.Host.ListenAndServeAsync(ctx)

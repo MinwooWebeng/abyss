@@ -1,4 +1,4 @@
-package conn
+package pcn
 
 import (
 	"crypto/x509"

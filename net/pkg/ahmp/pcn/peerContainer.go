@@ -1,4 +1,4 @@
-package conn
+package pcn
 
 import (
 	"abyss/net/pkg/aurl"
@@ -26,7 +26,7 @@ const (
 	CompletePeer
 )
 
-func (m *PeerContainer) AddInboundConnection(aurl aurl.AbyssURL, connection quic.Connection) (*Peer, PeerState, bool) {
+func (m *PeerContainer) AddInboundConnection(aurl *aurl.AURL, connection quic.Connection, ahmp_rx quic.ReceiveStream) (*Peer, PeerState, bool) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
@@ -41,6 +41,8 @@ func (m *PeerContainer) AddInboundConnection(aurl aurl.AbyssURL, connection quic
 			new_peer := &Peer{
 				InboundConnection:  connection,
 				OutboundConnection: t.Connection,
+				AHMPRx:             ahmp_rx,
+				AHMPTx:             t.AHMPTx,
 			}
 			m._inner[aurl.Hash] = new_peer
 			return new_peer, CompletePeer, true
@@ -50,10 +52,11 @@ func (m *PeerContainer) AddInboundConnection(aurl aurl.AbyssURL, connection quic
 	}
 	m._inner[aurl.Hash] = &InboundPrePeer{
 		Connection: connection,
+		AHMPRx:     ahmp_rx,
 	}
 	return nil, PartialPeer, true
 }
-func (m *PeerContainer) AddOutboundConnection(aurl aurl.AbyssURL, connection quic.Connection) (*Peer, PeerState, bool) {
+func (m *PeerContainer) AddOutboundConnection(aurl *aurl.AURL, connection quic.Connection, ahmp_tx quic.SendStream) (*Peer, PeerState, bool) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
@@ -66,6 +69,8 @@ func (m *PeerContainer) AddOutboundConnection(aurl aurl.AbyssURL, connection qui
 			new_peer := &Peer{
 				InboundConnection:  t.Connection,
 				OutboundConnection: connection,
+				AHMPRx:             t.AHMPRx,
+				AHMPTx:             ahmp_tx,
 			}
 			m._inner[aurl.Hash] = new_peer
 			return new_peer, CompletePeer, true
@@ -77,6 +82,7 @@ func (m *PeerContainer) AddOutboundConnection(aurl aurl.AbyssURL, connection qui
 	}
 	m._inner[aurl.Hash] = &OutboundPrePeer{
 		Connection: connection,
+		AHMPTx:     ahmp_tx,
 	}
 	return nil, PartialPeer, true
 }

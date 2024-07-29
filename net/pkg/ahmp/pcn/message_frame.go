@@ -1,4 +1,4 @@
-package ahmp
+package pcn
 
 import (
 	"abyss/net/pkg/nettype"
@@ -8,7 +8,7 @@ import (
 
 type MessageFrame struct {
 	ContentLength uint64
-	Type          uint64
+	Type          FrameType
 	Payload       []byte
 }
 
@@ -25,7 +25,7 @@ func ReceiveMessageFrame(reader io.Reader) (*MessageFrame, error) {
 	if err != nil {
 		return nil, err
 	}
-	m.Type = type_id
+	m.Type = FrameType(type_id)
 
 	m.Payload = make([]byte, m.ContentLength)
 	if _, err := io.ReadFull(reader, m.Payload); err != nil {
@@ -35,13 +35,14 @@ func ReceiveMessageFrame(reader io.Reader) (*MessageFrame, error) {
 	return m, nil
 }
 
-func SendMessageFrame(writer io.Writer, payload []byte, payload_type uint64) error {
+// ***Not Thread Safe*** never use this from peer. use peer.SendMessageFrameSync() for thread safety.
+func SendMessageFrame(writer io.Writer, payload []byte, payload_type FrameType) error {
 	buf := [16]byte{}
 	cl_len, ok := nettype.TryWriteQuicUint(uint64(len(payload)), buf[:])
 	if !ok {
 		return errors.New("AHMP Frame: Content-Length encoding fail")
 	}
-	ty_len, ok := nettype.TryWriteQuicUint(payload_type, buf[cl_len:])
+	ty_len, ok := nettype.TryWriteQuicUint(uint64(payload_type), buf[cl_len:])
 	if !ok {
 		return errors.New("AHMP Frame: Type encoding fail")
 	}
