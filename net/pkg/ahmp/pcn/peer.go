@@ -1,6 +1,7 @@
 package pcn
 
 import (
+	"abyss/net/pkg/aurl"
 	"sync"
 	"sync/atomic"
 
@@ -22,7 +23,7 @@ type Peer struct {
 	OutboundConnection quic.Connection
 	AHMPRx             quic.ReceiveStream
 	AHMPTx             quic.SendStream
-	Hash               string
+	Address            *aurl.AURL
 
 	isClosed     atomic.Bool
 	txLock       sync.Mutex
@@ -33,23 +34,30 @@ func NewPeer(InboundConnection quic.Connection,
 	OutboundConnection quic.Connection,
 	AHMPRx quic.ReceiveStream,
 	AHMPTx quic.SendStream,
-	Hash string) *Peer {
+	Address *aurl.AURL) *Peer {
 	return &Peer{
 		InboundConnection:  InboundConnection,
 		OutboundConnection: OutboundConnection,
 		AHMPRx:             AHMPRx,
 		AHMPTx:             AHMPTx,
-		Hash:               Hash,
+		Address:            Address,
 
 		messageQueue: make(chan MessageFrame),
 	}
 }
 
-func (p *Peer) SendMessageFrameSync(payload []byte, payload_type FrameType) error {
+func (p *Peer) SendMessageFrameSync(payload_type FrameType, payload []byte) error {
 	p.txLock.Lock()
 	defer p.txLock.Unlock()
 
 	return SendMessageFrame(p.AHMPTx, payload, payload_type)
+}
+
+func (p *Peer) SendMessageFrameSync2(payload_type FrameType, payloads ...[]byte) error {
+	p.txLock.Lock()
+	defer p.txLock.Unlock()
+
+	return SendMessageFrame2(p.AHMPTx, payload_type, payloads...)
 }
 
 // can be called anywhere, the server will automatically detect and issue an global peer disconnect event.
@@ -60,7 +68,4 @@ func (p *Peer) CloseWithError(err error) {
 		p.InboundConnection.CloseWithError(0, err.Error())
 		p.OutboundConnection.CloseWithError(0, err.Error())
 	}
-}
-
-func (p *Peer) Join() {
 }

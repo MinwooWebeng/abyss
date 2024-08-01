@@ -1,6 +1,7 @@
 package ahmp
 
 import (
+	"abyss/net/pkg/ahmp/and"
 	pcn "abyss/net/pkg/ahmp/pcn"
 	"abyss/net/pkg/aurl"
 	"context"
@@ -18,10 +19,10 @@ type Dialer interface {
 }
 
 type AhmpHandler interface {
-	OnConnected(ctx context.Context, peer *pcn.Peer)
-	OnConnectFailed(ctx context.Context, address *aurl.AURL)
-	ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pcn.MessageFrame)
-	OnClosed(ctx context.Context, peer *pcn.Peer)
+	OnConnected(ctx context.Context, peer *pcn.Peer) error
+	OnConnectFailed(ctx context.Context, address *aurl.AURL) error
+	ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pcn.MessageFrame) error
+	OnClosed(ctx context.Context, peer *pcn.Peer) error
 }
 
 type Server struct {
@@ -71,6 +72,7 @@ func (s *Server) ServeQUICConn(connection quic.Connection) error {
 		connection.CloseWithError(0, "redundant connection")
 		return errors.New("redundant connection")
 	}
+	//fmt.Println("ServeQUICConn:", s.Dialer.LocalAddress(), remote_aurl, state)
 	if state == pcn.PartialPeer {
 		//TODO: connect or hold
 		return nil
@@ -95,6 +97,7 @@ func (s *Server) ConsumeQUICConn(aurl *aurl.AURL, connection quic.Connection) er
 		connection.CloseWithError(0, "redundant connection")
 		return errors.New("redundant connection")
 	}
+	//fmt.Println("ConsumeQUICConn:", s.Dialer.LocalAddress(), aurl, state)
 	if state == pcn.PartialPeer {
 		return nil
 	}
@@ -102,31 +105,44 @@ func (s *Server) ConsumeQUICConn(aurl *aurl.AURL, connection quic.Connection) er
 }
 
 func (s *Server) servePeer(peer *pcn.Peer) error {
-	fmt.Println("on", s.Dialer.LocalAddress(), ") serve:opponent", peer.Hash)
+	fmt.Println("on", s.Dialer.LocalAddress(), ") serve:opponent", peer.Address.Hash)
+	var err error
+	err = s.AhmpHandler.OnConnected(s.Context, peer)
+	//fmt.Println("OnConnected error: ", err)
 
-	s.AhmpHandler.OnConnected(s.Context, peer)
-	defer func() {
-		s.AhmpHandler.OnClosed(s.Context, peer)
-
-		//free from peer container. this allows new connection from same peer.
-		s.peer_container.Pop(peer.Hash)
-	}()
-
+	var msg *pcn.MessageFrame
 	for {
-		msg, err := pcn.ReceiveMessageFrame(peer.AHMPRx)
+		msg, err = pcn.ReceiveMessageFrame(peer.AHMPRx)
 		if err != nil {
 			peer.CloseWithError(err)
-			return err
+			break
 		}
-		s.AhmpHandler.ServeMessage(s.Context, peer, msg)
+		err = s.AhmpHandler.ServeMessage(s.Context, peer, msg)
+		//fmt.Println("ServeMessage error: ", err)
 	}
+
+	err_close := s.AhmpHandler.OnClosed(s.Context, peer)
+	//fmt.Println("OnClosed error: ", err_close)
+
+	//free from peer container. this allows new connection from same peer.
+	s.peer_container.Pop(peer.Address.Hash)
+
+	if err_close != nil {
+		return &and.MultipleError{Errors: []error{err, err_close}}
+	}
+	return err
 }
 
 func (s *Server) RequestPeerConnect(aurl *aurl.AURL) {
+	if aurl.Hash == s.Dialer.LocalAddress().Hash { //this happens quite a lot.
+		return
+	}
 	if _, ok := s.peer_container.Get(aurl.Hash); !ok {
 		go func() {
 			connection, err := s.Dialer.Dial(aurl)
 			if err != nil {
+				s.AhmpHandler.OnConnectFailed(s.Context, aurl)
+				fmt.Println("conn fail: ", err.Error())
 				return
 			}
 

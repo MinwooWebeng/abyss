@@ -93,3 +93,13 @@ func TryWriteQuicUint(value uint64, buf []byte) (int, bool) { //used length, ok
 	}
 	return 0, false
 }
+
+func MarshalQuicUint(value uint64) []byte {
+	result := [8]byte{}
+	len, ok := TryWriteQuicUint(value, result[:])
+	if !ok {
+		panic("MarshalQuicUint: failed")
+	}
+
+	return result[:len]
+}

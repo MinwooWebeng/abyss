@@ -54,3 +54,31 @@ func SendMessageFrame(writer io.Writer, payload []byte, payload_type FrameType) 
 	}
 	return nil
 }
+
+// ***Not Thread Safe*** never use this from peer. use peer.SendMessageFrameSync() for thread safety.
+func SendMessageFrame2(writer io.Writer, payload_type FrameType, payloads ...[]byte) error {
+	total_size := 0
+	for _, p := range payloads {
+		total_size += len(p)
+	}
+
+	buf := [16]byte{}
+	cl_len, ok := nettype.TryWriteQuicUint(uint64(total_size), buf[:])
+	if !ok {
+		return errors.New("AHMP Frame: Content-Length encoding fail")
+	}
+	ty_len, ok := nettype.TryWriteQuicUint(uint64(payload_type), buf[cl_len:])
+	if !ok {
+		return errors.New("AHMP Frame: Type encoding fail")
+	}
+	if _, err := writer.Write(buf[:cl_len+ty_len]); err != nil {
+		return err
+	}
+
+	for _, p := range payloads {
+		if _, err := writer.Write(p); err != nil {
+			return err
+		}
+	}
+	return nil
+}

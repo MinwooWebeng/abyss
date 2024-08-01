@@ -43,6 +43,7 @@ func (m *PeerContainer) AddInboundConnection(aurl *aurl.AURL, connection quic.Co
 				OutboundConnection: t.Connection,
 				AHMPRx:             ahmp_rx,
 				AHMPTx:             t.AHMPTx,
+				Address:            aurl,
 			}
 			m._inner[aurl.Hash] = new_peer
 			return new_peer, CompletePeer, true
@@ -71,6 +72,7 @@ func (m *PeerContainer) AddOutboundConnection(aurl *aurl.AURL, connection quic.C
 				OutboundConnection: connection,
 				AHMPRx:             t.AHMPRx,
 				AHMPTx:             ahmp_tx,
+				Address:            aurl,
 			}
 			m._inner[aurl.Hash] = new_peer
 			return new_peer, CompletePeer, true

@@ -5,6 +5,7 @@ import (
 	"abyss/net/pkg/aurl"
 	"context"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"math/rand/v2"
 	"sync"
@@ -39,21 +40,27 @@ func (h *PingHandler) PingRTT(peer *pcn.Peer) <-chan time.Duration {
 	defer h.mtx.Unlock()
 
 	h.hangings[ping_id] = HangingPingRet{time.Now(), ret_ch}
-	peer.SendMessageFrameSync(bs, pcn.PINGT)
+	peer.SendMessageFrameSync(pcn.PINGT, bs)
 	fmt.Println("sent ping: ", ping_id)
 	return ret_ch
 }
 
-func (h *PingHandler) OnConnected(ctx context.Context, peer *pcn.Peer)         {}
-func (h *PingHandler) OnConnectFailed(ctx context.Context, address *aurl.AURL) {}
-func (h *PingHandler) OnClosed(ctx context.Context, peer *pcn.Peer)            {}
+func (h *PingHandler) OnConnected(ctx context.Context, peer *pcn.Peer) error {
+	return nil
+}
+func (h *PingHandler) OnConnectFailed(ctx context.Context, address *aurl.AURL) error {
+	return nil
+}
+func (h *PingHandler) OnClosed(ctx context.Context, peer *pcn.Peer) error {
+	return nil
+}
 
-func (h *PingHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pcn.MessageFrame) {
+func (h *PingHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pcn.MessageFrame) error {
 	fmt.Println("PingHandler: serve", frame)
 	switch frame.Type {
 	case pcn.PINGT:
 		fmt.Println("echo!")
-		peer.SendMessageFrameSync(frame.Payload, pcn.PINGR)
+		peer.SendMessageFrameSync(pcn.PINGR, frame.Payload)
 	case pcn.PINGR:
 		ping_id := binary.LittleEndian.Uint32(frame.Payload)
 
@@ -62,9 +69,10 @@ func (h *PingHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *p
 
 		hanging_call, ok := h.hangings[ping_id]
 		if !ok {
-			return
+			return errors.New("PingHandler: unexpected ping return")
 		}
 		delete(h.hangings, ping_id)
 		hanging_call.ret_ch <- time.Since(hanging_call.start_time)
 	}
+	return nil
 }
