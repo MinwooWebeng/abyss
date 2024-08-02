@@ -5,7 +5,6 @@ import (
 	"abyss/net/pkg/ahmp/pcn"
 	"abyss/net/pkg/aurl"
 	"abyss/net/pkg/nettype"
-	"fmt"
 	"reflect"
 )
 
@@ -36,7 +35,7 @@ func (p *ANDPeerWrapper) SendMessageFrameSyncMarshal(payload_type pcn.FrameType,
 			conv_payloads[conv_off] = nettype.MarshalQuicUint(p)
 			conv_off++
 		default:
-			fmt.Println(p)
+			// fmt.Println(p)
 			panic("SendMessageFrameSyncMarshal: cannot marshal type " + reflect.TypeOf(p).Name())
 		}
 	}

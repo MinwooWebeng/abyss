@@ -75,6 +75,20 @@ extern "C" {
 #endif
 
 extern __declspec(dllexport) int GetVersion(char* buf, int buflen);
+extern __declspec(dllexport) uintptr_t NewAbyssHost(char* hash, int hash_len);
+extern __declspec(dllexport) void CloseAbyssHost(uintptr_t handle);
+extern __declspec(dllexport) int LocalAddr(uintptr_t host_handle, char* buf, int buflen);
+extern __declspec(dllexport) void RequestPeerConnect(uintptr_t host_handle, char* remoteaurl, int remoteaurl_len);
+extern __declspec(dllexport) void DisconnectPeer(uintptr_t host_handle, char* hash, int hash_len);
+extern __declspec(dllexport) int WaitANDEvent(uintptr_t host_handle, char* buf, int buf_len);
+extern __declspec(dllexport) int OpenWorld(uintptr_t host_handle, char* path, int path_len, char* url, int url_len);
+extern __declspec(dllexport) void CloseWorld(uintptr_t host_handle, char* path, int path_len);
+extern __declspec(dllexport) void Join(uintptr_t host_handle, char* localpath, int localpath_len, char* remoteaurl, int remoteaurl_len);
+extern __declspec(dllexport) uintptr_t HttpGet(uintptr_t handle, GoString url);
+extern __declspec(dllexport) uintptr_t HttpHead(uintptr_t handle, GoString url);
+extern __declspec(dllexport) uintptr_t HttpPost(uintptr_t handle, GoString url, GoString contentType, char* body, int bodylen);
+extern __declspec(dllexport) void CloseHttpResponse(uintptr_t handle);
+extern __declspec(dllexport) int GetReponseBodyLength(uintptr_t handle);
 
 #ifdef __cplusplus
 }

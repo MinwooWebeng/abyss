@@ -272,7 +272,7 @@ func (h *NeighborDiscoveryHandler) _AppendJoinInfo(localpath string, peer_hash s
 func (h *NeighborDiscoveryHandler) JoinConnected(localpath string, peer INeighborDiscoveryPeerBase, path string) error {
 	if h.IsLocalPathOccupied(localpath) {
 		h.event_listener <- NeighborDiscoveryEvent{JoinExpired, localpath, peer.GetHash(), peer, path, nil, 0, ""}
-		return errors.New("local path collision in JoinAny: " + localpath)
+		return errors.New("local path collision in JoinConnected: " + localpath)
 	}
 
 	_, ok := h.peers[peer.GetHash()]

@@ -7,7 +7,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"sync"
 	"time"
 
@@ -98,7 +97,7 @@ func (m *ANDHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 	defer m.mtx.Unlock()
 
 	/// Debug
-	fmt.Println("from", peer.Address.Hash, frame.Type.String(), "to", peer.InboundConnection.LocalAddr())
+	// fmt.Println("from", peer.Address.Hash, frame.Type.String(), "to", peer.InboundConnection.LocalAddr())
 	///
 	switch frame.Type { //TODO: parse message and synchronize between calls.
 	case pcn.JN:
@@ -131,7 +130,7 @@ func (m *ANDHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 				peer.CloseWithError(errors.New("JOK: failed to parse member address: " + addr_str))
 				return errors.New("JOK: failed to parse member address: " + addr_str)
 			}
-			fmt.Println("...", addr.String())
+			// fmt.Println("...", addr.String())
 			member_addrs = append(member_addrs, addr)
 		}
 		return m.algorithm.OnJOK(&ANDPeerWrapper{peer}, path, world, member_addrs)
@@ -203,7 +202,7 @@ func (m *ANDHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 			peer.CloseWithError(errors.New("CRR: failed to parse"))
 			return errors.New("CRR: failed to parse")
 		}
-		fmt.Println("CRR:", member)
+		// fmt.Println("CRR:", member)
 		return m.algorithm.OnCRR(&ANDPeerWrapper{peer}, wuid, member)
 	case pcn.RST:
 		wuid, ok, _ := PayloadPopString(frame.Payload)
@@ -256,4 +255,11 @@ func (m *ANDHandler) JoinConnected(local_path string, peer *pcn.Peer, path strin
 	defer m.mtx.Unlock()
 
 	m.algorithm.JoinConnected(local_path, &ANDPeerWrapper{peer}, path)
+}
+
+func (m *ANDHandler) JoinAny(local_path string, aurl *aurl.AURL) {
+	m.mtx.Lock()
+	defer m.mtx.Unlock()
+
+	m.algorithm.JoinAny(local_path, aurl, aurl.Hash, aurl.Path)
 }

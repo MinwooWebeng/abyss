@@ -27,6 +27,19 @@ type NeighborDiscoveryEvent struct {
 	Message   string
 }
 
+type ANDEventJoinDenied struct {
+	Localpath string
+	Peer      INeighborDiscoveryPeerBase
+}
+type ANDEventJoinExpired struct {
+}
+type ANDEventJoinSuccess struct {
+}
+type ANDEventPeerJoin struct {
+}
+type ANDEventPeerLeave struct {
+}
+
 type PeerSendError struct {
 	Peer INeighborDiscoveryPeerBase
 }

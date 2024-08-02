@@ -6,7 +6,6 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"math/rand/v2"
 	"sync"
 	"time"
@@ -41,7 +40,7 @@ func (h *PingHandler) PingRTT(peer *pcn.Peer) <-chan time.Duration {
 
 	h.hangings[ping_id] = HangingPingRet{time.Now(), ret_ch}
 	peer.SendMessageFrameSync(pcn.PINGT, bs)
-	fmt.Println("sent ping: ", ping_id)
+	// fmt.Println("sent ping: ", ping_id)
 	return ret_ch
 }
 
@@ -56,10 +55,10 @@ func (h *PingHandler) OnClosed(ctx context.Context, peer *pcn.Peer) error {
 }
 
 func (h *PingHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pcn.MessageFrame) error {
-	fmt.Println("PingHandler: serve", frame)
+	// fmt.Println("PingHandler: serve", frame)
 	switch frame.Type {
 	case pcn.PINGT:
-		fmt.Println("echo!")
+		// fmt.Println("echo!")
 		peer.SendMessageFrameSync(pcn.PINGR, frame.Payload)
 	case pcn.PINGR:
 		ping_id := binary.LittleEndian.Uint32(frame.Payload)

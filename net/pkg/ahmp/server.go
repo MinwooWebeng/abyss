@@ -6,7 +6,6 @@ import (
 	"abyss/net/pkg/aurl"
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/quic-go/quic-go"
 )
@@ -72,7 +71,7 @@ func (s *Server) ServeQUICConn(connection quic.Connection) error {
 		connection.CloseWithError(0, "redundant connection")
 		return errors.New("redundant connection")
 	}
-	//fmt.Println("ServeQUICConn:", s.Dialer.LocalAddress(), remote_aurl, state)
+	//// fmt.Println("ServeQUICConn:", s.Dialer.LocalAddress(), remote_aurl, state)
 	if state == pcn.PartialPeer {
 		//TODO: connect or hold
 		return nil
@@ -97,7 +96,7 @@ func (s *Server) ConsumeQUICConn(aurl *aurl.AURL, connection quic.Connection) er
 		connection.CloseWithError(0, "redundant connection")
 		return errors.New("redundant connection")
 	}
-	//fmt.Println("ConsumeQUICConn:", s.Dialer.LocalAddress(), aurl, state)
+	//// fmt.Println("ConsumeQUICConn:", s.Dialer.LocalAddress(), aurl, state)
 	if state == pcn.PartialPeer {
 		return nil
 	}
@@ -105,10 +104,10 @@ func (s *Server) ConsumeQUICConn(aurl *aurl.AURL, connection quic.Connection) er
 }
 
 func (s *Server) servePeer(peer *pcn.Peer) error {
-	fmt.Println("on", s.Dialer.LocalAddress(), ") serve:opponent", peer.Address.Hash)
+	// fmt.Println("on", s.Dialer.LocalAddress(), ") serve:opponent", peer.Address.Hash)
 	var err error
 	err = s.AhmpHandler.OnConnected(s.Context, peer)
-	//fmt.Println("OnConnected error: ", err)
+	//// fmt.Println("OnConnected error: ", err)
 
 	var msg *pcn.MessageFrame
 	for {
@@ -118,11 +117,11 @@ func (s *Server) servePeer(peer *pcn.Peer) error {
 			break
 		}
 		err = s.AhmpHandler.ServeMessage(s.Context, peer, msg)
-		//fmt.Println("ServeMessage error: ", err)
+		//// fmt.Println("ServeMessage error: ", err)
 	}
 
 	err_close := s.AhmpHandler.OnClosed(s.Context, peer)
-	//fmt.Println("OnClosed error: ", err_close)
+	//// fmt.Println("OnClosed error: ", err_close)
 
 	//free from peer container. this allows new connection from same peer.
 	s.peer_container.Pop(peer.Address.Hash)
@@ -142,7 +141,7 @@ func (s *Server) RequestPeerConnect(aurl *aurl.AURL) {
 			connection, err := s.Dialer.Dial(aurl)
 			if err != nil {
 				s.AhmpHandler.OnConnectFailed(s.Context, aurl)
-				fmt.Println("conn fail: ", err.Error())
+				// fmt.Println("conn fail: ", err.Error())
 				return
 			}
 

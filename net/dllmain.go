@@ -3,10 +3,14 @@ package main
 import "C"
 import (
 	"abyss/net/pkg/ahmp"
+	"abyss/net/pkg/ahmp/and"
+	"abyss/net/pkg/aurl"
 	"abyss/net/pkg/cpb"
 	"abyss/net/pkg/host"
 	"bytes"
 	"context"
+	"encoding/binary"
+	"errors"
 	"io"
 	"net/http"
 	"runtime/cgo"
@@ -16,7 +20,7 @@ func init() {
 	//TODO
 }
 
-const version = "0.9.0"
+const version = "0.1.0"
 
 //export GetVersion
 func GetVersion(buf *C.char, buflen C.int) C.int {
@@ -24,29 +28,139 @@ func GetVersion(buf *C.char, buflen C.int) C.int {
 }
 
 type HostExport struct {
-	Host  *host.Host
-	Close context.CancelFunc
+	Host      *host.Host
+	CloseFunc context.CancelFunc
+
+	ANDHandler *ahmp.ANDHandler
+	ANDEventCh <-chan and.NeighborDiscoveryEvent
 }
 
 //export NewAbyssHost
-func NewAbyssHost() C.uintptr_t {
+func NewAbyssHost(hash *C.char, hash_len C.int) C.uintptr_t {
 	ctx, cancelFunc := context.WithCancel(context.Background())
-	hostA, _ := host.NewHost(context.Background(), "hostA", ahmp.NewANDHandler("hostA"), &cpb.PlayerBackend{}, http.DefaultClient.Jar)
-	result := &HostExport{
-		Host:  hostA,
-		Close: cancelFunc,
-	}
-	result.Host.ListenAndServeAsync(ctx)
+	go_hash := string(UnmarshalBytes(hash, hash_len))
 
-	return C.uintptr_t(cgo.NewHandle(result))
+	and_event_ch := make(chan and.NeighborDiscoveryEvent, 128)
+	and_handler := ahmp.NewANDHandler(ctx, go_hash, and_event_ch)
+	hostA, _ := host.NewHost(ctx, go_hash, and_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	and_handler.ReserveConnectCallback(hostA.AhmpServer.RequestPeerConnect)
+	hostA.ListenAndServeAsync(ctx)
+
+	return C.uintptr_t(cgo.NewHandle(&HostExport{
+		Host:      hostA,
+		CloseFunc: cancelFunc,
+
+		ANDHandler: and_handler,
+		ANDEventCh: and_event_ch,
+	}))
 }
 
 //export CloseAbyssHost
 func CloseAbyssHost(handle C.uintptr_t) {
 	export := (cgo.Handle(handle)).Value().(*HostExport)
-	export.Close()
+	export.CloseFunc()
 	(cgo.Handle(handle)).Delete()
 }
+
+//export LocalAddr
+func LocalAddr(host_handle C.uintptr_t, buf *C.char, buflen C.int) C.int {
+	export := (cgo.Handle(host_handle)).Value().(*HostExport)
+
+	return TryMarshalBytes(buf, buflen, []byte(export.Host.AhmpServer.Dialer.LocalAddress().String()))
+}
+
+//export RequestPeerConnect
+func RequestPeerConnect(host_handle C.uintptr_t, remoteaurl *C.char, remoteaurl_len C.int) {
+	export := (cgo.Handle(host_handle)).Value().(*HostExport)
+
+	aurl, err := aurl.ParseAURL(string(UnmarshalBytes(remoteaurl, remoteaurl_len)))
+	if err != nil {
+		return
+	}
+	export.Host.AhmpServer.RequestPeerConnect(aurl)
+}
+
+//export DisconnectPeer
+func DisconnectPeer(host_handle C.uintptr_t, hash *C.char, hash_len C.int) {
+	export := (cgo.Handle(host_handle)).Value().(*HostExport)
+
+	peer, ok := export.Host.AhmpServer.TryGetPeer(string(UnmarshalBytes(hash, hash_len)))
+	if !ok {
+		return
+	}
+
+	peer.CloseWithError(errors.New("application: close request"))
+}
+
+//export WaitANDEvent
+func WaitANDEvent(host_handle C.uintptr_t, buf *C.char, buf_len C.int) C.int {
+	export := (cgo.Handle(host_handle)).Value().(*HostExport)
+	buffer := UnmarshalBytes(buf, buf_len)
+
+	event := <-export.ANDEventCh
+
+	message_len := len(event.Message)
+	localpath_len := len(event.Localpath)
+	peerhash_len := len(event.Peer_hash)
+	worldjson_len := 0
+	var world_json []byte
+	if event.World != nil {
+		world_json = event.World.GetJsonBytes()
+		worldjson_len = len(world_json)
+	}
+
+	if len(buffer) < 9+message_len+localpath_len+peerhash_len+worldjson_len {
+		return -1
+	}
+
+	//all multibyte types are passed in native endian
+	//fixed 9 byte
+	buffer[0] = byte(event.EventType)
+	binary.NativeEndian.PutUint32(buffer[1:], uint32(event.Status))
+	buffer[5] = byte(message_len)
+	buffer[6] = byte(localpath_len)
+	buffer[7] = byte(peerhash_len)
+	buffer[8] = byte(worldjson_len)
+
+	//message (string)
+	copy(buffer[9:], event.Message)
+	copy(buffer[9+message_len:], event.Localpath)
+	copy(buffer[9+message_len+localpath_len:], event.Peer_hash)
+	copy(buffer[9+message_len+localpath_len+peerhash_len:], world_json)
+	return C.int(9 + message_len + localpath_len + peerhash_len + worldjson_len)
+}
+
+//export OpenWorld
+func OpenWorld(host_handle C.uintptr_t, path *C.char, path_len C.int, url *C.char, url_len C.int) C.int {
+	export := (cgo.Handle(host_handle)).Value().(*HostExport)
+
+	if err := export.ANDHandler.OpenWorld(string(UnmarshalBytes(path, path_len)), ahmp.NewANDWorld(string(UnmarshalBytes(url, url_len)))); err != nil {
+		return -1
+	}
+	return 0
+}
+
+//export CloseWorld
+func CloseWorld(host_handle C.uintptr_t, path *C.char, path_len C.int) {
+	export := (cgo.Handle(host_handle)).Value().(*HostExport)
+
+	export.ANDHandler.CloseWorld(string(UnmarshalBytes(path, path_len)))
+}
+
+//export Join
+func Join(host_handle C.uintptr_t, localpath *C.char, localpath_len C.int, remoteaurl *C.char, remoteaurl_len C.int) {
+	export := (cgo.Handle(host_handle)).Value().(*HostExport)
+
+	aurl, err := aurl.ParseAURL(string(UnmarshalBytes(remoteaurl, remoteaurl_len)))
+	if err != nil {
+		return
+	}
+	export.ANDHandler.JoinAny(string(UnmarshalBytes(localpath, localpath_len)), aurl)
+}
+
+//////////////
+/// HTTP/3 ///
+//////////////
 
 type HttpResponseExport struct {
 	Body     []byte
