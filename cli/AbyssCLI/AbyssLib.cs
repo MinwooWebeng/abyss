@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Mime;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
@@ -57,19 +59,79 @@ namespace AbyssCLI
             public string PeerHash { get; }
             public string WorldJson { get; }
         }
-        public class AbyssHost
+        public class AbyssHttpResponse
         {
-            public AbyssHost(string hash) {
+            internal AbyssHttpResponse(IntPtr handle)
+            {
+                response_handle = handle;
+            }
+
+            public void Close()
+            {
+                [DllImport("../../../abyssnet.dll")]
+                static extern void Close(IntPtr handle);
+
+                Close(response_handle);
+            }
+
+            public int GetStatus()
+            {
+                [DllImport("../../../abyssnet.dll")]
+                static extern int GetReponseStatus(IntPtr handle);
+
+                return GetReponseStatus(response_handle);
+            }
+            public int GetBodyLength()
+            {
+                [DllImport("../../../abyssnet.dll")]
+                static extern int GetReponseBodyLength(IntPtr handle);
+
+                return GetReponseBodyLength(response_handle);
+            }
+            public byte[] GetBody()
+            {
                 unsafe
                 {
                     [DllImport("../../../abyssnet.dll")]
-                    static extern IntPtr NewAbyssHost(byte* buf, int buflen);
+                    static extern int GetResponseBody(IntPtr handle, byte* buf, int buflen);
+
+                    var buf = new byte[GetBodyLength()];
+                    fixed (byte* dBytes = buf)
+                    {
+                        var len = GetResponseBody(response_handle, dBytes, buf.Length);
+                        if (len != buf.Length)
+                        {
+                            return Array.Empty<byte>();
+                        }
+                    }
+                    return buf;
+                }
+            }
+
+            readonly IntPtr response_handle;
+        }
+        public class AbyssHost
+        {
+            public AbyssHost(string hash, string backend_root_dir) {
+                unsafe
+                {
+                    [DllImport("../../../abyssnet.dll")]
+                    static extern IntPtr NewAbyssHost(byte* buf, int buflen, byte* backend_root, int backend_root_len);
 
                     var hash_bytes = Encoding.UTF8.GetBytes(hash);
+                    var backend_root_bytes = Encoding.UTF8.GetBytes(backend_root_dir);
                     fixed (byte* pBytes = hash_bytes)
                     {
-                        host_handle = NewAbyssHost(pBytes, hash_bytes.Length);
+                        fixed (byte* dBytes = backend_root_bytes)
+                        {
+                            host_handle = NewAbyssHost(pBytes, hash_bytes.Length, dBytes, backend_root_bytes.Length);
+                        }
                     }
+                }
+
+                if (host_handle == IntPtr.Zero)
+                {
+                    throw new Exception("abyss: failed to create host");
                 }
             }
             public void Close()
@@ -206,6 +268,21 @@ namespace AbyssCLI
                         {
                             Join(host_handle, pBytes, path_bytes.Length, aBytes, aurl_bytes.Length);
                         }
+                    }
+                }
+            }
+
+            public AbyssHttpResponse HttpGet(string aurl)
+            {
+                unsafe
+                {
+                    [DllImport("../../../abyssnet.dll")]
+                    static extern IntPtr HttpGet(IntPtr handle, byte* aurl, int aurl_len);
+                    
+                    var url_bytes = Encoding.UTF8.GetBytes(aurl);
+                    fixed (byte* pBytes = url_bytes)
+                    {
+                        return new AbyssHttpResponse(HttpGet(host_handle, pBytes, url_bytes.Length));
                     }
                 }
             }

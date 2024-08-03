@@ -8,6 +8,7 @@ import (
 )
 
 type AURL struct {
+	Scheme     string //abyss(ahmp) or abyst(http3)
 	Hash       string
 	Candidates []*net.UDPAddr
 	Path       string
@@ -51,15 +52,26 @@ func (u *AURLParseError) Error() string {
 }
 
 func ParseAURL(raw string) (*AURL, error) {
-	body, ok := strings.CutPrefix(raw, "abyss:")
-	if !ok {
-		return nil, &AURLParseError{Code: 100}
+	var scheme string
+	var body string
+	var ok bool
+	if body, ok = strings.CutPrefix(raw, "abyss:"); ok {
+		scheme = "abyss"
+	} else {
+		if body, ok = strings.CutPrefix(raw, "abyst:"); ok {
+			scheme = "abyst"
+		} else {
+			return nil, &AURLParseError{Code: 100}
+		}
 	}
+
+	body = strings.TrimPrefix(body, "//") //for old people
 
 	hash_endpos := strings.IndexAny(body, ":/")
 	if hash_endpos == -1 {
 		//no candidates, no path
 		return &AURL{
+			Scheme:     scheme,
 			Hash:       body,
 			Candidates: []*net.UDPAddr{},
 			Path:       "/",
@@ -100,6 +112,7 @@ func ParseAURL(raw string) (*AURL, error) {
 		}
 
 		return &AURL{
+			Scheme:     scheme,
 			Hash:       hash,
 			Candidates: candidates,
 			Path:       path,
@@ -107,6 +120,7 @@ func ParseAURL(raw string) (*AURL, error) {
 	} else if body[hash_endpos] == '/' {
 		//only path
 		return &AURL{
+			Scheme:     scheme,
 			Hash:       hash,
 			Candidates: []*net.UDPAddr{},
 			Path:       body[hash_endpos:],

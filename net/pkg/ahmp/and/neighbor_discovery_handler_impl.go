@@ -219,6 +219,7 @@ func (h *NeighborDiscoveryHandler) Disconnected(peer_hash string) error {
 
 		delete(session.CC_MR, peer_hash)
 		delete(session.snb_targets, peer_hash)
+		h.event_listener <- NeighborDiscoveryEvent{PeerLeave, "", peer.GetHash(), peer, "", session.world, 0, ""}
 	}
 
 	//candidate sessions, remove silently.
@@ -547,6 +548,7 @@ func (h *NeighborDiscoveryHandler) OnRST(peer INeighborDiscoveryPeerBase, world_
 	if session != nil {
 		delete(session.members, peer.GetHash())
 		delete(session.snb_targets, peer.GetHash())
+		h.event_listener <- NeighborDiscoveryEvent{PeerLeave, "", peer.GetHash(), peer, "", session.world, 0, ""}
 	}
 	if candidate != nil {
 		delete(candidate.members, peer.GetHash())

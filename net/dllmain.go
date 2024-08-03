@@ -11,6 +11,7 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"runtime/cgo"
@@ -36,13 +37,20 @@ type HostExport struct {
 }
 
 //export NewAbyssHost
-func NewAbyssHost(hash *C.char, hash_len C.int) C.uintptr_t {
+func NewAbyssHost(hash *C.char, hash_len C.int, backend_root *C.char, backend_root_len C.int) C.uintptr_t {
 	ctx, cancelFunc := context.WithCancel(context.Background())
 	go_hash := string(UnmarshalBytes(hash, hash_len))
 
 	and_event_ch := make(chan and.NeighborDiscoveryEvent, 128)
 	and_handler := ahmp.NewANDHandler(ctx, go_hash, and_event_ch)
-	hostA, _ := host.NewHost(ctx, go_hash, and_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	player_backend, err := cpb.NewDefaultPlayerBackend(string(UnmarshalBytes(backend_root, backend_root_len)))
+	if err != nil {
+		return 0
+	}
+	hostA, err := host.NewHost(ctx, go_hash, and_handler, player_backend, http.DefaultClient.Jar)
+	if err != nil {
+		return 0
+	}
 	and_handler.ReserveConnectCallback(hostA.AhmpServer.RequestPeerConnect)
 	hostA.ListenAndServeAsync(ctx)
 
@@ -155,7 +163,10 @@ func Join(host_handle C.uintptr_t, localpath *C.char, localpath_len C.int, remot
 	if err != nil {
 		return
 	}
-	export.ANDHandler.JoinAny(string(UnmarshalBytes(localpath, localpath_len)), aurl)
+	err = export.ANDHandler.JoinAny(string(UnmarshalBytes(localpath, localpath_len)), aurl)
+	if err != nil {
+		fmt.Println("err: ", err)
+	}
 }
 
 //////////////
@@ -183,47 +194,62 @@ func MakeHttpResponseExport(response *http.Response, err error) C.uintptr_t {
 	return C.uintptr_t(cgo.NewHandle(&HttpResponseExport{
 		Body:     body,
 		Response: response,
-		Err:      err,
+		Err:      nil,
 	}))
 }
 
+//export CloseHttpResponse
+func CloseHttpResponse(response_handle C.uintptr_t) {
+	export := (cgo.Handle(response_handle)).Value().(*HttpResponseExport)
+	export.Response.Body.Close()
+	(cgo.Handle(response_handle)).Delete()
+}
+
 //export HttpGet
-func HttpGet(handle C.uintptr_t, url string) C.uintptr_t {
+func HttpGet(handle C.uintptr_t, url *C.char, url_len C.int) C.uintptr_t {
 	h := (cgo.Handle(handle)).Value().(*HostExport)
-	response, err := h.Host.HttpGet(url)
+	response, err := h.Host.HttpGet(string(UnmarshalBytes(url, url_len)))
 	return MakeHttpResponseExport(response, err)
 }
 
 //export HttpHead
-func HttpHead(handle C.uintptr_t, url string) C.uintptr_t {
+func HttpHead(handle C.uintptr_t, url *C.char, url_len C.int) C.uintptr_t {
 	h := (cgo.Handle(handle)).Value().(*HostExport)
-	response, err := h.Host.HttpHead(url)
+	response, err := h.Host.HttpHead(string(UnmarshalBytes(url, url_len)))
 	return MakeHttpResponseExport(response, err)
 }
 
 //export HttpPost
-func HttpPost(handle C.uintptr_t, url, contentType string, body *C.char, bodylen C.int) C.uintptr_t {
+func HttpPost(handle C.uintptr_t, url *C.char, url_len C.int, contentType *C.char, contentType_len C.int, body *C.char, bodylen C.int) C.uintptr_t {
 	h := (cgo.Handle(handle)).Value().(*HostExport)
-	response, err := h.Host.HttpPost(url, contentType, bytes.NewReader(UnmarshalBytes(body, bodylen)))
+	response, err := h.Host.HttpPost(string(UnmarshalBytes(url, url_len)), string(UnmarshalBytes(contentType, contentType_len)), bytes.NewReader(UnmarshalBytes(body, bodylen)))
 	return MakeHttpResponseExport(response, err)
 }
 
-//export CloseHttpResponse
-func CloseHttpResponse(handle C.uintptr_t) {
-	export := (cgo.Handle(handle)).Value().(*HttpResponseExport)
-	export.Response.Body.Close()
-	(cgo.Handle(handle)).Delete()
+//export GetReponseStatus
+func GetReponseStatus(response_handle C.uintptr_t) C.int {
+	response := (cgo.Handle(response_handle)).Value().(*HttpResponseExport)
+	if response.Err != nil {
+		return -1
+	}
+	return C.int(response.Response.StatusCode)
 }
 
 //export GetReponseBodyLength
-func GetReponseBodyLength(handle C.uintptr_t) C.int {
-	response := (cgo.Handle(handle)).Value().(*HttpResponseExport)
+func GetReponseBodyLength(response_handle C.uintptr_t) C.int {
+	response := (cgo.Handle(response_handle)).Value().(*HttpResponseExport)
+	if response.Err != nil {
+		return C.int(len(response.Err.Error()))
+	}
 	return C.int(len(response.Body))
 }
 
-// export GetResponseBody
-func GetResponseBody(handle C.uintptr_t, buf *C.char, buflen C.int) C.int {
-	response := (cgo.Handle(handle)).Value().(*HttpResponseExport)
+//export GetResponseBody
+func GetResponseBody(response_handle C.uintptr_t, buf *C.char, buflen C.int) C.int {
+	response := (cgo.Handle(response_handle)).Value().(*HttpResponseExport)
+	if response.Err != nil {
+		return TryMarshalBytes(buf, buflen, []byte(response.Err.Error()))
+	}
 	return TryMarshalBytes(buf, buflen, response.Body)
 }
 

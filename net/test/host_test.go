@@ -7,6 +7,7 @@ import (
 	"abyss/net/pkg/host"
 	"context"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"strconv"
@@ -17,21 +18,25 @@ import (
 func TestHost(t *testing.T) {
 	hostA_events := make(chan and.NeighborDiscoveryEvent)
 	hostA_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostA", hostA_events)
-	hostA, _ := host.NewHost(context.Background(), "hostA", hostA_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostA_player_backend, _ := cpb.NewDefaultPlayerBackend("./")
+	hostA, _ := host.NewHost(context.Background(), "hostA", hostA_ahmp_handler, hostA_player_backend, http.DefaultClient.Jar)
 	hostA.ListenAndServeAsync(context.Background())
 	hostA_localaddr, _ := hostA.LocalAddr().(*net.UDPAddr)
 
 	hostB_events := make(chan and.NeighborDiscoveryEvent)
 	hostB_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostB", hostB_events)
-	hostB, _ := host.NewHost(context.Background(), "hostB", hostB_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostB_player_backend, _ := cpb.NewDefaultPlayerBackend("./")
+	hostB, _ := host.NewHost(context.Background(), "hostB", hostB_ahmp_handler, hostB_player_backend, http.DefaultClient.Jar)
 	hostB.ListenAndServeAsync(context.Background())
 	hostB_localaddr, _ := hostB.LocalAddr().(*net.UDPAddr)
 
-	response, err := hostA.HttpGet("https://127.0.0.1:" + strconv.Itoa(hostB_localaddr.Port) + "/")
+	response, err := hostA.HttpGet("https://127.0.0.1:" + strconv.Itoa(hostB_localaddr.Port) + "/static/host_test.go")
 	if err != nil {
 		t.Error(err.Error())
 	}
 	fmt.Println(response.Status)
+	body, _ := io.ReadAll(response.Body)
+	fmt.Println(string(body))
 	response, err = hostB.HttpGet("https://127.0.0.1:" + strconv.Itoa(hostA_localaddr.Port) + "/")
 	if err != nil {
 		t.Error(err.Error())

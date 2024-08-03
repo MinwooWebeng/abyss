@@ -2,6 +2,7 @@ package host
 
 import (
 	"abyss/net/pkg/ahmp"
+	"abyss/net/pkg/aurl"
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
@@ -68,6 +69,37 @@ func NewHost(ctx context.Context, local_identity string, ahmp_handler ahmp.AhmpH
 		Handler: http_handler,
 	}
 	h.HttpCookieJar = cookie_jar
+
+	//initialize http3 client
+	roundTripper := &http3.RoundTripper{
+		TLSClientConfig: h.TlsConf,  // set a TLS client config, if desired
+		QUICConfig:      h.QuicConf, // QUIC connection options
+		Dial: func(ctx context.Context, addr string, tlsConf *tls.Config, quicConf *quic.Config) (quic.EarlyConnection, error) {
+			//addr is {peer hash} + ".null:443", hacky tactic explained below.
+			var abyst_hash = addr[:len(addr)-9]
+			//fmt.Println("Http3 Dial peer:", abyst_hash)
+
+			peer, ok := h.AhmpServer.TryGetPeer(abyst_hash) //trim .abyst
+			if !ok {
+				//peer not found, unable to dial
+				return nil, errors.New("abyst: peer not found")
+			}
+
+			early_conn, err := h.QuicTransport.DialEarly(ctx, peer.OutboundConnection.RemoteAddr(), tlsConf, quicConf)
+			if err != nil {
+				return nil, err
+			}
+
+			//TODO: abyssh3 address identity check. compare TLS certificate from early connection and previous ahmp handshake.
+			//currently, man-in-the-middle attack is possible
+
+			return early_conn, nil
+		},
+	}
+	h.http3Client = &http.Client{
+		Transport: roundTripper,
+		Jar:       h.HttpCookieJar,
+	}
 	return h, nil
 }
 
@@ -84,32 +116,6 @@ func (h *Host) ListenAndServeAsync(ctx context.Context) error {
 		return errors.New("ListenAndServeAsync: incomplete server")
 	}
 
-	//initialize http3 client
-	roundTripper := &http3.RoundTripper{
-		TLSClientConfig: h.TlsConf,  // set a TLS client config, if desired
-		QUICConfig:      h.QuicConf, // QUIC connection options
-		Dial: func(ctx context.Context, addr string, tlsConf *tls.Config, quicConf *quic.Config) (quic.EarlyConnection, error) {
-			//TODO: support abyssh3 address.
-			a, err := net.ResolveUDPAddr("udp", addr)
-			if err != nil {
-				return nil, err
-			}
-			return h.QuicTransport.DialEarly(ctx, a, tlsConf, quicConf)
-			//TODO: abyssh3 address identity check.
-		},
-	}
-	h.http3Client = &http.Client{
-		Transport: roundTripper,
-		Jar:       h.HttpCookieJar,
-	}
-
-	//initialize servers
-	if h.AhmpServer == nil {
-		return errors.New("abyss: host ahmp server not provided")
-	}
-	if h.Http3Server == nil {
-		return errors.New("abyss: host http/3 server not provided")
-	}
 	h.error_log = make(chan error, 32)
 	go func() {
 		listener, err := h.QuicTransport.ListenEarly(h.TlsConf, h.QuicConf)
@@ -143,13 +149,38 @@ func (h *Host) ListenAndServeAsync(ctx context.Context) error {
 	return nil
 }
 
-func (h *Host) HttpGet(url string) (*http.Response, error) {
+// puts aurl hash into url user section
+func HackyAddressTransformAurlToURL(aurl_str string) (string, error) {
+	aurl, err := aurl.ParseAURL(aurl_str)
+	if err != nil {
+		return "", err
+	}
+	if aurl.Scheme != "abyst" {
+		return "", errors.New("url scheme mismatch")
+	}
+
+	return "https://" + aurl.Hash + ".null" + aurl.Path, nil
+}
+
+func (h *Host) HttpGet(aurl_str string) (*http.Response, error) {
+	url, err := HackyAddressTransformAurlToURL(aurl_str)
+	if err != nil {
+		return nil, err
+	}
 	return h.http3Client.Get(url)
 }
-func (h *Host) HttpHead(url string) (*http.Response, error) {
+func (h *Host) HttpHead(aurl_str string) (*http.Response, error) {
+	url, err := HackyAddressTransformAurlToURL(aurl_str)
+	if err != nil {
+		return nil, err
+	}
 	return h.http3Client.Head(url)
 }
-func (h *Host) HttpPost(url, contentType string, body io.Reader) (*http.Response, error) {
+func (h *Host) HttpPost(aurl_str, contentType string, body io.Reader) (*http.Response, error) {
+	url, err := HackyAddressTransformAurlToURL(aurl_str)
+	if err != nil {
+		return nil, err
+	}
 	return h.http3Client.Post(url, contentType, body)
 }
 

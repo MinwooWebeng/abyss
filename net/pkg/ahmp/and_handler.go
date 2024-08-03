@@ -250,16 +250,20 @@ func (m *ANDHandler) GetWorld(path string) (*ANDWorld, bool) {
 	return nil, false
 }
 
-func (m *ANDHandler) JoinConnected(local_path string, peer *pcn.Peer, path string) {
+func (m *ANDHandler) JoinConnected(local_path string, peer *pcn.Peer, path string) error {
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
-	m.algorithm.JoinConnected(local_path, &ANDPeerWrapper{peer}, path)
+	return m.algorithm.JoinConnected(local_path, &ANDPeerWrapper{peer}, path)
 }
 
-func (m *ANDHandler) JoinAny(local_path string, aurl *aurl.AURL) {
+func (m *ANDHandler) JoinAny(local_path string, aurl *aurl.AURL) error {
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
-	m.algorithm.JoinAny(local_path, aurl, aurl.Hash, aurl.Path)
+	if aurl.Scheme != "abyss" {
+		return errors.New("url scheme mismatch")
+	}
+
+	return m.algorithm.JoinAny(local_path, aurl, aurl.Hash, aurl.Path)
 }
