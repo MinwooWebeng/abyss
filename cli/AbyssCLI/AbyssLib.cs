@@ -35,11 +35,11 @@ namespace AbyssCLI
         public enum ANDEventType
         {
             Error = -1,
-            JoinDenied,
-            JoinExpired,
-            JoinSuccess,
-            PeerJoin,
-            PeerLeave,
+            JoinDenied, //0
+            JoinExpired,//1
+            JoinSuccess,//2
+            PeerJoin,   //3
+            PeerLeave,  //4
         }
         public class ANDEvent
         {
@@ -69,9 +69,9 @@ namespace AbyssCLI
             public void Close()
             {
                 [DllImport("../../../abyssnet.dll")]
-                static extern void Close(IntPtr handle);
+                static extern void CloseHttpResponse(IntPtr handle);
 
-                Close(response_handle);
+                CloseHttpResponse(response_handle);
             }
 
             public int GetStatus()
@@ -142,6 +142,40 @@ namespace AbyssCLI
                     static extern void CloseAbyssHost(IntPtr handle);
 
                     CloseAbyssHost(host_handle);
+                }
+            }
+            public string WaitError()
+            {
+                unsafe
+                {
+                    [DllImport("../../../abyssnet.dll")]
+                    static extern IntPtr GetAhmpError(IntPtr handle);
+
+                    var err_handle = GetAhmpError(host_handle);
+
+                    [DllImport("../../../abyssnet.dll")]
+                    static extern int GetErrorBodyLength(IntPtr err_handle);
+
+                    var err_length = GetErrorBodyLength(err_handle);
+
+                    [DllImport("../../../abyssnet.dll")]
+                    static extern int GetErrorBody(IntPtr err_handle, byte* buf, int buflen);
+
+                    [DllImport("../../../abyssnet.dll")]
+                    static extern void CloseError(IntPtr err_handle);
+
+                    var buf = new byte[err_length];
+                    fixed (byte* dBytes = buf)
+                    {
+                        var len = GetErrorBody(err_handle, dBytes, buf.Length);
+                        if (len != buf.Length)
+                        {
+                            CloseError(err_handle);
+                            return "";
+                        }
+                    }
+                    CloseError(err_handle);
+                    return Encoding.UTF8.GetString(buf);
                 }
             }
             public string LocalAddr()

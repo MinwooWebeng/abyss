@@ -65,7 +65,12 @@ func (p *Peer) CloseWithError(err error) {
 	if p.isClosed.CompareAndSwap(false, true) {
 		p.AHMPRx.CancelRead(0)
 		p.AHMPTx.CancelWrite(0)
-		p.InboundConnection.CloseWithError(0, err.Error())
-		p.OutboundConnection.CloseWithError(0, err.Error())
+		if err != nil {
+			p.InboundConnection.CloseWithError(0, err.Error())
+			p.OutboundConnection.CloseWithError(0, err.Error())
+		} else {
+			p.InboundConnection.CloseWithError(0, "")
+			p.OutboundConnection.CloseWithError(0, "")
+		}
 	}
 }

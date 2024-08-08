@@ -207,8 +207,8 @@ func (m *ANDHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 	case pcn.RST:
 		wuid, ok, _ := PayloadPopString(frame.Payload)
 		if !ok {
-			peer.CloseWithError(errors.New("CRR: failed to parse"))
-			return errors.New("CRR: failed to parse")
+			peer.CloseWithError(errors.New("RST: failed to parse"))
+			return errors.New("RST: failed to parse")
 		}
 		return m.algorithm.OnRST(&ANDPeerWrapper{peer}, wuid)
 	}

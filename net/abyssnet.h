@@ -75,8 +75,12 @@ extern "C" {
 #endif
 
 extern __declspec(dllexport) int GetVersion(char* buf, int buflen);
+extern __declspec(dllexport) void CloseError(uintptr_t error_handle);
+extern __declspec(dllexport) int GetErrorBodyLength(uintptr_t error_handle);
+extern __declspec(dllexport) int GetErrorBody(uintptr_t error_handle, char* buf, int buflen);
 extern __declspec(dllexport) uintptr_t NewAbyssHost(char* hash, int hash_len, char* backend_root, int backend_root_len);
 extern __declspec(dllexport) void CloseAbyssHost(uintptr_t handle);
+extern __declspec(dllexport) uintptr_t GetAhmpError(uintptr_t host_handle);
 extern __declspec(dllexport) int LocalAddr(uintptr_t host_handle, char* buf, int buflen);
 extern __declspec(dllexport) void RequestPeerConnect(uintptr_t host_handle, char* remoteaurl, int remoteaurl_len);
 extern __declspec(dllexport) void DisconnectPeer(uintptr_t host_handle, char* hash, int hash_len);

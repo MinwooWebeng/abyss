@@ -28,6 +28,33 @@ func GetVersion(buf *C.char, buflen C.int) C.int {
 	return TryMarshalBytes(buf, buflen, []byte(version))
 }
 
+type ErrorExport struct {
+	Err error
+}
+
+func MakeErrorExport(err error) C.uintptr_t {
+	return C.uintptr_t(cgo.NewHandle(&ErrorExport{
+		Err: err,
+	}))
+}
+
+//export CloseError
+func CloseError(error_handle C.uintptr_t) {
+	cgo.Handle(error_handle).Delete()
+}
+
+//export GetErrorBodyLength
+func GetErrorBodyLength(error_handle C.uintptr_t) C.int {
+	response := (cgo.Handle(error_handle)).Value().(*ErrorExport)
+	return C.int(len(response.Err.Error()))
+}
+
+//export GetErrorBody
+func GetErrorBody(error_handle C.uintptr_t, buf *C.char, buflen C.int) C.int {
+	response := (cgo.Handle(error_handle)).Value().(*ErrorExport)
+	return TryMarshalBytes(buf, buflen, []byte(response.Err.Error()))
+}
+
 type HostExport struct {
 	Host      *host.Host
 	CloseFunc context.CancelFunc
@@ -65,9 +92,14 @@ func NewAbyssHost(hash *C.char, hash_len C.int, backend_root *C.char, backend_ro
 
 //export CloseAbyssHost
 func CloseAbyssHost(handle C.uintptr_t) {
-	export := (cgo.Handle(handle)).Value().(*HostExport)
+	export := cgo.Handle(handle).Value().(*HostExport)
 	export.CloseFunc()
-	(cgo.Handle(handle)).Delete()
+	cgo.Handle(handle).Delete()
+}
+
+//export GetAhmpError
+func GetAhmpError(host_handle C.uintptr_t) C.uintptr_t {
+	return MakeErrorExport(cgo.Handle(host_handle).Value().(*HostExport).Host.AhmpServer.WaitError())
 }
 
 //export LocalAddr
@@ -207,21 +239,21 @@ func CloseHttpResponse(response_handle C.uintptr_t) {
 
 //export HttpGet
 func HttpGet(handle C.uintptr_t, url *C.char, url_len C.int) C.uintptr_t {
-	h := (cgo.Handle(handle)).Value().(*HostExport)
+	h := cgo.Handle(handle).Value().(*HostExport)
 	response, err := h.Host.HttpGet(string(UnmarshalBytes(url, url_len)))
 	return MakeHttpResponseExport(response, err)
 }
 
 //export HttpHead
 func HttpHead(handle C.uintptr_t, url *C.char, url_len C.int) C.uintptr_t {
-	h := (cgo.Handle(handle)).Value().(*HostExport)
+	h := cgo.Handle(handle).Value().(*HostExport)
 	response, err := h.Host.HttpHead(string(UnmarshalBytes(url, url_len)))
 	return MakeHttpResponseExport(response, err)
 }
 
 //export HttpPost
 func HttpPost(handle C.uintptr_t, url *C.char, url_len C.int, contentType *C.char, contentType_len C.int, body *C.char, bodylen C.int) C.uintptr_t {
-	h := (cgo.Handle(handle)).Value().(*HostExport)
+	h := cgo.Handle(handle).Value().(*HostExport)
 	response, err := h.Host.HttpPost(string(UnmarshalBytes(url, url_len)), string(UnmarshalBytes(contentType, contentType_len)), bytes.NewReader(UnmarshalBytes(body, bodylen)))
 	return MakeHttpResponseExport(response, err)
 }
