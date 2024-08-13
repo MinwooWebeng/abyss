@@ -434,10 +434,10 @@ func (h *NeighborDiscoveryHandler) OnJNI(peer INeighborDiscoveryPeerBase, world_
 	session, candidate := h.ValidateSessionMember(peer, world_uuid)
 	if session == nil && candidate == nil {
 		peer.SendRST(world_uuid)
-		return nil
+		return errors.New("JNI: not from member")
 	}
 	if candidate != nil {
-		return nil
+		return errors.New("JNI: not from candidate session member")
 	}
 
 	//check if joiner is connected
@@ -446,20 +446,21 @@ func (h *NeighborDiscoveryHandler) OnJNI(peer INeighborDiscoveryPeerBase, world_
 		//check if joiner is already member.
 		_, ok = session.members[joiner_hash]
 		if ok { //already member
-			return nil //ignore duplicate JNI
+			return errors.New("duplicate JNI: " + joiner_hash) //ignore duplicate JNI
 		}
 
 		//already connected, not a member
 		session.members[joiner_hash] = joiner
 		session.snb_targets[joiner_hash] = 3
 		h.SetSNBTimer(session)
+		h.event_listener <- NeighborDiscoveryEvent{PeerJoin, "", peer.GetHash(), peer, "", session.world, 0, ""}
 		return joiner.SendMEM(session.world)
 	}
 
 	//check if joiner is CC_MR
 	_, ok = session.CC_MR[joiner_hash]
 	if ok {
-		return nil //duplicate JNI. all peers in CC_MR is already dialing
+		return errors.New("duplicate JNI: " + joiner_hash) //duplicate JNI. all peers in CC_MR is already dialing
 	}
 
 	//not connected, not CC_MR

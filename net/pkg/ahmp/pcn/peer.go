@@ -1,7 +1,10 @@
 package pcn
 
 import (
+	"abyss/net/pkg/ahmp/serializer"
 	"abyss/net/pkg/aurl"
+	"errors"
+	"io"
 	"sync"
 	"sync/atomic"
 
@@ -58,6 +61,46 @@ func (p *Peer) SendMessageFrameSync2(payload_type FrameType, payloads ...[]byte)
 	defer p.txLock.Unlock()
 
 	return SendMessageFrame2(p.AHMPTx, payload_type, payloads...)
+}
+
+func writeSerializedToBuffer(buffer io.Writer, serialized *serializer.SerializedNode) (int, error) {
+	n := 0
+	if serialized.Body != nil {
+		b_n, err := buffer.Write(serialized.Body)
+		if err != nil {
+			return 0, err
+		}
+		n += b_n
+	}
+	if serialized.Leaf != nil {
+		for _, l := range serialized.Leaf {
+			l_n, err := writeSerializedToBuffer(buffer, l)
+			if err != nil {
+				return 0, err
+			}
+			n += l_n
+		}
+	}
+	return n, nil
+}
+
+func (p *Peer) SendSerializedMessageFrameSync(payload_type FrameType, serialized *serializer.SerializedNode) error {
+	p.txLock.Lock()
+	defer p.txLock.Unlock()
+
+	err := SendMessageFrameHeader(p.AHMPTx, payload_type, serialized.Size)
+	if err != nil {
+		return err
+	}
+
+	n, err := writeSerializedToBuffer(p.AHMPTx, serialized)
+	if err != nil {
+		return err
+	}
+	if n != serialized.Size {
+		return errors.New("SendMessageFrameSerialized: size mismatch")
+	}
+	return nil
 }
 
 // can be called anywhere, the server will automatically detect and issue an global peer disconnect event.

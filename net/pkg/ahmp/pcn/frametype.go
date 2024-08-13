@@ -2,6 +2,7 @@ package pcn
 
 type FrameType uint64
 
+// abyss neighbor discovery
 const (
 	ID FrameType = iota
 	JN
@@ -14,6 +15,15 @@ const (
 	RST
 )
 
+// shared object model
+const (
+	SOR FrameType = iota + 20 //request
+	SO                        //init
+	SOA                       //new
+	SOD                       //delete
+)
+
+// ping
 const (
 	PINGT FrameType = iota + 60
 	PINGR

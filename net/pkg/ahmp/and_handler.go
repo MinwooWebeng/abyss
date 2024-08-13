@@ -3,6 +3,7 @@ package ahmp
 import (
 	"abyss/net/pkg/ahmp/and"
 	"abyss/net/pkg/ahmp/pcn"
+	"abyss/net/pkg/ahmp/serializer"
 	"abyss/net/pkg/aurl"
 	"context"
 	"encoding/json"
@@ -96,44 +97,42 @@ func (m *ANDHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
-	/// Debug
-	// fmt.Println("from", peer.Address.Hash, frame.Type.String(), "to", peer.InboundConnection.LocalAddr())
-	///
 	switch frame.Type { //TODO: parse message and synchronize between calls.
 	case pcn.JN:
-		return m.algorithm.OnJN(&ANDPeerWrapper{peer}, string(frame.Payload))
+		deserialized, _, ok := serializer.DeserializeString(frame.Payload)
+		if !ok {
+			return errors.New("JN: failed to parse")
+		}
+		return m.algorithm.OnJN(&ANDPeerWrapper{peer}, deserialized)
 	case pcn.JOK:
-		path, ok, rem := PayloadPopString(frame.Payload)
+		path, ulen1, ok := serializer.DeserializeString(frame.Payload)
 		if !ok {
-			peer.CloseWithError(errors.New("JOK: failed to parse"))
-			return errors.New("JOK: failed to parse")
+			return errors.New("JOK: failed to parse path")
 		}
-		world_json, ok, rem := PayloadPopByteSlice(rem)
+		payload_rem := frame.Payload[ulen1:]
+		world_json, ulen2, ok := serializer.DeserializeBytes(payload_rem)
 		if !ok {
-			peer.CloseWithError(errors.New("JOK: failed to parse"))
-			return errors.New("JOK: failed to parse")
-		}
-		world, err := ParseANDWorldJson(world_json)
-		if err != nil {
-			peer.CloseWithError(errors.New("JOK: failed to parse json"))
 			return errors.New("JOK: failed to parse json")
 		}
-		member_addrs := []any{}
-		for {
-			var addr_str string
-			addr_str, ok, rem = PayloadPopString(rem)
-			if !ok {
-				break
-			}
-			addr, err := aurl.ParseAURL(addr_str)
-			if err != nil {
-				peer.CloseWithError(errors.New("JOK: failed to parse member address: " + addr_str))
-				return errors.New("JOK: failed to parse member address: " + addr_str)
-			}
-			// fmt.Println("...", addr.String())
-			member_addrs = append(member_addrs, addr)
+		payload_rem = payload_rem[ulen2:]
+
+		world, err := ParseANDWorldJson(world_json)
+		if err != nil {
+			return errors.New("JOK: failed to parse json")
 		}
-		return m.algorithm.OnJOK(&ANDPeerWrapper{peer}, path, world, member_addrs)
+
+		member_addrs, _, ok := serializer.DeserializeStringArray(payload_rem)
+		if !ok {
+			return errors.New("JOK: failed to parse member addresses")
+		}
+		member_addrs_any := make([]any, len(member_addrs))
+		for i, a := range member_addrs {
+			member_addrs_any[i], err = aurl.ParseAURL(a)
+			if err != nil {
+				return errors.New("JOK: failed to parse member addresses(" + a + ")")
+			}
+		}
+		return m.algorithm.OnJOK(&ANDPeerWrapper{peer}, path, world, member_addrs_any)
 	case pcn.JDN:
 		path, ok, rem := PayloadPopString(frame.Payload)
 		if !ok {
@@ -211,6 +210,17 @@ func (m *ANDHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 			return errors.New("RST: failed to parse")
 		}
 		return m.algorithm.OnRST(&ANDPeerWrapper{peer}, wuid)
+		// case pcn.SO:
+		// 	world_uuid, ulen1, ok := serializer.DeserializeString(frame.Payload)
+		// 	if !ok {
+		// 		return errors.New("SO: failed to parse world uuid")
+		// 	}
+		// 	body_rem := frame.Payload[ulen1:]
+
+		// 	objects, _, ok := serializer.DeserializeObjectArray(body_rem, som.DeserialzeSharedObject)
+		// 	if !ok {
+		// 		return errors.New("SO: failed to parse objects")
+		// 	}
 	}
 	return errors.New("ahmp message unhandled")
 }

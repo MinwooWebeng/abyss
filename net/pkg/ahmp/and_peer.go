@@ -3,6 +3,7 @@ package ahmp
 import (
 	"abyss/net/pkg/ahmp/and"
 	"abyss/net/pkg/ahmp/pcn"
+	"abyss/net/pkg/ahmp/serializer"
 	"abyss/net/pkg/aurl"
 	"abyss/net/pkg/nettype"
 	"reflect"
@@ -44,18 +45,18 @@ func (p *ANDPeerWrapper) SendMessageFrameSyncMarshal(payload_type pcn.FrameType,
 }
 
 func (p *ANDPeerWrapper) SendJN(path string) error {
-	return p.SendMessageFrameSync2(pcn.JN, []byte(path))
+	return p.SendSerializedMessageFrameSync(pcn.JN, serializer.SerializeString(path))
 }
 func (p *ANDPeerWrapper) SendJOK(path string, world and.INeighborDiscoveryWorldBase, member_addrs []any) error {
-	//dirty code due to go's lack of variadic packing
-	sugar_buf := make([]any, len(member_addrs)+2)
-	sugar_buf[0] = path
-	sugar_buf[1] = world.GetJsonBytes()
+	address_strings := make([]string, len(member_addrs))
 	for i, addr := range member_addrs {
-		sugar_buf[i+2] = addr.(*aurl.AURL).String()
+		address_strings[i] = addr.(*aurl.AURL).String()
 	}
-
-	return p.SendMessageFrameSyncMarshal(pcn.JOK, sugar_buf...)
+	return p.SendSerializedMessageFrameSync(pcn.JOK, serializer.SerializeJoinRaw([]*serializer.SerializedNode{
+		serializer.SerializeString(path),
+		serializer.SerializeBytes(world.GetJsonBytes()),
+		serializer.SerializeStringArray(address_strings),
+	}))
 }
 func (p *ANDPeerWrapper) SendJDN(path string, status int, message string) error {
 	return p.SendMessageFrameSyncMarshal(pcn.JDN, path, uint64(status), message)

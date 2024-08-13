@@ -82,3 +82,17 @@ func SendMessageFrame2(writer io.Writer, payload_type FrameType, payloads ...[]b
 	}
 	return nil
 }
+
+func SendMessageFrameHeader(writer io.Writer, payload_type FrameType, payload_size int) error {
+	buf := [16]byte{}
+	cl_len, ok := nettype.TryWriteQuicUint(uint64(payload_size), buf[:])
+	if !ok {
+		return errors.New("AHMP Frame: Content-Length encoding fail")
+	}
+	ty_len, ok := nettype.TryWriteQuicUint(uint64(payload_type), buf[cl_len:])
+	if !ok {
+		return errors.New("AHMP Frame: Type encoding fail")
+	}
+	_, err := writer.Write(buf[:cl_len+ty_len])
+	return err
+}
