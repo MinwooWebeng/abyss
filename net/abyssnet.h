@@ -88,6 +88,15 @@ extern __declspec(dllexport) int WaitANDEvent(uintptr_t host_handle, char* buf, 
 extern __declspec(dllexport) int OpenWorld(uintptr_t host_handle, char* path, int path_len, char* url, int url_len);
 extern __declspec(dllexport) void CloseWorld(uintptr_t host_handle, char* path, int path_len);
 extern __declspec(dllexport) void Join(uintptr_t host_handle, char* localpath, int localpath_len, char* remoteaurl, int remoteaurl_len);
+extern __declspec(dllexport) uintptr_t SOMRequestService(uintptr_t host_handle, GoString peer_hash, GoString world_uuid);
+extern __declspec(dllexport) void SOMInitiateService(uintptr_t host_handle, GoString peer_hash, GoString world_uuid);
+extern __declspec(dllexport) void SOMTerminateService(uintptr_t host_handle, GoString peer_hash, GoString world_uuid);
+extern __declspec(dllexport) void SOMRegisterObject(uintptr_t host_handle, GoString url, GoString object_uuid);
+extern __declspec(dllexport) uintptr_t SOMShareObject(uintptr_t host_handle, char* objects_uuid, int objects_uuid_len, char* world_uuid, int world_uuid_len, char* peer_uuid, int peer_uuid_len);
+extern __declspec(dllexport) void SOMCloseEvent(uintptr_t event_handle);
+extern __declspec(dllexport) int SOMGetEventBodyLength(uintptr_t event_handle);
+extern __declspec(dllexport) int SOMGetEventBody(uintptr_t event_handle, char* buf, int buflen);
+extern __declspec(dllexport) uintptr_t SOMWaitEvent(uintptr_t host_handle);
 extern __declspec(dllexport) void CloseHttpResponse(uintptr_t response_handle);
 extern __declspec(dllexport) uintptr_t HttpGet(uintptr_t handle, char* url, int url_len);
 extern __declspec(dllexport) uintptr_t HttpHead(uintptr_t handle, char* url, int url_len);

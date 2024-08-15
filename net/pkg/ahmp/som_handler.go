@@ -3,10 +3,10 @@ package ahmp
 import (
 	advancedmap "abyss/net/pkg/advanced_map"
 	"abyss/net/pkg/ahmp/pcn"
-	"abyss/net/pkg/ahmp/serializer"
 	"abyss/net/pkg/ahmp/ws"
 	"abyss/net/pkg/aurl"
 	"abyss/net/pkg/functional"
+	"abyss/net/pkg/serializer"
 	"context"
 	"errors"
 	"sync"
@@ -21,9 +21,9 @@ const (
 )
 
 type SomEvent struct {
+	Type        SomEventType
 	PeerHash    string
 	WorldUUID   string
-	Type        SomEventType
 	SomObjects  []*ws.SharedObject //SO, SOA
 	SomObjUUIDs []string           //SOD
 }
@@ -216,6 +216,6 @@ func (m *SOMHandler) ShareObject(object_uuids []string, world_uuid string, peer_
 	return nil
 }
 
-func (m *SOMHandler) WaitEvent() {
-
+func (m *SOMHandler) WaitEvent() *SomEvent {
+	return <-m.event_ch
 }

@@ -2,6 +2,7 @@ package host
 
 import (
 	"abyss/net/pkg/ahmp"
+	"abyss/net/pkg/ahmp/pcn"
 	"abyss/net/pkg/aurl"
 	"context"
 	"crypto/ed25519"
@@ -41,7 +42,7 @@ type Host struct {
 	error_log   chan error
 }
 
-func NewHost(ctx context.Context, local_identity string, ahmp_handler ahmp.AhmpHandler, http_handler http.Handler, cookie_jar http.CookieJar) (*Host, error) {
+func NewHost(ctx context.Context, local_identity string, peer_container *pcn.PeerContainer, ahmp_handler ahmp.AhmpHandler, http_handler http.Handler, cookie_jar http.CookieJar) (*Host, error) {
 	h := &Host{
 		LocalIdentity: local_identity,
 	}
@@ -60,11 +61,13 @@ func NewHost(ctx context.Context, local_identity string, ahmp_handler ahmp.AhmpH
 		return nil, err
 	}
 	h.QuicConf = defaultQuicConf
-	h.AhmpServer = ahmp.NewServer(
-		ctx,
-		NewDefaultDialer(ctx, h.QuicTransport, h.TlsConf, h.QuicConf, h.LocalIdentity),
-		ahmp_handler,
-	)
+	h.AhmpServer = &ahmp.Server{
+		Context:       ctx,
+		Dialer:        NewDefaultDialer(ctx, h.QuicTransport, h.TlsConf, h.QuicConf, h.LocalIdentity),
+		AhmpHandler:   ahmp_handler,
+		ErrLog:        make(chan error, 64),
+		PeerContainer: peer_container,
+	}
 	h.Http3Server = &http3.Server{
 		Handler: http_handler,
 	}

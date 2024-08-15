@@ -18,24 +18,22 @@ type Dialer interface {
 }
 
 type Server struct {
-	Context     context.Context
-	Dialer      Dialer
-	AhmpHandler AhmpHandler
-	ErrLog      chan error
-
-	//internal
-	peer_container *pcn.PeerContainer
+	Context       context.Context
+	Dialer        Dialer
+	AhmpHandler   AhmpHandler
+	ErrLog        chan error
+	PeerContainer *pcn.PeerContainer
 }
 
-func NewServer(ctx context.Context, dialer Dialer, ahmpHandler AhmpHandler) *Server {
-	return &Server{
-		Context:        ctx,
-		Dialer:         dialer,
-		AhmpHandler:    ahmpHandler,
-		ErrLog:         make(chan error, 128),
-		peer_container: pcn.NewPeerContainer(),
-	}
-}
+// func NewServer(ctx context.Context, dialer Dialer, ahmpHandler AhmpHandler) *Server {
+// 	return &Server{
+// 		Context:        ctx,
+// 		Dialer:         dialer,
+// 		AhmpHandler:    ahmpHandler,
+// 		ErrLog:         make(chan error, 128),
+// 		peer_container: pcn.NewPeerContainer(),
+// 	}
+// }
 
 type PartialPeerServeError struct {
 	Address net.Addr
@@ -55,12 +53,19 @@ func (e *PartialPeerConsumeError) Error() string {
 	return "PartialPeerConsumeError(" + e.ConnectAURL.String() + "):" + e.Err.Error()
 }
 
+type AhmpServeError struct {
+	PeerHash string
+	Err      error
+}
+
+func (e *AhmpServeError) Error() string {
+	return "AhmpServeError(" + e.PeerHash + "):" + e.Err.Error()
+}
+
 func (s *Server) TryLogError(err error) {
-	if err != nil {
-		select {
-		case s.ErrLog <- err:
-		default:
-		}
+	select {
+	case s.ErrLog <- err:
+	default:
 	}
 }
 
@@ -91,7 +96,7 @@ func (s *Server) ServeQUICConn(connection quic.Connection) {
 	}
 	//TODO: check init frame
 
-	new_peer, state, ok := s.peer_container.AddInboundConnection(remote_aurl, connection, ahmp_stream)
+	new_peer, state, ok := s.PeerContainer.AddInboundConnection(remote_aurl, connection, ahmp_stream)
 	if !ok {
 		connection.CloseWithError(0, "redundant connection")
 		s.TryLogError(&PartialPeerServeError{connection.RemoteAddr(), errors.New("redundant connection")})
@@ -118,7 +123,7 @@ func (s *Server) ConsumeQUICConn(aurl *aurl.AURL, connection quic.Connection) {
 		return
 	}
 
-	new_peer, state, ok := s.peer_container.AddOutboundConnection(aurl, connection, ahmp_stream)
+	new_peer, state, ok := s.PeerContainer.AddOutboundConnection(aurl, connection, ahmp_stream)
 	if !ok {
 		connection.CloseWithError(0, "redundant connection")
 		s.TryLogError(&PartialPeerConsumeError{aurl, errors.New("redundant connection")})
@@ -132,7 +137,9 @@ func (s *Server) ConsumeQUICConn(aurl *aurl.AURL, connection quic.Connection) {
 
 func (s *Server) servePeer(peer *pcn.Peer) {
 	err := s.AhmpHandler.OnConnected(s.Context, peer)
-	s.TryLogError(err)
+	if err != nil {
+		s.TryLogError(&AhmpServeError{peer.Address.Hash, err})
+	}
 
 	var msg *pcn.MessageFrame
 	var err_recv error
@@ -143,16 +150,18 @@ func (s *Server) servePeer(peer *pcn.Peer) {
 			break
 		}
 		err = s.AhmpHandler.ServeMessage(s.Context, peer, msg)
-		s.TryLogError(err)
+		if err != nil {
+			s.TryLogError(&AhmpServeError{peer.Address.Hash, err})
+		}
 	}
 
 	err_close := s.AhmpHandler.OnClosed(s.Context, peer)
 	if err_close != nil {
-		s.TryLogError(err_close)
+		s.TryLogError(&AhmpServeError{peer.Address.Hash, err_close})
 	}
 
 	//free from peer container. this allows new connection from same peer.
-	_, ok := s.peer_container.Pop(peer.Address.Hash)
+	_, ok := s.PeerContainer.Pop(peer.Address.Hash)
 	if !ok {
 		panic("servePeer: closing peer is not removed from peer container")
 	}
@@ -162,16 +171,16 @@ func (s *Server) RequestPeerConnect(aurl *aurl.AURL) {
 	if aurl.Hash == s.Dialer.LocalAddress().Hash { //prevent self connection
 		return
 	}
-	if _, ok := s.peer_container.Get(aurl.Hash); ok { //peer already connected
+	if _, ok := s.PeerContainer.Get(aurl.Hash); ok { //peer already connected
 		return
 	}
 
 	go func() {
 		connection, err := s.Dialer.Dial(aurl)
 		if err != nil {
-			err := s.AhmpHandler.OnConnectFailed(s.Context, aurl)
-			if err != nil {
-				s.TryLogError(err)
+			conn_fail_err := s.AhmpHandler.OnConnectFailed(s.Context, aurl)
+			if conn_fail_err != nil {
+				s.TryLogError(&AhmpServeError{aurl.Hash, conn_fail_err})
 			}
 			return
 		}
@@ -181,7 +190,7 @@ func (s *Server) RequestPeerConnect(aurl *aurl.AURL) {
 }
 
 func (s *Server) TryGetPeer(hash string) (*pcn.Peer, bool) {
-	return s.peer_container.Get(hash)
+	return s.PeerContainer.Get(hash)
 }
 
 func (s *Server) WaitError() error {

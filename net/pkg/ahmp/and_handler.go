@@ -3,8 +3,8 @@ package ahmp
 import (
 	"abyss/net/pkg/ahmp/and"
 	"abyss/net/pkg/ahmp/pcn"
-	"abyss/net/pkg/ahmp/serializer"
 	"abyss/net/pkg/aurl"
+	"abyss/net/pkg/serializer"
 	"context"
 	"encoding/json"
 	"errors"
@@ -210,17 +210,6 @@ func (m *ANDHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 			return errors.New("RST: failed to parse")
 		}
 		return m.algorithm.OnRST(&ANDPeerWrapper{peer}, wuid)
-		// case pcn.SO:
-		// 	world_uuid, ulen1, ok := serializer.DeserializeString(frame.Payload)
-		// 	if !ok {
-		// 		return errors.New("SO: failed to parse world uuid")
-		// 	}
-		// 	body_rem := frame.Payload[ulen1:]
-
-		// 	objects, _, ok := serializer.DeserializeObjectArray(body_rem, som.DeserialzeSharedObject)
-		// 	if !ok {
-		// 		return errors.New("SO: failed to parse objects")
-		// 	}
 	}
 	return errors.New("ahmp message unhandled")
 }

@@ -3,6 +3,7 @@ package test
 import (
 	"abyss/net/pkg/ahmp"
 	"abyss/net/pkg/ahmp/and"
+	"abyss/net/pkg/ahmp/pcn"
 	"abyss/net/pkg/cpb"
 	"abyss/net/pkg/host"
 	"context"
@@ -19,14 +20,14 @@ func TestHost(t *testing.T) {
 	hostA_events := make(chan and.NeighborDiscoveryEvent)
 	hostA_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostA", hostA_events)
 	hostA_player_backend, _ := cpb.NewDefaultPlayerBackend("./")
-	hostA, _ := host.NewHost(context.Background(), "hostA", hostA_ahmp_handler, hostA_player_backend, http.DefaultClient.Jar)
+	hostA, _ := host.NewHost(context.Background(), "hostA", pcn.NewPeerContainer(), hostA_ahmp_handler, hostA_player_backend, http.DefaultClient.Jar)
 	hostA.ListenAndServeAsync(context.Background())
 	hostA_localaddr, _ := hostA.LocalAddr().(*net.UDPAddr)
 
 	hostB_events := make(chan and.NeighborDiscoveryEvent)
 	hostB_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostB", hostB_events)
 	hostB_player_backend, _ := cpb.NewDefaultPlayerBackend("./")
-	hostB, _ := host.NewHost(context.Background(), "hostB", hostB_ahmp_handler, hostB_player_backend, http.DefaultClient.Jar)
+	hostB, _ := host.NewHost(context.Background(), "hostB", pcn.NewPeerContainer(), hostB_ahmp_handler, hostB_player_backend, http.DefaultClient.Jar)
 	hostB.ListenAndServeAsync(context.Background())
 	hostB_localaddr, _ := hostB.LocalAddr().(*net.UDPAddr)
 
@@ -46,11 +47,11 @@ func TestHost(t *testing.T) {
 
 func TestPingHost(t *testing.T) {
 	hostA_ping_handler := ahmp.NewPingHandler()
-	hostA, _ := host.NewHost(context.Background(), "hostA", hostA_ping_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostA, _ := host.NewHost(context.Background(), "hostA", pcn.NewPeerContainer(), hostA_ping_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
 	hostA.ListenAndServeAsync(context.Background())
 
 	hostB_ping_handler := ahmp.NewPingHandler()
-	hostB, _ := host.NewHost(context.Background(), "hostB", hostB_ping_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostB, _ := host.NewHost(context.Background(), "hostB", pcn.NewPeerContainer(), hostB_ping_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
 	hostB.ListenAndServeAsync(context.Background())
 
 	hostA.AhmpServer.RequestPeerConnect(hostB.AhmpServer.Dialer.LocalAddress())
@@ -81,28 +82,28 @@ func TestSimpleNeighbor(t *testing.T) {
 	hostA_events := make(chan and.NeighborDiscoveryEvent)
 	go PrintEvent(">>> hostA", hostA_events)
 	hostA_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostA", hostA_events)
-	hostA, _ := host.NewHost(context.Background(), "hostA", hostA_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostA, _ := host.NewHost(context.Background(), "hostA", pcn.NewPeerContainer(), hostA_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
 	hostA.ListenAndServeAsync(context.Background())
 	hostA_ahmp_handler.ReserveConnectCallback(hostA.AhmpServer.RequestPeerConnect)
 
 	hostB_events := make(chan and.NeighborDiscoveryEvent)
 	go PrintEvent(">>> hostB", hostB_events)
 	hostB_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostB", hostB_events)
-	hostB, _ := host.NewHost(context.Background(), "hostB", hostB_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostB, _ := host.NewHost(context.Background(), "hostB", pcn.NewPeerContainer(), hostB_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
 	hostB.ListenAndServeAsync(context.Background())
 	hostB_ahmp_handler.ReserveConnectCallback(hostB.AhmpServer.RequestPeerConnect)
 
 	hostC_events := make(chan and.NeighborDiscoveryEvent)
 	go PrintEvent(">>> hostC", hostC_events)
 	hostC_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostC", hostC_events)
-	hostC, _ := host.NewHost(context.Background(), "hostC", hostC_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostC, _ := host.NewHost(context.Background(), "hostC", pcn.NewPeerContainer(), hostC_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
 	hostC.ListenAndServeAsync(context.Background())
 	hostC_ahmp_handler.ReserveConnectCallback(hostC.AhmpServer.RequestPeerConnect)
 
 	hostD_events := make(chan and.NeighborDiscoveryEvent)
 	go PrintEvent(">>> hostD", hostD_events)
 	hostD_ahmp_handler := ahmp.NewANDHandler(context.Background(), "hostD", hostD_events)
-	hostD, _ := host.NewHost(context.Background(), "hostD", hostD_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
+	hostD, _ := host.NewHost(context.Background(), "hostD", pcn.NewPeerContainer(), hostD_ahmp_handler, &cpb.PlayerBackend{}, http.DefaultClient.Jar)
 	hostD.ListenAndServeAsync(context.Background())
 	hostD_ahmp_handler.ReserveConnectCallback(hostD.AhmpServer.RequestPeerConnect)
 

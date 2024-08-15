@@ -1,7 +1,7 @@
 package ws
 
 import (
-	"abyss/net/pkg/ahmp/serializer"
+	"abyss/net/pkg/serializer"
 
 	"github.com/google/uuid"
 )
