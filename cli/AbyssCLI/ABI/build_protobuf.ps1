@@ -1,0 +1,1 @@
+﻿protoc -I="." --csharp_out="." .\RenderAction.proto

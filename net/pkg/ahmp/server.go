@@ -55,11 +55,12 @@ func (e *PartialPeerConsumeError) Error() string {
 
 type AhmpServeError struct {
 	PeerHash string
+	Origin   string
 	Err      error
 }
 
 func (e *AhmpServeError) Error() string {
-	return "AhmpServeError(" + e.PeerHash + "):" + e.Err.Error()
+	return "AhmpServeError(" + e.PeerHash + ")" + e.Origin + ":" + e.Err.Error()
 }
 
 func (s *Server) TryLogError(err error) {
@@ -138,7 +139,7 @@ func (s *Server) ConsumeQUICConn(aurl *aurl.AURL, connection quic.Connection) {
 func (s *Server) servePeer(peer *pcn.Peer) {
 	err := s.AhmpHandler.OnConnected(s.Context, peer)
 	if err != nil {
-		s.TryLogError(&AhmpServeError{peer.Address.Hash, err})
+		s.TryLogError(&AhmpServeError{peer.Address.Hash, "OnConnected", err})
 	}
 
 	var msg *pcn.MessageFrame
@@ -151,13 +152,13 @@ func (s *Server) servePeer(peer *pcn.Peer) {
 		}
 		err = s.AhmpHandler.ServeMessage(s.Context, peer, msg)
 		if err != nil {
-			s.TryLogError(&AhmpServeError{peer.Address.Hash, err})
+			s.TryLogError(&AhmpServeError{peer.Address.Hash, "ServeMessage", err})
 		}
 	}
 
 	err_close := s.AhmpHandler.OnClosed(s.Context, peer)
 	if err_close != nil {
-		s.TryLogError(&AhmpServeError{peer.Address.Hash, err_close})
+		s.TryLogError(&AhmpServeError{peer.Address.Hash, "OnClosed", err_close})
 	}
 
 	//free from peer container. this allows new connection from same peer.
@@ -180,7 +181,7 @@ func (s *Server) RequestPeerConnect(aurl *aurl.AURL) {
 		if err != nil {
 			conn_fail_err := s.AhmpHandler.OnConnectFailed(s.Context, aurl)
 			if conn_fail_err != nil {
-				s.TryLogError(&AhmpServeError{aurl.Hash, conn_fail_err})
+				s.TryLogError(&AhmpServeError{aurl.Hash, "OnConnectFailed", conn_fail_err})
 			}
 			return
 		}

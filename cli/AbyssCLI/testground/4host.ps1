@@ -1,0 +1,4 @@
+Start-Process powershell.exe {./host.ps1 --id=hostA --root=D:\WORKS\github\abyss\temp --commands='help>> LocalAddr' > hostA.log}
+Start-Process powershell.exe {./host.ps1 --id=hostB --root=D:\WORKS\github\abyss\temp --commands='LocalAddr>> AndOpenWorld /B https:room.world>> SomRegisterObject abyst:hostB/cat.obj bb80c2cf-de4b-473c-8560-42409fa734d1' > hostB.log}
+Start-Process powershell.exe {./host.ps1 --id=hostC --root=D:\WORKS\github\abyss\temp --commands='LocalAddr' > hostC.log}
+Start-Process powershell.exe {./host.ps1 --id=hostD --root=D:\WORKS\github\abyss\temp --commands='LocalAddr' > hostD.log}

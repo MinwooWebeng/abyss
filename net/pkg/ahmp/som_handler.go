@@ -125,6 +125,7 @@ func (m *SOMHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 			Type:       SomAppend,
 			SomObjects: objects,
 		}
+		return nil
 	case pcn.SOD:
 		world_uuid, rem := functional.MaybeYield(functional.MakeMaybe(frame.Payload), serializer.LegacyDes(serializer.DeserializeString))
 		object_uuids, rem := functional.MaybeYield(rem, serializer.LegacyDes(serializer.DeserializeStringArray))
@@ -138,6 +139,7 @@ func (m *SOMHandler) ServeMessage(ctx context.Context, peer *pcn.Peer, frame *pc
 			Type:        SomDelete,
 			SomObjUUIDs: object_uuids,
 		}
+		return nil
 	}
 	return errors.ErrUnsupported
 }
@@ -183,7 +185,7 @@ func (m *SOMHandler) RegisterObject(object *ws.SharedObject) {
 	m.objects[object.UUID.String()] = object
 }
 
-func (m *SOMHandler) ShareObject(object_uuids []string, world_uuid string, peer_hash string) error {
+func (m *SOMHandler) ShareObject(peer_hash string, world_uuid string, object_uuids []string) error {
 	peer, ok := m.peer_container.Get(peer_hash)
 	if !ok {
 		return errors.New("RequestSOMService: peer not connected")

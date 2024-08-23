@@ -1,0 +1,4 @@
+D:\win-x64-native\AbyssHost.dll
+D:\win-x64-native\AbyssHost.pdb
+D:\win-x64-native\Google.Protobuf.dll
+D:\win-x64-native\AbyssHost.deps.json

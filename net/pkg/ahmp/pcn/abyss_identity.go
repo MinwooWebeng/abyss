@@ -42,7 +42,7 @@ func MakeAbyssIdentity(publickey []byte, name string) (AbyssIdentity, error) {
 		}
 		identity.Parsed_publickey = parsed_publickey
 	default:
-		return identity, errors.New("unsupported public key")
+		return identity, errors.New(" public key")
 	}
 
 	hashfunc := sha3.New256()

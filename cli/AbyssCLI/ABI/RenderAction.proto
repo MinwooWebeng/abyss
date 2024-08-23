@@ -1,0 +1,23 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "AbyssCLI.ABI";
+
+message RenderAction {
+	message CreateElement {
+		int32 parent_id = 1;
+		int32 element_id = 2;
+	}
+	message MoveElement {
+		int32 element_id = 1;
+		int32 new_parent_id = 2;
+	}
+	message RemoveElement {
+		int32 element_id = 1;
+	}
+
+	oneof inner {
+		CreateElement create_element = 1;
+		MoveElement move_element = 2;
+		RemoveElement remove_element = 3;
+	}
+}

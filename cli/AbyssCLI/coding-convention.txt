@@ -1,0 +1,18 @@
+﻿class UpperCamelCase
+{
+	nested class
+
+	constructor
+	destructor
+
+	public method UpperCamelCase
+	public override method UpperCamelCase
+
+	public parameter UpperCamelCase {get; set}
+
+	protected... UpperCamelCase
+
+	private... _lowerCamelCase
+}
+
+local variable snake_case

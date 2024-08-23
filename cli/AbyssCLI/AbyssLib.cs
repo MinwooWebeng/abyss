@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Mime;
-using System.Reflection.Metadata;
+﻿using Microsoft.VisualBasic;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
+#nullable enable
 namespace AbyssCLI
 {
-    static public class AbyssLib
+    static internal class AbyssLib
     {
         static public string GetVersion()
         {
             unsafe
             {
-                [DllImport("../../../abyssnet.dll")]
+                [DllImport("abyssnet.dll")]
                 static extern int GetVersion(byte* buf, int buflen);
 
                 fixed (byte* pBytes = new byte[16])
@@ -32,7 +26,46 @@ namespace AbyssCLI
                 }
             }
         }
-        public enum ANDEventType
+        public class AbyssDllError
+        {
+            public AbyssDllError(IntPtr error_handle)
+            {
+                if (error_handle == IntPtr.Zero)
+                    throw new ArgumentNullException(nameof(error_handle));
+                this.error_handle = error_handle;
+            }
+            public override string ToString()
+            {
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern int GetErrorBodyLength(IntPtr err_handle);
+
+                    [DllImport("abyssnet.dll")]
+                    static extern int GetErrorBody(IntPtr err_handle, byte* buf, int buflen);
+
+                    var msg_len = GetErrorBodyLength(error_handle);
+                    var buf = new byte[msg_len];
+                    fixed (byte* dBytes = buf)
+                    {
+                        var len = GetErrorBody(error_handle, dBytes, buf.Length);
+                        if (len != buf.Length)
+                        {
+                            throw new Exception("AbyssDLL: buffer write failure");
+                        }
+                        return Encoding.UTF8.GetString(buf);
+                    }
+                }
+            }
+            ~AbyssDllError()
+            {
+                [DllImport("abyssnet.dll")]
+                static extern void CloseError(IntPtr err_handle);
+                CloseError(error_handle);
+            }
+            private readonly IntPtr error_handle;
+        }
+        public enum AndEventType
         {
             Error = -1,
             JoinDenied, //0
@@ -41,9 +74,9 @@ namespace AbyssCLI
             PeerJoin,   //3
             PeerLeave,  //4
         }
-        public class ANDEvent
+        public class AndEvent
         {
-            public ANDEvent(ANDEventType Type, int Status, string Message, string LocalPath, string PeerHash, string WorldJson)
+            public AndEvent(AndEventType Type, int Status, string Message, string LocalPath, string PeerHash, string WorldJson)
             {
                 this.Type = Type;
                 this.Status = Status;
@@ -52,12 +85,42 @@ namespace AbyssCLI
                 this.PeerHash = PeerHash;
                 this.WorldJson = WorldJson;
             }
-            public ANDEventType Type { get; }
+            public AndEventType Type { get; }
             public int Status { get; }
             public string Message { get; }
             public string LocalPath { get; }
             public string PeerHash { get; }
             public string WorldJson { get; }
+        }
+        public enum SomEventType
+        {
+            Invalid = -1,  //SOM service termiated
+            SomReNew,
+            SomAppend,
+            SomDelete,
+        }
+        public class SomEvent
+        {
+            public SomEvent(SomEventType type, string peer_hash, string world_uuid, Tuple<string, string>[] objects_info)
+            {
+                Type = type;
+                PeerHash = peer_hash;
+                WorldUUID = world_uuid;
+                ObjectsInfo = objects_info;
+            }
+            public SomEventType Type { get; }
+            public string PeerHash { get; }
+            public string WorldUUID { get; }
+            public Tuple<string /*url(empty on SOD)*/, string /*uuid*/>[] ObjectsInfo { get; }
+            public override string ToString()
+            {
+                return string.Concat(
+                    Convert.ChangeType(Type, Enum.GetUnderlyingType(Type.GetType())).ToString(), " ",
+                    PeerHash, " ",
+                    WorldUUID, " [",
+                    Strings.Join(ObjectsInfo.Select(e => e.Item1 + "-" + e.Item2).ToArray(), ", "), "]"
+                );
+            }
         }
         public class AbyssHttpResponse
         {
@@ -65,10 +128,9 @@ namespace AbyssCLI
             {
                 response_handle = handle;
             }
-
-            public void Close()
+            ~AbyssHttpResponse()
             {
-                [DllImport("../../../abyssnet.dll")]
+                [DllImport("abyssnet.dll")]
                 static extern void CloseHttpResponse(IntPtr handle);
 
                 CloseHttpResponse(response_handle);
@@ -76,14 +138,14 @@ namespace AbyssCLI
 
             public int GetStatus()
             {
-                [DllImport("../../../abyssnet.dll")]
+                [DllImport("abyssnet.dll")]
                 static extern int GetReponseStatus(IntPtr handle);
 
                 return GetReponseStatus(response_handle);
             }
             public int GetBodyLength()
             {
-                [DllImport("../../../abyssnet.dll")]
+                [DllImport("abyssnet.dll")]
                 static extern int GetReponseBodyLength(IntPtr handle);
 
                 return GetReponseBodyLength(response_handle);
@@ -92,7 +154,7 @@ namespace AbyssCLI
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern int GetResponseBody(IntPtr handle, byte* buf, int buflen);
 
                     var buf = new byte[GetBodyLength()];
@@ -101,7 +163,7 @@ namespace AbyssCLI
                         var len = GetResponseBody(response_handle, dBytes, buf.Length);
                         if (len != buf.Length)
                         {
-                            return Array.Empty<byte>();
+                            throw new Exception("AbyssDLL: buffer write failure");
                         }
                     }
                     return buf;
@@ -115,7 +177,7 @@ namespace AbyssCLI
             public AbyssHost(string hash, string backend_root_dir) {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern IntPtr NewAbyssHost(byte* buf, int buflen, byte* backend_root, int backend_root_len);
 
                     var hash_bytes = Encoding.UTF8.GetBytes(hash);
@@ -134,55 +196,31 @@ namespace AbyssCLI
                     throw new Exception("abyss: failed to create host");
                 }
             }
-            public void Close()
+            ~AbyssHost()
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern void CloseAbyssHost(IntPtr handle);
 
                     CloseAbyssHost(host_handle);
                 }
             }
-            public string WaitError()
+            public AbyssDllError WaitError()
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern IntPtr GetAhmpError(IntPtr handle);
 
-                    var err_handle = GetAhmpError(host_handle);
-
-                    [DllImport("../../../abyssnet.dll")]
-                    static extern int GetErrorBodyLength(IntPtr err_handle);
-
-                    var err_length = GetErrorBodyLength(err_handle);
-
-                    [DllImport("../../../abyssnet.dll")]
-                    static extern int GetErrorBody(IntPtr err_handle, byte* buf, int buflen);
-
-                    [DllImport("../../../abyssnet.dll")]
-                    static extern void CloseError(IntPtr err_handle);
-
-                    var buf = new byte[err_length];
-                    fixed (byte* dBytes = buf)
-                    {
-                        var len = GetErrorBody(err_handle, dBytes, buf.Length);
-                        if (len != buf.Length)
-                        {
-                            CloseError(err_handle);
-                            return "";
-                        }
-                    }
-                    CloseError(err_handle);
-                    return Encoding.UTF8.GetString(buf);
+                    return new AbyssDllError(GetAhmpError(host_handle));
                 }
             }
             public string LocalAddr()
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern int LocalAddr(IntPtr handle, byte* buf, int buflen);
 
                     fixed (byte* pBytes = new byte[1024])
@@ -192,7 +230,7 @@ namespace AbyssCLI
                         {
                             return "";
                         }
-                        return System.Text.Encoding.UTF8.GetString(pBytes, len);
+                        return Encoding.UTF8.GetString(pBytes, len);
                     }
                 }
             }
@@ -200,7 +238,7 @@ namespace AbyssCLI
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern void RequestPeerConnect(IntPtr handle, byte* buf, int buflen);
 
                     var aurl_bytes = Encoding.UTF8.GetBytes(aurl);
@@ -215,7 +253,7 @@ namespace AbyssCLI
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern void DisconnectPeer(IntPtr handle, byte* buf, int buflen);
 
                     var hash_bytes = Encoding.UTF8.GetBytes(hash);
@@ -226,23 +264,26 @@ namespace AbyssCLI
                 }
             }
 
-            readonly byte[] buffer = new byte[4096];
-            public ANDEvent WaitANDEvent()
+            /////////
+            // AND //
+            /////////
+            public AndEvent AndWaitEvent()
             {
+                byte[] buffer = new byte[4096];
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern int WaitANDEvent(IntPtr handle, byte* buf, int buflen);
 
                     fixed (byte* pBytes = buffer)
                     {
                         var len = WaitANDEvent(host_handle, pBytes, buffer.Length);
                         if (len < 9) {
-                            return new ANDEvent(ANDEventType.Error, 0, "", "", "", "");
+                            return new AndEvent(AndEventType.Error, 0, "", "", "", "");
                         }
 
-                        return new ANDEvent(
-                            (ANDEventType)pBytes[0],
+                        return new AndEvent(
+                            (AndEventType)pBytes[0],
                             pBytes[1],
                             pBytes[5] != 0 ? System.Text.Encoding.UTF8.GetString(pBytes + 9, pBytes[5]) : "",
                             pBytes[6] != 0 ? System.Text.Encoding.UTF8.GetString(pBytes + 9 + pBytes[5], pBytes[6]) : "",
@@ -252,12 +293,12 @@ namespace AbyssCLI
                     }
                 }
             }
-
-            public int OpenWorld(string local_path, string url)
+            
+            public int AndOpenWorld(string local_path, string url)
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern int OpenWorld(IntPtr handle, byte* path, int pathlen, byte* url, int urllen);
 
                     var path_bytes = Encoding.UTF8.GetBytes(local_path);
@@ -272,11 +313,11 @@ namespace AbyssCLI
                 }
             }
 
-            public void CloseWorld(string local_path)
+            public void AndCloseWorld(string local_path)
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern void CloseWorld(IntPtr handle, byte* path, int pathlen);
 
                     var path_bytes = Encoding.UTF8.GetBytes(local_path);
@@ -287,11 +328,11 @@ namespace AbyssCLI
                 }
             }
 
-            public void Join(string local_path, string aurl)
+            public void AndJoin(string local_path, string aurl)
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern void Join(IntPtr handle, byte* path, int pathlen, byte* aurl, int aurllen);
 
                     var path_bytes = Encoding.UTF8.GetBytes(local_path);
@@ -306,11 +347,211 @@ namespace AbyssCLI
                 }
             }
 
+            /////////
+            // SOM //
+            /////////
+            public AbyssDllError? SomRequestService(string peer_hash, string world_uuid)
+            {
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern IntPtr SOMRequestService(IntPtr host_handle, byte* peer_hash, int peer_hash_len, byte* world_uuid, int world_uuid_len);
+
+                    var peer_hash_bytes = Encoding.UTF8.GetBytes(peer_hash);
+                    var world_uuid_bytes = Encoding.UTF8.GetBytes(world_uuid);
+                    fixed(byte* phb = peer_hash_bytes)
+                    {
+                        fixed(byte* wub = world_uuid_bytes)
+                        {
+                            var result = SOMRequestService(host_handle, phb, peer_hash_bytes.Length, wub, world_uuid_bytes.Length);
+                            if (result != IntPtr.Zero)
+                            {
+                                return new AbyssDllError(result);
+                            }
+                            return null;
+                        }
+                    }
+                }
+            }
+            public void SomInitiateService(string peer_hash, string world_uuid)
+            {
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern void SOMInitiateService(IntPtr host_handle, byte* peer_hash, int peer_hash_len, byte* world_uuid, int world_uuid_len);
+
+                    var peer_hash_bytes = Encoding.UTF8.GetBytes(peer_hash);
+                    var world_uuid_bytes = Encoding.UTF8.GetBytes(world_uuid);
+                    fixed (byte* phb = peer_hash_bytes)
+                    {
+                        fixed (byte* wub = world_uuid_bytes)
+                        {
+                            SOMInitiateService(host_handle, phb, peer_hash_bytes.Length, wub, world_uuid_bytes.Length);
+                        }
+                    }
+                }
+            }
+            public void SomTerminateService(string peer_hash, string world_uuid)
+            {
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern void SOMTerminateService(IntPtr host_handle, byte* peer_hash, int peer_hash_len, byte* world_uuid, int world_uuid_len);
+
+                    var peer_hash_bytes = Encoding.UTF8.GetBytes(peer_hash);
+                    var world_uuid_bytes = Encoding.UTF8.GetBytes(world_uuid);
+                    fixed (byte* phb = peer_hash_bytes)
+                    {
+                        fixed (byte* wub = world_uuid_bytes)
+                        {
+                            SOMTerminateService(host_handle, phb, peer_hash_bytes.Length, wub, world_uuid_bytes.Length);
+                        }
+                    }
+                }
+            }
+            public void SomRegisterObject(string url, string object_uuid)
+            {
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern void SOMRegisterObject(IntPtr host_handle, byte* url, int url_len, byte *object_uuid, int object_uuid_len);
+
+                    var url_bytes = Encoding.UTF8.GetBytes(url);
+                    var object_uuid_bytes = Encoding.UTF8.GetBytes(object_uuid);
+                    fixed (byte* urb = url_bytes)
+                    {
+                        fixed (byte* oub = object_uuid_bytes)
+                        {
+                            SOMRegisterObject(host_handle, urb, url_bytes.Length, oub, object_uuid_bytes.Length);
+                        }
+                    }
+                }
+            }
+            public AbyssDllError? SomShareObject(string peer_hash, string world_uuid, string object_uuid)
+            {
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern IntPtr SOMShareObject(IntPtr host_handle, byte* peer_hash, int peer_hash_len, byte* world_uuid, int world_uuid_len, byte* objects_uuid, int objects_uuid_len);
+
+                    var peer_hash_bytes = Encoding.UTF8.GetBytes(peer_hash);
+                    var world_uuid_bytes = Encoding.UTF8.GetBytes(world_uuid);
+                    var object_uuid_bytes = Encoding.UTF8.GetBytes(object_uuid);
+                    fixed (byte* phb = peer_hash_bytes)
+                    {
+                        fixed (byte* wub = world_uuid_bytes)
+                        {
+                            fixed (byte* oub = object_uuid_bytes)
+                            {
+                                var result = SOMShareObject(host_handle, phb, peer_hash_bytes.Length, wub, world_uuid_bytes.Length, oub, object_uuid_bytes.Length);
+                                if (result != IntPtr.Zero)
+                                {
+                                    return new AbyssDllError(result);
+                                }
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+            public SomEvent SomWaitEvent()
+            {
+                unsafe
+                {
+                    [DllImport("abyssnet.dll")]
+                    static extern IntPtr SOMWaitEvent(IntPtr host_handle);
+
+                    [DllImport("abyssnet.dll")]
+                    static extern int SOMGetEventBodyLength(IntPtr event_handle);
+
+                    [DllImport("abyssnet.dll")]
+                    static extern int SOMGetEventBody(IntPtr host_handle, byte* buf, int buflen);
+
+                    [DllImport("abyssnet.dll")]
+                    static extern void SOMCloseEvent(IntPtr event_handle);
+
+                    var event_handle = SOMWaitEvent(host_handle);
+
+                    var body_len = SOMGetEventBodyLength(event_handle);
+                    fixed (byte* buf = new byte[body_len])
+                    {
+                        if (SOMGetEventBody(event_handle, buf, body_len) != body_len)
+                        {
+                            throw new Exception("AbyssDLL: buffer write failure");
+                        }
+                        SOMCloseEvent(event_handle);
+
+                        var offset = 0;
+                        var type = (SomEventType)buf[offset];
+                        offset++;
+
+                        var peer_hash_len = buf[offset];
+                        offset++;
+                        var peer_hash = Encoding.UTF8.GetString(buf+offset, peer_hash_len);
+                        offset += peer_hash_len;
+
+                        var world_uuid_len = buf[offset];
+                        offset++;
+                        var world_uuid = Encoding.UTF8.GetString(buf+offset, world_uuid_len);
+                        offset += world_uuid_len;
+
+                        var object_count = buf[offset];
+                        var objects_info = new Tuple<string, string>[object_count];
+                        offset++;
+                        switch (type)
+                        {
+                            case SomEventType.Invalid:
+                                {
+                                    break;
+                                }
+                            case SomEventType.SomReNew or SomEventType.SomAppend:
+                                {
+                                    for (int i = 0; i < object_count; i++)
+                                    {
+                                        var url_len = *(UInt16*)(buf+offset);
+                                        offset += 2;
+                                        var url = Encoding.UTF8.GetString(buf+offset, url_len);
+                                        offset += url_len;
+                                        
+                                        var uuid_len = buf[offset];
+                                        offset++;
+                                        var uuid = Encoding.UTF8.GetString(buf+offset, uuid_len);
+                                        offset += uuid_len;
+
+                                        objects_info[i] = new Tuple<string, string>(url, uuid);
+                                    }
+                                    break;
+                                }
+                            case SomEventType.SomDelete:
+                                {
+                                    for (int i = 0; i < object_count; i++)
+                                    {
+                                        var uuid_len = buf[offset];
+                                        offset++;
+                                        var uuid = Encoding.UTF8.GetString(buf + offset, uuid_len);
+                                        offset += uuid_len;
+
+                                        objects_info[i] = new Tuple<string, string>("", uuid);
+                                    }
+                                    break;
+                                }
+                            default:
+                                throw new NotSupportedException();
+                        }
+
+                        return new SomEvent(type, peer_hash, world_uuid, objects_info);
+                    }
+                }
+            }
+
+            ////////////////////
+            // HTTP/3 backend //
+            ////////////////////
             public AbyssHttpResponse HttpGet(string aurl)
             {
                 unsafe
                 {
-                    [DllImport("../../../abyssnet.dll")]
+                    [DllImport("abyssnet.dll")]
                     static extern IntPtr HttpGet(IntPtr handle, byte* aurl, int aurl_len);
                     
                     var url_bytes = Encoding.UTF8.GetBytes(aurl);
@@ -322,6 +563,59 @@ namespace AbyssCLI
             }
 
             readonly IntPtr host_handle;
+            
+            ////////////////////
+            // CLI reflection //
+            ////////////////////
+            public void ParseAndInvoke(string input)
+            {
+                try
+                {
+                    // Split the input string by spaces
+                    string[] parts = input.Split(' ');
+
+                    // The first part is the method name
+                    string methodName = parts[0];
+                    if (methodName == "help")
+                    {
+                        var methods = this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.Public);
+                        foreach (var m in methods)
+                        {
+                            Console.WriteLine($"{m.Name} ({Strings.Join(m.GetParameters().Select(m=>m.Name).ToArray(), ", ")})");
+                        }
+                        return;
+                    }
+
+                    // The remaining parts are the method arguments
+                    string[] methodArgs = parts[1..];
+
+                    // Find the method by name
+                    MethodInfo? method = this.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public);
+
+                    if (method != null)
+                    {
+                        // Convert string arguments to the appropriate types
+                        ParameterInfo[] parameters = method.GetParameters();
+                        object[] parsedArgs = new object[parameters.Length];
+
+                        for (int i = 0; i < parameters.Length; i++)
+                        {
+                            parsedArgs[i] = Convert.ChangeType(methodArgs[i], parameters[i].ParameterType);
+                        }
+
+                        // Invoke the method with the parsed arguments
+                        var retval = method.Invoke(this, parsedArgs);
+                        Console.WriteLine(retval);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Method '{methodName}' not found.");
+                    }
+                }
+                catch(Exception e){
+                    Console.WriteLine($"Failed to call: {e.Message}");
+                }
+            }
         }
     }
 }

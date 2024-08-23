@@ -1,113 +1,103 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using AbyssCLI;
-using System.Text;
+using AbyssCLI.ABI;
 using System.Text.Json;
-using System.Threading;
-using static AbyssCLI.AbyssLib;
-using System;
-
-Console.WriteLine(AbyssLib.GetVersion());
-var hostA = new AbyssLib.AbyssHost("mallang_host_A", "D:\\WORKS\\github\\abyss\\temp");
-Console.WriteLine(hostA.LocalAddr());
-
-var hostB = new AbyssLib.AbyssHost("mallang_host_B", "D:\\WORKS\\github\\abyss\\temp");
-Console.WriteLine(hostB.LocalAddr());
-
-var hostC = new AbyssLib.AbyssHost("mallang_host_C", "D:\\WORKS\\github\\abyss\\temp");
-Console.WriteLine(hostC.LocalAddr());
-
-var hostD = new AbyssLib.AbyssHost("mallang_host_D", "D:\\WORKS\\github\\abyss\\temp");
-Console.WriteLine(hostD.LocalAddr());
-
-var A_th = new Thread(() =>
+class Program
 {
-    while (true)
+    static void Main(string[] _)
     {
-        var ev_a = hostA.WaitANDEvent();
-        Console.WriteLine("A: " + JsonSerializer.Serialize(ev_a));
+        var cout = Console.OpenStandardOutput();
+        var protobuf_out = new Google.Protobuf.CodedOutputStream(cout);
+        new RenderAction()
+        {
+            CreateElement = new RenderAction.Types.CreateElement
+            {
+                ParentId = 2323222,
+                ElementId = 7777
+            }
+        }.WriteTo(protobuf_out);
     }
-});
-new Thread(() =>
-{
-    while(true)
+    static void Main2(string[] args)
     {
-        Console.WriteLine("Err[A] " + hostA.WaitError());
+        Dictionary<string, string> parameters = new();
+
+        // Loop through the command-line arguments
+        foreach (var arg in args)
+        {
+            if (arg.StartsWith("--"))
+            {
+                int splitIndex = arg.IndexOf('=');
+                if (splitIndex > 0)
+                {
+                    string key = arg[2..splitIndex];
+                    string value = arg[(splitIndex + 1)..];
+                    parameters[key] = value;
+                }
+            }
+        }
+
+        if (!parameters.TryGetValue("id", out string host_id) || 
+            !parameters.TryGetValue("root", out string root_path))
+        {
+            Console.WriteLine("id: ");
+            host_id = Console.ReadLine();
+
+            //D:\WORKS\github\abyss\temp
+            Console.WriteLine("root: ");
+            root_path = Console.ReadLine();
+        }
+
+        if (host_id == null || root_path == null)
+        {
+            throw new Exception("invalid arguments");
+        }
+
+        var this_host = new AbyssLib.AbyssHost(host_id, root_path);
+        new Thread(() =>
+        {
+            while (true)
+            {
+                var ev_a = this_host.AndWaitEvent();
+                Console.WriteLine($"AND: {JsonSerializer.Serialize(ev_a)}");
+            }
+        }).Start();
+        new Thread(() =>
+        {
+            while (true)
+            {
+                Console.WriteLine($"Error: {this_host.WaitError()}");
+            }
+        }).Start();
+        new Thread(() =>
+        {
+            while (true)
+            {
+                Console.WriteLine($"SOM: {this_host.SomWaitEvent()}");
+            }
+        }).Start();
+
+        var pre_command = parameters["commands"];
+        if (pre_command != null)
+        {
+            foreach (var s in pre_command.Split(">> "))
+            {
+                if (s == null || s == "exit")
+                {
+                    return;
+                }
+                this_host.ParseAndInvoke(s);
+            }
+        }
+
+        while (true)
+        {
+            Console.Write(">> ");
+            var call = Console.ReadLine();
+            if (call == null || call == "exit")
+            {
+                return;
+            }
+            this_host.ParseAndInvoke(call);
+        }
     }
-}).Start();
-A_th.Start();
-var B_th = new Thread(() =>
-{
-    while (true)
-    {
-        var ev_b = hostB.WaitANDEvent();
-        Console.WriteLine("B: " + JsonSerializer.Serialize(ev_b));
-    }
-});
-new Thread(() =>
-{
-    while (true)
-    {
-        Console.WriteLine("Err[B] " + hostB.WaitError());
-    }
-}).Start();
-B_th.Start();
-var C_th = new Thread(() =>
-{
-    while (true)
-    {
-        var ev_c = hostC.WaitANDEvent();
-        Console.WriteLine("C: " + JsonSerializer.Serialize(ev_c));
-    }
-});
-new Thread(() =>
-{
-    while (true)
-    {
-        Console.WriteLine("Err[C] " + hostC.WaitError());
-    }
-}).Start();
-C_th.Start();
-var D_th = new Thread(() =>
-{
-    while (true)
-    {
-        var ev_d = hostD.WaitANDEvent();
-        Console.WriteLine("D: " + JsonSerializer.Serialize(ev_d));
-    }
-});
-new Thread(() =>
-{
-    while (true)
-    {
-        Console.WriteLine("Err[D] " + hostD.WaitError());
-    }
-}).Start();
-D_th.Start();
-Console.WriteLine("----");
-
-hostA.OpenWorld("/", "https://www.abysseum.com/");
-Thread.Sleep(1000);
-
-hostA.RequestConnect(hostB.LocalAddr());
-hostB.Join("/", hostA.LocalAddr());
-Thread.Sleep(1000);
-
-hostB.RequestConnect(hostC.LocalAddr());
-hostC.Join("/", hostB.LocalAddr());
-Thread.Sleep(1000);
-
-hostC.RequestConnect(hostD.LocalAddr());
-hostD.Join("/", hostC.LocalAddr());
-
-Thread.Sleep(3000);
-
-//var response = hostB.HttpGet("abyst://mallang_host_D/static/key.pem");
-//Console.WriteLine("response(" + response.GetStatus() + ")" + Encoding.UTF8.GetString(response.GetBody()));
-
-//TODO: fix
-Console.WriteLine("host A closing world /");
-hostA.CloseWorld("/");
-Thread.Sleep(5000);
-
-Console.WriteLine("host A joining C world /");
-hostA.Join("/", hostC.LocalAddr());
+}

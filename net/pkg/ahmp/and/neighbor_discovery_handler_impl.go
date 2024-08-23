@@ -112,6 +112,14 @@ func (h *NeighborDiscoveryHandler) OpenWorld(localpath string, world INeighborDi
 	session := NewNeighborDiscoverySession()
 	session.world = world
 	h.sessions[world.GetUUID()] = session
+	h.event_listener <- NeighborDiscoveryEvent{
+		EventType: JoinSuccess,
+		Localpath: localpath,
+		Peer_hash: h.local_hash,
+		World:     world,
+		Status:    200,
+		Message:   "Open",
+	}
 	return nil
 }
 func (h *NeighborDiscoveryHandler) CloseWorld(localpath string) error {

@@ -232,10 +232,10 @@ func Join(host_handle C.uintptr_t, localpath *C.char, localpath_len C.int, remot
 //////////////
 
 //export SOMRequestService
-func SOMRequestService(host_handle C.uintptr_t, peer_hash string, world_uuid string) C.uintptr_t {
+func SOMRequestService(host_handle C.uintptr_t, peer_hash *C.char, peer_hash_len C.int, world_uuid *C.char, world_uuid_len C.int) C.uintptr_t {
 	export := (cgo.Handle(host_handle)).Value().(*HostExport)
 
-	err := export.SOMHandler.RequestSOMService(peer_hash, world_uuid)
+	err := export.SOMHandler.RequestSOMService(string(UnmarshalBytes(peer_hash, peer_hash_len)), string(UnmarshalBytes(world_uuid, world_uuid_len)))
 	if err != nil {
 		return MakeErrorExport(err)
 	}
@@ -243,37 +243,37 @@ func SOMRequestService(host_handle C.uintptr_t, peer_hash string, world_uuid str
 }
 
 //export SOMInitiateService
-func SOMInitiateService(host_handle C.uintptr_t, peer_hash string, world_uuid string) {
+func SOMInitiateService(host_handle C.uintptr_t, peer_hash *C.char, peer_hash_len C.int, world_uuid *C.char, world_uuid_len C.int) {
 	export := (cgo.Handle(host_handle)).Value().(*HostExport)
 
-	export.SOMHandler.InitiateSOMService(peer_hash, world_uuid)
+	export.SOMHandler.InitiateSOMService(string(UnmarshalBytes(peer_hash, peer_hash_len)), string(UnmarshalBytes(world_uuid, world_uuid_len)))
 }
 
 //export SOMTerminateService
-func SOMTerminateService(host_handle C.uintptr_t, peer_hash string, world_uuid string) {
+func SOMTerminateService(host_handle C.uintptr_t, peer_hash *C.char, peer_hash_len C.int, world_uuid *C.char, world_uuid_len C.int) {
 	export := (cgo.Handle(host_handle)).Value().(*HostExport)
 
-	export.SOMHandler.TerminateSOMService(peer_hash, world_uuid)
+	export.SOMHandler.TerminateSOMService(string(UnmarshalBytes(peer_hash, peer_hash_len)), string(UnmarshalBytes(world_uuid, world_uuid_len)))
 }
 
 //export SOMRegisterObject
-func SOMRegisterObject(host_handle C.uintptr_t, url, object_uuid string) {
+func SOMRegisterObject(host_handle C.uintptr_t, url *C.char, url_len C.int, object_uuid *C.char, object_uuid_len C.int) {
 	export := (cgo.Handle(host_handle)).Value().(*HostExport)
 
 	export.SOMHandler.RegisterObject(&ws.SharedObject{
-		URL:  url,
-		UUID: uuid.MustParse(object_uuid),
+		URL:  string(UnmarshalBytes(url, url_len)),
+		UUID: uuid.MustParse(string(UnmarshalBytes(object_uuid, object_uuid_len))),
 	})
 }
 
 //export SOMShareObject
-func SOMShareObject(host_handle C.uintptr_t, objects_uuid *C.char, objects_uuid_len C.int, world_uuid *C.char, world_uuid_len C.int, peer_uuid *C.char, peer_uuid_len C.int) C.uintptr_t {
+func SOMShareObject(host_handle C.uintptr_t, peer_hash *C.char, peer_hash_len C.int, world_uuid *C.char, world_uuid_len C.int, objects_uuid *C.char, objects_uuid_len C.int) C.uintptr_t {
 	export := (cgo.Handle(host_handle)).Value().(*HostExport)
 
 	err := export.SOMHandler.ShareObject(
-		strings.Split(string(UnmarshalBytes(objects_uuid, objects_uuid_len)), " "),
+		string(UnmarshalBytes(peer_hash, peer_hash_len)),
 		string(UnmarshalBytes(world_uuid, world_uuid_len)),
-		string(UnmarshalBytes(peer_uuid, peer_uuid_len)),
+		strings.Split(string(UnmarshalBytes(objects_uuid, objects_uuid_len)), " "),
 	)
 	if err != nil {
 		return MakeErrorExport(err)
@@ -288,6 +288,8 @@ type SOMEventExport struct {
 
 func MakeSOMEventExport(som_ev *ahmp.SomEvent) C.uintptr_t {
 	//1byte type, 1byte hashlen, 1byte uuidlen,
+	// hash, uuid
+
 	//1byte shared object count(max 255)
 
 	//n * 3byte(urllen(2), uuidlen(1)) - SO/SOA
@@ -298,12 +300,16 @@ func MakeSOMEventExport(som_ev *ahmp.SomEvent) C.uintptr_t {
 	switch som_ev.Type {
 	case ahmp.SomReNew, ahmp.SomAppend:
 		bodylen += 4 +
+			len(som_ev.PeerHash) +
+			len(som_ev.WorldUUID) +
 			len(som_ev.SomObjects)*3 +
 			functional.Accum_all(som_ev.SomObjects, 0, func(o *ws.SharedObject, accum int) int {
 				return accum + len(o.URL) + len(o.UUID.String())
 			})
 	case ahmp.SomDelete:
 		bodylen += 4 +
+			len(som_ev.PeerHash) +
+			len(som_ev.WorldUUID) +
 			len(som_ev.SomObjUUIDs) +
 			functional.Accum_all(som_ev.SomObjUUIDs, 0, func(uuid string, accum int) int {
 				return accum + len(uuid)
@@ -335,26 +341,36 @@ func SOMGetEventBody(event_handle C.uintptr_t, buf *C.char, buflen C.int) C.int 
 
 	data := make([]byte, event.bodylen)
 	data[0] = byte(event.event.Type)
-	data[1] = byte(len(event.event.PeerHash))
-	data[2] = byte(len(event.event.WorldUUID))
+	rem := data[1:]
+
+	rem[0] = byte(len(event.event.PeerHash))
+	rem = rem[1:]
+	copy(rem, []byte(event.event.PeerHash))
+	rem = rem[len(event.event.PeerHash):]
+
+	rem[0] = byte(len(event.event.WorldUUID))
+	rem = rem[1:]
+	copy(rem, []byte(event.event.WorldUUID))
+	rem = rem[len(event.event.WorldUUID):]
 
 	switch event.event.Type {
 	case ahmp.SomReNew, ahmp.SomAppend:
-		data[3] = byte(len(event.event.SomObjects))
-		rem := data[4:]
+		rem[0] = byte(len(event.event.SomObjects))
+		rem := rem[1:]
 		for _, o := range event.event.SomObjects {
 			binary.NativeEndian.PutUint16(rem, uint16(len(o.URL)))
 			copy(rem[2:], []byte(o.URL))
 			rem = rem[2+len(o.URL):]
 
 			uuid_str := o.UUID.String()
+
 			rem[0] = byte(len(uuid_str))
 			copy(rem[1:], []byte(uuid_str))
 			rem = rem[1+len(uuid_str):]
 		}
 	case ahmp.SomDelete:
-		data[3] = byte(len(event.event.SomObjUUIDs))
-		rem := data[4:]
+		rem[0] = byte(len(event.event.SomObjUUIDs))
+		rem := rem[1:]
 		for _, uuid := range event.event.SomObjUUIDs {
 			rem[0] = byte(len(uuid))
 			copy(rem[1:], []byte(uuid))

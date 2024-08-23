@@ -1,0 +1,4 @@
+D:\WORKS\github\abyss\host\AbyssHost\win-x64-native\AbyssHost.dll
+D:\WORKS\github\abyss\host\AbyssHost\win-x64-native\AbyssHost.pdb
+D:\WORKS\github\abyss\host\AbyssHost\win-x64-native\Google.Protobuf.dll
+D:\WORKS\github\abyss\host\AbyssHost\win-x64-native\AbyssHost.deps.json
