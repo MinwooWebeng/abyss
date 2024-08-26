@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/AbyssUI/very_dark_bg.uss?fileID=7433441132597879392&amp;guid=079354aef73510c4289c82a146bbff0a&amp;type=3#very_dark_bg" />
+    <ui:VisualElement name="screen" style="height: 100%; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.81); width: 100%;">
+        <ui:VisualElement name="background">
+            <ui:TextField picking-mode="Ignore" value="abyst:local/home" name="address-bar" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

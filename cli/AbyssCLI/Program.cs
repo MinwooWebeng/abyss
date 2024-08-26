@@ -2,20 +2,57 @@
 using AbyssCLI;
 using AbyssCLI.ABI;
 using System.Text.Json;
+using System.Text;
+using Google.Protobuf;
+using System.IO.MemoryMappedFiles;
 class Program
 {
+    static void WriteRenderAction()
+    {
+
+    }
     static void Main(string[] _)
     {
-        var cout = Console.OpenStandardOutput();
-        var protobuf_out = new Google.Protobuf.CodedOutputStream(cout);
-        new RenderAction()
+        var cout_writer = new RenderActionWriter(
+            Console.OpenStandardOutput()
+        );
+        cout_writer.CreateElement(0, 1);    //1
+
+        byte[] fileBytes = System.IO.File.ReadAllBytes("carrot.png");
+        MemoryMappedFile mmf = MemoryMappedFile.CreateNew("abysscli/static/carrot", fileBytes.Length);
+        var accessor = mmf.CreateViewAccessor();
+        accessor.WriteArray(0, fileBytes, 0, fileBytes.Length);
+        accessor.Flush();
+        cout_writer.CreateImage(0, new AbyssCLI.ABI.File()  //2
         {
-            CreateElement = new RenderAction.Types.CreateElement
-            {
-                ParentId = 2323222,
-                ElementId = 7777
-            }
-        }.WriteTo(protobuf_out);
+            Mime = MIME.ImagePng,
+            MmapName = "abysscli/static/carrot",
+            Off = 0,
+            Len = (uint)fileBytes.Length,
+        });
+
+        cout_writer.CreateMaterialV(1, "diffuse");  //3
+        cout_writer.MaterialSetParamC(1, "albedo", 0);  //4
+
+        byte[] fileBytes2 = System.IO.File.ReadAllBytes("carrot.obj");
+        MemoryMappedFile mmf2 = MemoryMappedFile.CreateNew("abysscli/static/carrot_mesh", fileBytes2.Length);
+        var accessor2 = mmf2.CreateViewAccessor();
+        accessor2.WriteArray(0, fileBytes2, 0, fileBytes2.Length);
+        accessor2.Flush();
+        cout_writer.CreateStaticMesh(2, new AbyssCLI.ABI.File() //5
+        {
+            Mime = MIME.ModelObj,
+            MmapName = "abysscli/static/carrot_mesh",
+            Off = 0,
+            Len = (uint)fileBytes2.Length,
+        });
+
+        cout_writer.StaticMeshSetMaterial(2, 0, 1); //6
+        cout_writer.ElemAttachStaticMesh(1, 2); //7
+
+        Thread.Sleep(5000);
+        mmf.Dispose();
+        cout_writer.Flush();
     }
     static void Main2(string[] args)
     {

@@ -1,0 +1,32 @@
+<!DOCTYPE AML>
+<aml>
+<head>
+    <script>
+        const carrot = document.getElementById("carrot");
+        carrot.onCollision => {
+            if (collision.y > 0) {
+                carrot.pos += vec3(0, 0.1, 0);
+            } else {
+                carrot.pos -= vec3(0, -0.1, 0);
+            }
+        };
+    </script>
+</head>
+<body>
+    <mesh id="carrot" src="some/path/carrot.fbx" type="object/fbx">
+        <mat id="root_mat" src="another/shader" type="shader/hlsl">
+            <img id="root_tex" role="color" src="root.png"/>
+        </mat>
+        <mat id="leaf_mat" shader="bsdf">
+            <img id="leaf_tex" role="albedo" src="leaf.png"/>
+        </mat>
+        <collider pos="0.0,0.1,0.0" shape="box 0.5 1.0 0.5"/>
+    </mesh>
+    <o id="wheel" pos="abysr:/wheel-motion" type="motion/bft">
+        <mesh id="tail" src="dog.obj" type="object/obj">
+            
+        </mesh>
+        <collider shape="ball" shape_r="0.2" />
+    </o>
+</body>
+</aml>
