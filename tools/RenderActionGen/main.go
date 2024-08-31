@@ -16,8 +16,8 @@ func readFile(path string) string {
 	return string(data)
 }
 
-func removeExtra(data string) string {
-	d2 := data[strings.Index(data, "message RenderAction"):]
+func removeExtra(data string, name string) string {
+	d2 := data[strings.Index(data, "message "+name+"Action"):]
 	d3 := d2[strings.Index(d2, "\n"):]
 	d4 := d3[:strings.Index(d3, "oneof")]
 
@@ -66,7 +66,7 @@ func toPascalCase(snake string) string {
 	return pascalCase
 }
 
-func formatFunction(input string) string {
+func formatFunction(input string, name string) string {
 	input = strings.TrimSpace(input)
 	// Regex to match function name and parameters
 	re := regexp.MustCompile(`public void (\w+)\s*\(([^)]+)\)`)
@@ -106,13 +106,15 @@ func formatFunction(input string) string {
 	}
 	actionBody = strings.TrimRight(actionBody, ",") + "\n    }"
 
-	result := fmt.Sprintf("public void %s\n(\n    %s\n)\n=> Write(new RenderAction()\n{\n    %s\n});", functionName, formattedParams, actionBody)
+	result := fmt.Sprintf("public void %s\n(\n    %s\n)\n=> Write(new "+name+"Action()\n{\n    %s\n});", functionName, formattedParams, actionBody)
 	return result
 }
 
 func main() {
+	is_concurrent := len(os.Args) >= 5 && os.Args[4] == "concurrent"
+
 	data := readFile(os.Args[1])
-	data = removeExtra(data)
+	data = removeExtra(data, os.Args[3])
 	data = replaceTypes(data)
 	result := make([]string, 0)
 	split := splitEntry(data)
@@ -120,16 +122,19 @@ func main() {
 		if i == len(split)-1 {
 			continue
 		}
-		result = append(result, formatFunction(e))
+		result = append(result, formatFunction(e, os.Args[3]))
 	}
 	data = strings.Join(result, "\n")
 	data = `using Google.Protobuf;
-using static AbyssCLI.ABI.RenderAction.Types;
+using static AbyssCLI.ABI.` + os.Args[3] + `Action.Types;
+using System.IO;
+using System;
 
 namespace AbyssCLI.ABI
 {
-    internal class RenderActionWriter(Stream stream)
+    internal class ` + os.Args[3] + `ActionWriter
     {
+		public ` + os.Args[3] + `ActionWriter(System.IO.Stream stream) { _out_stream = stream; }
 
 ` + data + `
 
@@ -138,14 +143,39 @@ namespace AbyssCLI.ABI
 			_out_stream.Flush();
 		}
 
-		private void Write(RenderAction msg)
+		private void Write(` + os.Args[3] + `Action msg)
 		{
 			var msg_len = msg.CalculateSize();
+` +
+		func() string {
+			if is_concurrent {
+				return "			_out_sema.WaitOne();"
+			}
+			return ""
+		}() + `
 			_out_stream.Write(BitConverter.GetBytes(msg_len));
 			msg.WriteTo(_out_stream);
+` +
+		func() string {
+			if is_concurrent {
+				return "			_out_sema.Release();"
+			}
+			return ""
+		}() + `
+            if(AutoFlush)
+            {
+                _out_stream.Flush();
+            }
 		}
-
-		private Stream _out_stream = stream;
+		public bool AutoFlush = false;
+		private readonly System.IO.Stream _out_stream;
+` +
+		func() string {
+			if is_concurrent {
+				return "		private readonly System.Threading.Semaphore _out_sema = new(1, 1);"
+			}
+			return ""
+		}() + `
 	}
 }`
 

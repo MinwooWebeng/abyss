@@ -1,6 +1,7 @@
 ﻿using AbyssCLI.ABI;
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -8,7 +9,7 @@ namespace AbyssEngine
 {
     internal class Host
     {
-        public Host()
+        public Host(string local_hash, string h3_root_dir)
         {
             //run host process with pipe
             _host_proc = new System.Diagnostics.Process();
@@ -20,6 +21,12 @@ namespace AbyssEngine
             _host_proc.StartInfo.RedirectStandardError = true;
             _host_proc.Start();
 
+            CallFunc = new AbyssCLI.ABI.UIActionWriter(
+                _host_proc.StandardInput.BaseStream
+            )
+            {
+                AutoFlush = true
+            };
             _render_action_queue = new();
             _error_queue = new();
 
@@ -57,9 +64,14 @@ namespace AbyssEngine
             {
                 try
                 {
-                    var fatal_error = _host_proc.StandardError.ReadToEnd();
-                    if (fatal_error.Length > 0)
-                        _error_queue.Enqueue(new Exception(fatal_error));
+                    while(true)
+                    {
+                        var line = _host_proc.StandardError.ReadLine();
+                        if (line == null)
+                            return; //cerr closed.
+
+                        _error_queue.Enqueue(new Exception(line));
+                    }
                 }
                 catch (Exception e)
                 {
@@ -67,6 +79,9 @@ namespace AbyssEngine
                 }
             });
             _error_reader_th.Start();
+
+            //initialize host
+            CallFunc.Init(local_hash, h3_root_dir);
         }
         public void Close()
         {
@@ -91,6 +106,8 @@ namespace AbyssEngine
         {
             return _error_queue.TryDequeue(out e);
         }
+
+        public AbyssCLI.ABI.UIActionWriter CallFunc {  get; private set; } //all protobuf message sender
 
         private readonly System.Diagnostics.Process _host_proc;
         private readonly ConcurrentQueue<RenderAction> _render_action_queue;

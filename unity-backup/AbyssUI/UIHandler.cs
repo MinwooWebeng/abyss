@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 public class UIHandler : MonoBehaviour
 {
     [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private Executor executor;
 
     private VisualElement root;
     private TextField addressBar;
@@ -32,6 +33,6 @@ public class UIHandler : MonoBehaviour
     }
     void AddressBarSubmit(string address)
     {
-        Debug.Log("AddressBarSubmit:" + address);
+        executor.MoveWorld(address);
     }
 }

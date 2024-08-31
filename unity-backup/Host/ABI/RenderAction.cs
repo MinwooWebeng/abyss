@@ -24,76 +24,62 @@ namespace AbyssCLI.ABI {
     static RenderActionReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8iHAoEVmVjMhIJCgF4",
-            "GAEgASgBEgkKAXkYAiABKAEiJwoEVmVjMxIJCgF4GAEgASgBEgkKAXkYAiAB",
-            "KAESCQoBehgDIAEoASIyCgRRdWF0EgkKAWEYASABKAESCQoBYhgCIAEoARIJ",
-            "CgFjGAMgASgBEgkKAWQYBCABKAEilwEKBkFueVZhbBIOCgRib29sGAEgASgI",
-            "SAASDQoDaW50GAIgASgFSAASEAoGZG91YmxlGAMgASgBSAASEAoGc3RyaW5n",
-            "GAQgASgJSAASFQoEdmVjMhgFIAEoCzIFLlZlYzJIABIVCgR2ZWMzGAYgASgL",
-            "MgUuVmVjM0gAEhUKBHF1YXQYByABKAsyBS5RdWF0SABCBQoDdmFsIkgKBEZp",
-            "bGUSEwoEbWltZRgBIAEoDjIFLk1JTUUSEQoJbW1hcF9uYW1lGAIgASgJEgsK",
-            "A29mZhgDIAEoDRILCgNsZW4YBCABKA0i1RAKDFJlbmRlckFjdGlvbhI1Cg5j",
-            "cmVhdGVfZWxlbWVudBgBIAEoCzIbLlJlbmRlckFjdGlvbi5DcmVhdGVFbGVt",
-            "ZW50SAASMQoMbW92ZV9lbGVtZW50GAIgASgLMhkuUmVuZGVyQWN0aW9uLk1v",
-            "dmVFbGVtZW50SAASNQoOZGVsZXRlX2VsZW1lbnQYAyABKAsyGy5SZW5kZXJB",
-            "Y3Rpb24uRGVsZXRlRWxlbWVudEgAEjAKDGVsZW1fc2V0X3BvcxgEIAEoCzIY",
-            "LlJlbmRlckFjdGlvbi5FbGVtU2V0UG9zSAASQgoVZWxlbV9kZXRhY2hfY29t",
-            "cG9uZW50GBQgASgLMiEuUmVuZGVyQWN0aW9uLkVsZW1EZXRhY2hDb21wb25l",
-            "bnRIABIxCgxjcmVhdGVfaW1hZ2UYZCABKAsyGS5SZW5kZXJBY3Rpb24uQ3Jl",
-            "YXRlSW1hZ2VIABIxCgxkZWxldGVfaW1hZ2UYbSABKAsyGS5SZW5kZXJBY3Rp",
-            "b24uRGVsZXRlSW1hZ2VIABI6ChFjcmVhdGVfbWF0ZXJpYWxfdhhuIAEoCzId",
-            "LlJlbmRlckFjdGlvbi5DcmVhdGVNYXRlcmlhbFZIABI6ChFjcmVhdGVfbWF0",
-            "ZXJpYWxfZhhvIAEoCzIdLlJlbmRlckFjdGlvbi5DcmVhdGVNYXRlcmlhbEZI",
-            "ABI/ChRtYXRlcmlhbF9zZXRfcGFyYW1fdhhwIAEoCzIfLlJlbmRlckFjdGlv",
-            "bi5NYXRlcmlhbFNldFBhcmFtVkgAEj8KFG1hdGVyaWFsX3NldF9wYXJhbV9j",
-            "GHEgASgLMh8uUmVuZGVyQWN0aW9uLk1hdGVyaWFsU2V0UGFyYW1DSAASNwoP",
-            "ZGVsZXRlX21hdGVyaWFsGHcgASgLMhwuUmVuZGVyQWN0aW9uLkRlbGV0ZU1h",
-            "dGVyaWFsSAASPAoSY3JlYXRlX3N0YXRpY19tZXNoGHggASgLMh4uUmVuZGVy",
-            "QWN0aW9uLkNyZWF0ZVN0YXRpY01lc2hIABJHChhzdGF0aWNfbWVzaF9zZXRf",
-            "bWF0ZXJpYWwYeSABKAsyIy5SZW5kZXJBY3Rpb24uU3RhdGljTWVzaFNldE1h",
-            "dGVyaWFsSAASRQoXZWxlbV9hdHRhY2hfc3RhdGljX21lc2gYeiABKAsyIi5S",
-            "ZW5kZXJBY3Rpb24uRWxlbUF0dGFjaFN0YXRpY01lc2hIABI9ChJkZWxldGVf",
-            "c3RhdGljX21lc2gYgQEgASgLMh4uUmVuZGVyQWN0aW9uLkRlbGV0ZVN0YXRp",
-            "Y01lc2hIABI6ChBjcmVhdGVfYW5pbWF0aW9uGMgBIAEoCzIdLlJlbmRlckFj",
-            "dGlvbi5DcmVhdGVBbmltYXRpb25IABI6ChBkZWxldGVfYW5pbWF0aW9uGNEB",
-            "IAEoCzIdLlJlbmRlckFjdGlvbi5EZWxldGVBbmltYXRpb25IABo2Cg1DcmVh",
-            "dGVFbGVtZW50EhEKCXBhcmVudF9pZBgBIAEoBRISCgplbGVtZW50X2lkGAIg",
-            "ASgFGjgKC01vdmVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUSFQoNbmV3",
-            "X3BhcmVudF9pZBgCIAEoBRojCg1EZWxldGVFbGVtZW50EhIKCmVsZW1lbnRf",
-            "aWQYASABKAUaNAoKRWxlbVNldFBvcxISCgplbGVtZW50X2lkGAEgASgFEhIK",
-            "A3BvcxgCIAEoCzIFLlZlYzMaPwoTRWxlbURldGFjaENvbXBvbmVudBISCgpl",
-            "bGVtZW50X2lkGAEgASgFEhQKDGNvbXBvbmVudF9pZBgCIAEoBRo0CgtDcmVh",
-            "dGVJbWFnZRIQCghpbWFnZV9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmls",
-            "ZRofCgtEZWxldGVJbWFnZRIQCghpbWFnZV9pZBgBIAEoBRo7Cg9DcmVhdGVN",
-            "YXRlcmlhbFYSEwoLbWF0ZXJpYWxfaWQYASABKAUSEwoLc2hhZGVyX25hbWUY",
-            "AiABKAkaOwoPQ3JlYXRlTWF0ZXJpYWxGEhMKC21hdGVyaWFsX2lkGAEgASgF",
-            "EhMKBGZpbGUYAiABKAsyBS5GaWxlGlQKEU1hdGVyaWFsU2V0UGFyYW1WEhMK",
-            "C21hdGVyaWFsX2lkGAEgASgFEhIKCnBhcmFtX25hbWUYAiABKAkSFgoFcGFy",
-            "YW0YAyABKAsyBy5BbnlWYWwaUgoRTWF0ZXJpYWxTZXRQYXJhbUMSEwoLbWF0",
-            "ZXJpYWxfaWQYASABKAUSEgoKcGFyYW1fbmFtZRgCIAEoCRIUCgxjb21wb25l",
-            "bnRfaWQYAyABKAUaJQoORGVsZXRlTWF0ZXJpYWwSEwoLbWF0ZXJpYWxfaWQY",
-            "ASABKAUaOAoQQ3JlYXRlU3RhdGljTWVzaBIPCgdtZXNoX2lkGAEgASgFEhMK",
-            "BGZpbGUYAiABKAsyBS5GaWxlGlQKFVN0YXRpY01lc2hTZXRNYXRlcmlhbBIP",
-            "CgdtZXNoX2lkGAEgASgFEhUKDW1hdGVyaWFsX3Nsb3QYAiABKAUSEwoLbWF0",
-            "ZXJpYWxfaWQYAyABKAUaOwoURWxlbUF0dGFjaFN0YXRpY01lc2gSEgoKZWxl",
-            "bWVudF9pZBgBIAEoBRIPCgdtZXNoX2lkGAIgASgFGiMKEERlbGV0ZVN0YXRp",
-            "Y01lc2gSDwoHbWVzaF9pZBgBIAEoBRo8Cg9DcmVhdGVBbmltYXRpb24SFAoM",
-            "YW5pbWF0aW9uX2lkGAEgASgFEhMKBGZpbGUYAiABKAsyBS5GaWxlGicKD0Rl",
-            "bGV0ZUFuaW1hdGlvbhIUCgxhbmltYXRpb25faWQYASABKAVCBwoFaW5uZXJC",
-            "D6oCDEFieXNzQ0xJLkFCSWIGcHJvdG8z"));
+            "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8aEGNvbW1vbnR5cGUu",
+            "cHJvdG8iSAoERmlsZRITCgRtaW1lGAEgASgOMgUuTUlNRRIRCgltbWFwX25h",
+            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSLQDwoMUmVuZGVy",
+            "QWN0aW9uEjUKDmNyZWF0ZV9lbGVtZW50GAEgASgLMhsuUmVuZGVyQWN0aW9u",
+            "LkNyZWF0ZUVsZW1lbnRIABIxCgxtb3ZlX2VsZW1lbnQYAiABKAsyGS5SZW5k",
+            "ZXJBY3Rpb24uTW92ZUVsZW1lbnRIABI1Cg5kZWxldGVfZWxlbWVudBgDIAEo",
+            "CzIbLlJlbmRlckFjdGlvbi5EZWxldGVFbGVtZW50SAASMAoMZWxlbV9zZXRf",
+            "cG9zGAQgASgLMhguUmVuZGVyQWN0aW9uLkVsZW1TZXRQb3NIABIxCgxjcmVh",
+            "dGVfaW1hZ2UYZCABKAsyGS5SZW5kZXJBY3Rpb24uQ3JlYXRlSW1hZ2VIABIx",
+            "CgxkZWxldGVfaW1hZ2UYbSABKAsyGS5SZW5kZXJBY3Rpb24uRGVsZXRlSW1h",
+            "Z2VIABI6ChFjcmVhdGVfbWF0ZXJpYWxfdhhuIAEoCzIdLlJlbmRlckFjdGlv",
+            "bi5DcmVhdGVNYXRlcmlhbFZIABI6ChFjcmVhdGVfbWF0ZXJpYWxfZhhvIAEo",
+            "CzIdLlJlbmRlckFjdGlvbi5DcmVhdGVNYXRlcmlhbEZIABI/ChRtYXRlcmlh",
+            "bF9zZXRfcGFyYW1fdhhwIAEoCzIfLlJlbmRlckFjdGlvbi5NYXRlcmlhbFNl",
+            "dFBhcmFtVkgAEj8KFG1hdGVyaWFsX3NldF9wYXJhbV9jGHEgASgLMh8uUmVu",
+            "ZGVyQWN0aW9uLk1hdGVyaWFsU2V0UGFyYW1DSAASNwoPZGVsZXRlX21hdGVy",
+            "aWFsGHcgASgLMhwuUmVuZGVyQWN0aW9uLkRlbGV0ZU1hdGVyaWFsSAASPAoS",
+            "Y3JlYXRlX3N0YXRpY19tZXNoGHggASgLMh4uUmVuZGVyQWN0aW9uLkNyZWF0",
+            "ZVN0YXRpY01lc2hIABJHChhzdGF0aWNfbWVzaF9zZXRfbWF0ZXJpYWwYeSAB",
+            "KAsyIy5SZW5kZXJBY3Rpb24uU3RhdGljTWVzaFNldE1hdGVyaWFsSAASRQoX",
+            "ZWxlbV9hdHRhY2hfc3RhdGljX21lc2gYeiABKAsyIi5SZW5kZXJBY3Rpb24u",
+            "RWxlbUF0dGFjaFN0YXRpY01lc2hIABI9ChJkZWxldGVfc3RhdGljX21lc2gY",
+            "gQEgASgLMh4uUmVuZGVyQWN0aW9uLkRlbGV0ZVN0YXRpY01lc2hIABI6ChBj",
+            "cmVhdGVfYW5pbWF0aW9uGMgBIAEoCzIdLlJlbmRlckFjdGlvbi5DcmVhdGVB",
+            "bmltYXRpb25IABI6ChBkZWxldGVfYW5pbWF0aW9uGNEBIAEoCzIdLlJlbmRl",
+            "ckFjdGlvbi5EZWxldGVBbmltYXRpb25IABo2Cg1DcmVhdGVFbGVtZW50EhEK",
+            "CXBhcmVudF9pZBgBIAEoBRISCgplbGVtZW50X2lkGAIgASgFGjgKC01vdmVF",
+            "bGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUSFQoNbmV3X3BhcmVudF9pZBgC",
+            "IAEoBRojCg1EZWxldGVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUaNAoK",
+            "RWxlbVNldFBvcxISCgplbGVtZW50X2lkGAEgASgFEhIKA3BvcxgCIAEoCzIF",
+            "LlZlYzMaNAoLQ3JlYXRlSW1hZ2USEAoIaW1hZ2VfaWQYASABKAUSEwoEZmls",
+            "ZRgCIAEoCzIFLkZpbGUaHwoLRGVsZXRlSW1hZ2USEAoIaW1hZ2VfaWQYASAB",
+            "KAUaOwoPQ3JlYXRlTWF0ZXJpYWxWEhMKC21hdGVyaWFsX2lkGAEgASgFEhMK",
+            "C3NoYWRlcl9uYW1lGAIgASgJGjsKD0NyZWF0ZU1hdGVyaWFsRhITCgttYXRl",
+            "cmlhbF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChFNYXRlcmlh",
+            "bFNldFBhcmFtVhITCgttYXRlcmlhbF9pZBgBIAEoBRISCgpwYXJhbV9uYW1l",
+            "GAIgASgJEhYKBXBhcmFtGAMgASgLMgcuQW55VmFsGlIKEU1hdGVyaWFsU2V0",
+            "UGFyYW1DEhMKC21hdGVyaWFsX2lkGAEgASgFEhIKCnBhcmFtX25hbWUYAiAB",
+            "KAkSFAoMY29tcG9uZW50X2lkGAMgASgFGiUKDkRlbGV0ZU1hdGVyaWFsEhMK",
+            "C21hdGVyaWFsX2lkGAEgASgFGjgKEENyZWF0ZVN0YXRpY01lc2gSDwoHbWVz",
+            "aF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChVTdGF0aWNNZXNo",
+            "U2V0TWF0ZXJpYWwSDwoHbWVzaF9pZBgBIAEoBRIVCg1tYXRlcmlhbF9zbG90",
+            "GAIgASgFEhMKC21hdGVyaWFsX2lkGAMgASgFGjsKFEVsZW1BdHRhY2hTdGF0",
+            "aWNNZXNoEhIKCmVsZW1lbnRfaWQYASABKAUSDwoHbWVzaF9pZBgCIAEoBRoj",
+            "ChBEZWxldGVTdGF0aWNNZXNoEg8KB21lc2hfaWQYASABKAUaPAoPQ3JlYXRl",
+            "QW5pbWF0aW9uEhQKDGFuaW1hdGlvbl9pZBgBIAEoBRITCgRmaWxlGAIgASgL",
+            "MgUuRmlsZRonCg9EZWxldGVBbmltYXRpb24SFAoMYW5pbWF0aW9uX2lkGAEg",
+            "ASgFQgcKBWlubmVyQg+qAgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.Vec2), global::AbyssCLI.ABI.Vec2.Parser, new[]{ "X", "Y" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.Vec3), global::AbyssCLI.ABI.Vec3.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.Quat), global::AbyssCLI.ABI.Quat.Parser, new[]{ "A", "B", "C", "D" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.AnyVal), global::AbyssCLI.ABI.AnyVal.Parser, new[]{ "Bool", "Int", "Double", "String", "Vec2", "Vec3", "Quat" }, new[]{ "Val" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.File), global::AbyssCLI.ABI.File.Parser, new[]{ "Mime", "MmapName", "Off", "Len" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "ElemDetachComponent", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MoveElement), global::AbyssCLI.ABI.RenderAction.Types.MoveElement.Parser, new[]{ "ElementId", "NewParentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteElement), global::AbyssCLI.ABI.RenderAction.Types.DeleteElement.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos), global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos.Parser, new[]{ "ElementId", "Pos" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent), global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent.Parser, new[]{ "ElementId", "ComponentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateImage), global::AbyssCLI.ABI.RenderAction.Types.CreateImage.Parser, new[]{ "ImageId", "File" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteImage), global::AbyssCLI.ABI.RenderAction.Types.DeleteImage.Parser, new[]{ "ImageId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateMaterialV), global::AbyssCLI.ABI.RenderAction.Types.CreateMaterialV.Parser, new[]{ "MaterialId", "ShaderName" }, null, null, null, null),
@@ -114,1385 +100,6 @@ namespace AbyssCLI.ABI {
   }
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Vec2 : pb::IMessage<Vec2>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Vec2> _parser = new pb::MessageParser<Vec2>(() => new Vec2());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Vec2> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[0]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Vec2() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Vec2(Vec2 other) : this() {
-      x_ = other.x_;
-      y_ = other.y_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Vec2 Clone() {
-      return new Vec2(this);
-    }
-
-    /// <summary>Field number for the "x" field.</summary>
-    public const int XFieldNumber = 1;
-    private double x_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double X {
-      get { return x_; }
-      set {
-        x_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "y" field.</summary>
-    public const int YFieldNumber = 2;
-    private double y_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Y {
-      get { return y_; }
-      set {
-        y_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as Vec2);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Vec2 other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(X, other.X)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Y, other.Y)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (X != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(X);
-      if (Y != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Y);
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
-      }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
-      }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (X != 0D) {
-        size += 1 + 8;
-      }
-      if (Y != 0D) {
-        size += 1 + 8;
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Vec2 other) {
-      if (other == null) {
-        return;
-      }
-      if (other.X != 0D) {
-        X = other.X;
-      }
-      if (other.Y != 0D) {
-        Y = other.Y;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 9: {
-            X = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            Y = input.ReadDouble();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 9: {
-            X = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            Y = input.ReadDouble();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Vec3 : pb::IMessage<Vec3>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Vec3> _parser = new pb::MessageParser<Vec3>(() => new Vec3());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Vec3> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[1]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Vec3() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Vec3(Vec3 other) : this() {
-      x_ = other.x_;
-      y_ = other.y_;
-      z_ = other.z_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Vec3 Clone() {
-      return new Vec3(this);
-    }
-
-    /// <summary>Field number for the "x" field.</summary>
-    public const int XFieldNumber = 1;
-    private double x_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double X {
-      get { return x_; }
-      set {
-        x_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "y" field.</summary>
-    public const int YFieldNumber = 2;
-    private double y_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Y {
-      get { return y_; }
-      set {
-        y_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "z" field.</summary>
-    public const int ZFieldNumber = 3;
-    private double z_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Z {
-      get { return z_; }
-      set {
-        z_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as Vec3);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Vec3 other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(X, other.X)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Y, other.Y)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Z, other.Z)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (X != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(X);
-      if (Y != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Y);
-      if (Z != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Z);
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
-      }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
-      }
-      if (Z != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Z);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (X != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(X);
-      }
-      if (Y != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Y);
-      }
-      if (Z != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Z);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (X != 0D) {
-        size += 1 + 8;
-      }
-      if (Y != 0D) {
-        size += 1 + 8;
-      }
-      if (Z != 0D) {
-        size += 1 + 8;
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Vec3 other) {
-      if (other == null) {
-        return;
-      }
-      if (other.X != 0D) {
-        X = other.X;
-      }
-      if (other.Y != 0D) {
-        Y = other.Y;
-      }
-      if (other.Z != 0D) {
-        Z = other.Z;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 9: {
-            X = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            Y = input.ReadDouble();
-            break;
-          }
-          case 25: {
-            Z = input.ReadDouble();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 9: {
-            X = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            Y = input.ReadDouble();
-            break;
-          }
-          case 25: {
-            Z = input.ReadDouble();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Quat : pb::IMessage<Quat>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Quat> _parser = new pb::MessageParser<Quat>(() => new Quat());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Quat> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[2]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Quat() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Quat(Quat other) : this() {
-      a_ = other.a_;
-      b_ = other.b_;
-      c_ = other.c_;
-      d_ = other.d_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Quat Clone() {
-      return new Quat(this);
-    }
-
-    /// <summary>Field number for the "a" field.</summary>
-    public const int AFieldNumber = 1;
-    private double a_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double A {
-      get { return a_; }
-      set {
-        a_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "b" field.</summary>
-    public const int BFieldNumber = 2;
-    private double b_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double B {
-      get { return b_; }
-      set {
-        b_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "c" field.</summary>
-    public const int CFieldNumber = 3;
-    private double c_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double C {
-      get { return c_; }
-      set {
-        c_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "d" field.</summary>
-    public const int DFieldNumber = 4;
-    private double d_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double D {
-      get { return d_; }
-      set {
-        d_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as Quat);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Quat other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(A, other.A)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(B, other.B)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(C, other.C)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(D, other.D)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (A != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(A);
-      if (B != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(B);
-      if (C != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(C);
-      if (D != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(D);
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (A != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(A);
-      }
-      if (B != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(B);
-      }
-      if (C != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(C);
-      }
-      if (D != 0D) {
-        output.WriteRawTag(33);
-        output.WriteDouble(D);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (A != 0D) {
-        output.WriteRawTag(9);
-        output.WriteDouble(A);
-      }
-      if (B != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(B);
-      }
-      if (C != 0D) {
-        output.WriteRawTag(25);
-        output.WriteDouble(C);
-      }
-      if (D != 0D) {
-        output.WriteRawTag(33);
-        output.WriteDouble(D);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (A != 0D) {
-        size += 1 + 8;
-      }
-      if (B != 0D) {
-        size += 1 + 8;
-      }
-      if (C != 0D) {
-        size += 1 + 8;
-      }
-      if (D != 0D) {
-        size += 1 + 8;
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Quat other) {
-      if (other == null) {
-        return;
-      }
-      if (other.A != 0D) {
-        A = other.A;
-      }
-      if (other.B != 0D) {
-        B = other.B;
-      }
-      if (other.C != 0D) {
-        C = other.C;
-      }
-      if (other.D != 0D) {
-        D = other.D;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 9: {
-            A = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            B = input.ReadDouble();
-            break;
-          }
-          case 25: {
-            C = input.ReadDouble();
-            break;
-          }
-          case 33: {
-            D = input.ReadDouble();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 9: {
-            A = input.ReadDouble();
-            break;
-          }
-          case 17: {
-            B = input.ReadDouble();
-            break;
-          }
-          case 25: {
-            C = input.ReadDouble();
-            break;
-          }
-          case 33: {
-            D = input.ReadDouble();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class AnyVal : pb::IMessage<AnyVal>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<AnyVal> _parser = new pb::MessageParser<AnyVal>(() => new AnyVal());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<AnyVal> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[3]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public AnyVal() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public AnyVal(AnyVal other) : this() {
-      switch (other.ValCase) {
-        case ValOneofCase.Bool:
-          Bool = other.Bool;
-          break;
-        case ValOneofCase.Int:
-          Int = other.Int;
-          break;
-        case ValOneofCase.Double:
-          Double = other.Double;
-          break;
-        case ValOneofCase.String:
-          String = other.String;
-          break;
-        case ValOneofCase.Vec2:
-          Vec2 = other.Vec2.Clone();
-          break;
-        case ValOneofCase.Vec3:
-          Vec3 = other.Vec3.Clone();
-          break;
-        case ValOneofCase.Quat:
-          Quat = other.Quat.Clone();
-          break;
-      }
-
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public AnyVal Clone() {
-      return new AnyVal(this);
-    }
-
-    /// <summary>Field number for the "bool" field.</summary>
-    public const int BoolFieldNumber = 1;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Bool {
-      get { return HasBool ? (bool) val_ : false; }
-      set {
-        val_ = value;
-        valCase_ = ValOneofCase.Bool;
-      }
-    }
-    /// <summary>Gets whether the "bool" field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool HasBool {
-      get { return valCase_ == ValOneofCase.Bool; }
-    }
-    /// <summary> Clears the value of the oneof if it's currently set to "bool" </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void ClearBool() {
-      if (HasBool) {
-        ClearVal();
-      }
-    }
-
-    /// <summary>Field number for the "int" field.</summary>
-    public const int IntFieldNumber = 2;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int Int {
-      get { return HasInt ? (int) val_ : 0; }
-      set {
-        val_ = value;
-        valCase_ = ValOneofCase.Int;
-      }
-    }
-    /// <summary>Gets whether the "int" field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool HasInt {
-      get { return valCase_ == ValOneofCase.Int; }
-    }
-    /// <summary> Clears the value of the oneof if it's currently set to "int" </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void ClearInt() {
-      if (HasInt) {
-        ClearVal();
-      }
-    }
-
-    /// <summary>Field number for the "double" field.</summary>
-    public const int DoubleFieldNumber = 3;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Double {
-      get { return HasDouble ? (double) val_ : 0D; }
-      set {
-        val_ = value;
-        valCase_ = ValOneofCase.Double;
-      }
-    }
-    /// <summary>Gets whether the "double" field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool HasDouble {
-      get { return valCase_ == ValOneofCase.Double; }
-    }
-    /// <summary> Clears the value of the oneof if it's currently set to "double" </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void ClearDouble() {
-      if (HasDouble) {
-        ClearVal();
-      }
-    }
-
-    /// <summary>Field number for the "string" field.</summary>
-    public const int StringFieldNumber = 4;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string String {
-      get { return HasString ? (string) val_ : ""; }
-      set {
-        val_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-        valCase_ = ValOneofCase.String;
-      }
-    }
-    /// <summary>Gets whether the "string" field is set</summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool HasString {
-      get { return valCase_ == ValOneofCase.String; }
-    }
-    /// <summary> Clears the value of the oneof if it's currently set to "string" </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void ClearString() {
-      if (HasString) {
-        ClearVal();
-      }
-    }
-
-    /// <summary>Field number for the "vec2" field.</summary>
-    public const int Vec2FieldNumber = 5;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::AbyssCLI.ABI.Vec2 Vec2 {
-      get { return valCase_ == ValOneofCase.Vec2 ? (global::AbyssCLI.ABI.Vec2) val_ : null; }
-      set {
-        val_ = value;
-        valCase_ = value == null ? ValOneofCase.None : ValOneofCase.Vec2;
-      }
-    }
-
-    /// <summary>Field number for the "vec3" field.</summary>
-    public const int Vec3FieldNumber = 6;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::AbyssCLI.ABI.Vec3 Vec3 {
-      get { return valCase_ == ValOneofCase.Vec3 ? (global::AbyssCLI.ABI.Vec3) val_ : null; }
-      set {
-        val_ = value;
-        valCase_ = value == null ? ValOneofCase.None : ValOneofCase.Vec3;
-      }
-    }
-
-    /// <summary>Field number for the "quat" field.</summary>
-    public const int QuatFieldNumber = 7;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::AbyssCLI.ABI.Quat Quat {
-      get { return valCase_ == ValOneofCase.Quat ? (global::AbyssCLI.ABI.Quat) val_ : null; }
-      set {
-        val_ = value;
-        valCase_ = value == null ? ValOneofCase.None : ValOneofCase.Quat;
-      }
-    }
-
-    private object val_;
-    /// <summary>Enum of possible cases for the "val" oneof.</summary>
-    public enum ValOneofCase {
-      None = 0,
-      Bool = 1,
-      Int = 2,
-      Double = 3,
-      String = 4,
-      Vec2 = 5,
-      Vec3 = 6,
-      Quat = 7,
-    }
-    private ValOneofCase valCase_ = ValOneofCase.None;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public ValOneofCase ValCase {
-      get { return valCase_; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void ClearVal() {
-      valCase_ = ValOneofCase.None;
-      val_ = null;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as AnyVal);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(AnyVal other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Bool != other.Bool) return false;
-      if (Int != other.Int) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Double, other.Double)) return false;
-      if (String != other.String) return false;
-      if (!object.Equals(Vec2, other.Vec2)) return false;
-      if (!object.Equals(Vec3, other.Vec3)) return false;
-      if (!object.Equals(Quat, other.Quat)) return false;
-      if (ValCase != other.ValCase) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (HasBool) hash ^= Bool.GetHashCode();
-      if (HasInt) hash ^= Int.GetHashCode();
-      if (HasDouble) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Double);
-      if (HasString) hash ^= String.GetHashCode();
-      if (valCase_ == ValOneofCase.Vec2) hash ^= Vec2.GetHashCode();
-      if (valCase_ == ValOneofCase.Vec3) hash ^= Vec3.GetHashCode();
-      if (valCase_ == ValOneofCase.Quat) hash ^= Quat.GetHashCode();
-      hash ^= (int) valCase_;
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (HasBool) {
-        output.WriteRawTag(8);
-        output.WriteBool(Bool);
-      }
-      if (HasInt) {
-        output.WriteRawTag(16);
-        output.WriteInt32(Int);
-      }
-      if (HasDouble) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Double);
-      }
-      if (HasString) {
-        output.WriteRawTag(34);
-        output.WriteString(String);
-      }
-      if (valCase_ == ValOneofCase.Vec2) {
-        output.WriteRawTag(42);
-        output.WriteMessage(Vec2);
-      }
-      if (valCase_ == ValOneofCase.Vec3) {
-        output.WriteRawTag(50);
-        output.WriteMessage(Vec3);
-      }
-      if (valCase_ == ValOneofCase.Quat) {
-        output.WriteRawTag(58);
-        output.WriteMessage(Quat);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (HasBool) {
-        output.WriteRawTag(8);
-        output.WriteBool(Bool);
-      }
-      if (HasInt) {
-        output.WriteRawTag(16);
-        output.WriteInt32(Int);
-      }
-      if (HasDouble) {
-        output.WriteRawTag(25);
-        output.WriteDouble(Double);
-      }
-      if (HasString) {
-        output.WriteRawTag(34);
-        output.WriteString(String);
-      }
-      if (valCase_ == ValOneofCase.Vec2) {
-        output.WriteRawTag(42);
-        output.WriteMessage(Vec2);
-      }
-      if (valCase_ == ValOneofCase.Vec3) {
-        output.WriteRawTag(50);
-        output.WriteMessage(Vec3);
-      }
-      if (valCase_ == ValOneofCase.Quat) {
-        output.WriteRawTag(58);
-        output.WriteMessage(Quat);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (HasBool) {
-        size += 1 + 1;
-      }
-      if (HasInt) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Int);
-      }
-      if (HasDouble) {
-        size += 1 + 8;
-      }
-      if (HasString) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(String);
-      }
-      if (valCase_ == ValOneofCase.Vec2) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Vec2);
-      }
-      if (valCase_ == ValOneofCase.Vec3) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Vec3);
-      }
-      if (valCase_ == ValOneofCase.Quat) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Quat);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(AnyVal other) {
-      if (other == null) {
-        return;
-      }
-      switch (other.ValCase) {
-        case ValOneofCase.Bool:
-          Bool = other.Bool;
-          break;
-        case ValOneofCase.Int:
-          Int = other.Int;
-          break;
-        case ValOneofCase.Double:
-          Double = other.Double;
-          break;
-        case ValOneofCase.String:
-          String = other.String;
-          break;
-        case ValOneofCase.Vec2:
-          if (Vec2 == null) {
-            Vec2 = new global::AbyssCLI.ABI.Vec2();
-          }
-          Vec2.MergeFrom(other.Vec2);
-          break;
-        case ValOneofCase.Vec3:
-          if (Vec3 == null) {
-            Vec3 = new global::AbyssCLI.ABI.Vec3();
-          }
-          Vec3.MergeFrom(other.Vec3);
-          break;
-        case ValOneofCase.Quat:
-          if (Quat == null) {
-            Quat = new global::AbyssCLI.ABI.Quat();
-          }
-          Quat.MergeFrom(other.Quat);
-          break;
-      }
-
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 8: {
-            Bool = input.ReadBool();
-            break;
-          }
-          case 16: {
-            Int = input.ReadInt32();
-            break;
-          }
-          case 25: {
-            Double = input.ReadDouble();
-            break;
-          }
-          case 34: {
-            String = input.ReadString();
-            break;
-          }
-          case 42: {
-            global::AbyssCLI.ABI.Vec2 subBuilder = new global::AbyssCLI.ABI.Vec2();
-            if (valCase_ == ValOneofCase.Vec2) {
-              subBuilder.MergeFrom(Vec2);
-            }
-            input.ReadMessage(subBuilder);
-            Vec2 = subBuilder;
-            break;
-          }
-          case 50: {
-            global::AbyssCLI.ABI.Vec3 subBuilder = new global::AbyssCLI.ABI.Vec3();
-            if (valCase_ == ValOneofCase.Vec3) {
-              subBuilder.MergeFrom(Vec3);
-            }
-            input.ReadMessage(subBuilder);
-            Vec3 = subBuilder;
-            break;
-          }
-          case 58: {
-            global::AbyssCLI.ABI.Quat subBuilder = new global::AbyssCLI.ABI.Quat();
-            if (valCase_ == ValOneofCase.Quat) {
-              subBuilder.MergeFrom(Quat);
-            }
-            input.ReadMessage(subBuilder);
-            Quat = subBuilder;
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 8: {
-            Bool = input.ReadBool();
-            break;
-          }
-          case 16: {
-            Int = input.ReadInt32();
-            break;
-          }
-          case 25: {
-            Double = input.ReadDouble();
-            break;
-          }
-          case 34: {
-            String = input.ReadString();
-            break;
-          }
-          case 42: {
-            global::AbyssCLI.ABI.Vec2 subBuilder = new global::AbyssCLI.ABI.Vec2();
-            if (valCase_ == ValOneofCase.Vec2) {
-              subBuilder.MergeFrom(Vec2);
-            }
-            input.ReadMessage(subBuilder);
-            Vec2 = subBuilder;
-            break;
-          }
-          case 50: {
-            global::AbyssCLI.ABI.Vec3 subBuilder = new global::AbyssCLI.ABI.Vec3();
-            if (valCase_ == ValOneofCase.Vec3) {
-              subBuilder.MergeFrom(Vec3);
-            }
-            input.ReadMessage(subBuilder);
-            Vec3 = subBuilder;
-            break;
-          }
-          case 58: {
-            global::AbyssCLI.ABI.Quat subBuilder = new global::AbyssCLI.ABI.Quat();
-            if (valCase_ == ValOneofCase.Quat) {
-              subBuilder.MergeFrom(Quat);
-            }
-            input.ReadMessage(subBuilder);
-            Quat = subBuilder;
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class File : pb::IMessage<File>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -1507,7 +114,7 @@ namespace AbyssCLI.ABI {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[4]; }
+      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1823,7 +430,7 @@ namespace AbyssCLI.ABI {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[5]; }
+      get { return global::AbyssCLI.ABI.RenderActionReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1855,9 +462,6 @@ namespace AbyssCLI.ABI {
           break;
         case InnerOneofCase.ElemSetPos:
           ElemSetPos = other.ElemSetPos.Clone();
-          break;
-        case InnerOneofCase.ElemDetachComponent:
-          ElemDetachComponent = other.ElemDetachComponent.Clone();
           break;
         case InnerOneofCase.CreateImage:
           CreateImage = other.CreateImage.Clone();
@@ -1954,18 +558,6 @@ namespace AbyssCLI.ABI {
       set {
         inner_ = value;
         innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.ElemSetPos;
-      }
-    }
-
-    /// <summary>Field number for the "elem_detach_component" field.</summary>
-    public const int ElemDetachComponentFieldNumber = 20;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent ElemDetachComponent {
-      get { return innerCase_ == InnerOneofCase.ElemDetachComponent ? (global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent) inner_ : null; }
-      set {
-        inner_ = value;
-        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.ElemDetachComponent;
       }
     }
 
@@ -2133,7 +725,6 @@ namespace AbyssCLI.ABI {
       MoveElement = 2,
       DeleteElement = 3,
       ElemSetPos = 4,
-      ElemDetachComponent = 20,
       CreateImage = 100,
       DeleteImage = 109,
       CreateMaterialV = 110,
@@ -2181,7 +772,6 @@ namespace AbyssCLI.ABI {
       if (!object.Equals(MoveElement, other.MoveElement)) return false;
       if (!object.Equals(DeleteElement, other.DeleteElement)) return false;
       if (!object.Equals(ElemSetPos, other.ElemSetPos)) return false;
-      if (!object.Equals(ElemDetachComponent, other.ElemDetachComponent)) return false;
       if (!object.Equals(CreateImage, other.CreateImage)) return false;
       if (!object.Equals(DeleteImage, other.DeleteImage)) return false;
       if (!object.Equals(CreateMaterialV, other.CreateMaterialV)) return false;
@@ -2207,7 +797,6 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.MoveElement) hash ^= MoveElement.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteElement) hash ^= DeleteElement.GetHashCode();
       if (innerCase_ == InnerOneofCase.ElemSetPos) hash ^= ElemSetPos.GetHashCode();
-      if (innerCase_ == InnerOneofCase.ElemDetachComponent) hash ^= ElemDetachComponent.GetHashCode();
       if (innerCase_ == InnerOneofCase.CreateImage) hash ^= CreateImage.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteImage) hash ^= DeleteImage.GetHashCode();
       if (innerCase_ == InnerOneofCase.CreateMaterialV) hash ^= CreateMaterialV.GetHashCode();
@@ -2255,10 +844,6 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.ElemSetPos) {
         output.WriteRawTag(34);
         output.WriteMessage(ElemSetPos);
-      }
-      if (innerCase_ == InnerOneofCase.ElemDetachComponent) {
-        output.WriteRawTag(162, 1);
-        output.WriteMessage(ElemDetachComponent);
       }
       if (innerCase_ == InnerOneofCase.CreateImage) {
         output.WriteRawTag(162, 6);
@@ -2338,10 +923,6 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(34);
         output.WriteMessage(ElemSetPos);
       }
-      if (innerCase_ == InnerOneofCase.ElemDetachComponent) {
-        output.WriteRawTag(162, 1);
-        output.WriteMessage(ElemDetachComponent);
-      }
       if (innerCase_ == InnerOneofCase.CreateImage) {
         output.WriteRawTag(162, 6);
         output.WriteMessage(CreateImage);
@@ -2415,9 +996,6 @@ namespace AbyssCLI.ABI {
       }
       if (innerCase_ == InnerOneofCase.ElemSetPos) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ElemSetPos);
-      }
-      if (innerCase_ == InnerOneofCase.ElemDetachComponent) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(ElemDetachComponent);
       }
       if (innerCase_ == InnerOneofCase.CreateImage) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CreateImage);
@@ -2494,12 +1072,6 @@ namespace AbyssCLI.ABI {
             ElemSetPos = new global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos();
           }
           ElemSetPos.MergeFrom(other.ElemSetPos);
-          break;
-        case InnerOneofCase.ElemDetachComponent:
-          if (ElemDetachComponent == null) {
-            ElemDetachComponent = new global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent();
-          }
-          ElemDetachComponent.MergeFrom(other.ElemDetachComponent);
           break;
         case InnerOneofCase.CreateImage:
           if (CreateImage == null) {
@@ -2634,15 +1206,6 @@ namespace AbyssCLI.ABI {
             }
             input.ReadMessage(subBuilder);
             ElemSetPos = subBuilder;
-            break;
-          }
-          case 162: {
-            global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent();
-            if (innerCase_ == InnerOneofCase.ElemDetachComponent) {
-              subBuilder.MergeFrom(ElemDetachComponent);
-            }
-            input.ReadMessage(subBuilder);
-            ElemDetachComponent = subBuilder;
             break;
           }
           case 802: {
@@ -2815,15 +1378,6 @@ namespace AbyssCLI.ABI {
             }
             input.ReadMessage(subBuilder);
             ElemSetPos = subBuilder;
-            break;
-          }
-          case 162: {
-            global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.ElemDetachComponent();
-            if (innerCase_ == InnerOneofCase.ElemDetachComponent) {
-              subBuilder.MergeFrom(ElemDetachComponent);
-            }
-            input.ReadMessage(subBuilder);
-            ElemDetachComponent = subBuilder;
             break;
           }
           case 802: {
@@ -3866,241 +2420,6 @@ namespace AbyssCLI.ABI {
       }
 
       [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-      public sealed partial class ElemDetachComponent : pb::IMessage<ElemDetachComponent>
-      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-          , pb::IBufferMessage
-      #endif
-      {
-        private static readonly pb::MessageParser<ElemDetachComponent> _parser = new pb::MessageParser<ElemDetachComponent>(() => new ElemDetachComponent());
-        private pb::UnknownFieldSet _unknownFields;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public static pb::MessageParser<ElemDetachComponent> Parser { get { return _parser; } }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[4]; }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        pbr::MessageDescriptor pb::IMessage.Descriptor {
-          get { return Descriptor; }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public ElemDetachComponent() {
-          OnConstruction();
-        }
-
-        partial void OnConstruction();
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public ElemDetachComponent(ElemDetachComponent other) : this() {
-          elementId_ = other.elementId_;
-          componentId_ = other.componentId_;
-          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public ElemDetachComponent Clone() {
-          return new ElemDetachComponent(this);
-        }
-
-        /// <summary>Field number for the "element_id" field.</summary>
-        public const int ElementIdFieldNumber = 1;
-        private int elementId_;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public int ElementId {
-          get { return elementId_; }
-          set {
-            elementId_ = value;
-          }
-        }
-
-        /// <summary>Field number for the "component_id" field.</summary>
-        public const int ComponentIdFieldNumber = 2;
-        private int componentId_;
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public int ComponentId {
-          get { return componentId_; }
-          set {
-            componentId_ = value;
-          }
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public override bool Equals(object other) {
-          return Equals(other as ElemDetachComponent);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public bool Equals(ElemDetachComponent other) {
-          if (ReferenceEquals(other, null)) {
-            return false;
-          }
-          if (ReferenceEquals(other, this)) {
-            return true;
-          }
-          if (ElementId != other.ElementId) return false;
-          if (ComponentId != other.ComponentId) return false;
-          return Equals(_unknownFields, other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public override int GetHashCode() {
-          int hash = 1;
-          if (ElementId != 0) hash ^= ElementId.GetHashCode();
-          if (ComponentId != 0) hash ^= ComponentId.GetHashCode();
-          if (_unknownFields != null) {
-            hash ^= _unknownFields.GetHashCode();
-          }
-          return hash;
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public override string ToString() {
-          return pb::JsonFormatter.ToDiagnosticString(this);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public void WriteTo(pb::CodedOutputStream output) {
-        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-          output.WriteRawMessage(this);
-        #else
-          if (ElementId != 0) {
-            output.WriteRawTag(8);
-            output.WriteInt32(ElementId);
-          }
-          if (ComponentId != 0) {
-            output.WriteRawTag(16);
-            output.WriteInt32(ComponentId);
-          }
-          if (_unknownFields != null) {
-            _unknownFields.WriteTo(output);
-          }
-        #endif
-        }
-
-        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-          if (ElementId != 0) {
-            output.WriteRawTag(8);
-            output.WriteInt32(ElementId);
-          }
-          if (ComponentId != 0) {
-            output.WriteRawTag(16);
-            output.WriteInt32(ComponentId);
-          }
-          if (_unknownFields != null) {
-            _unknownFields.WriteTo(ref output);
-          }
-        }
-        #endif
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public int CalculateSize() {
-          int size = 0;
-          if (ElementId != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeInt32Size(ElementId);
-          }
-          if (ComponentId != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeInt32Size(ComponentId);
-          }
-          if (_unknownFields != null) {
-            size += _unknownFields.CalculateSize();
-          }
-          return size;
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public void MergeFrom(ElemDetachComponent other) {
-          if (other == null) {
-            return;
-          }
-          if (other.ElementId != 0) {
-            ElementId = other.ElementId;
-          }
-          if (other.ComponentId != 0) {
-            ComponentId = other.ComponentId;
-          }
-          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-        }
-
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        public void MergeFrom(pb::CodedInputStream input) {
-        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-          input.ReadRawMessage(this);
-        #else
-          uint tag;
-          while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
-              default:
-                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-                break;
-              case 8: {
-                ElementId = input.ReadInt32();
-                break;
-              }
-              case 16: {
-                ComponentId = input.ReadInt32();
-                break;
-              }
-            }
-          }
-        #endif
-        }
-
-        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-          uint tag;
-          while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
-              default:
-                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-                break;
-              case 8: {
-                ElementId = input.ReadInt32();
-                break;
-              }
-              case 16: {
-                ComponentId = input.ReadInt32();
-                break;
-              }
-            }
-          }
-        }
-        #endif
-
-      }
-
-      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
       public sealed partial class CreateImage : pb::IMessage<CreateImage>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
@@ -4115,7 +2434,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[5]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[4]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4359,7 +2678,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[6]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[5]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4557,7 +2876,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[7]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[6]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4792,7 +3111,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[8]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[7]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5036,7 +3355,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[9]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[8]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5317,7 +3636,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[10]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[9]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5589,7 +3908,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[11]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[10]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5787,7 +4106,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[12]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[11]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6031,7 +4350,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[13]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[12]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6303,7 +4622,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[14]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[13]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6538,7 +4857,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[15]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[14]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6736,7 +5055,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[16]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[15]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6980,7 +5299,7 @@ namespace AbyssCLI.ABI {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
         [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[17]; }
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[16]; }
         }
 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

@@ -157,7 +157,12 @@ namespace AbyssCLI
                     [DllImport("abyssnet.dll")]
                     static extern int GetResponseBody(IntPtr handle, byte* buf, int buflen);
 
-                    var buf = new byte[GetBodyLength()];
+                    var body_len = GetBodyLength();
+                    if(body_len == 0)
+                    {
+                        throw new Exception("Abyst: empty body");
+                    }
+                    var buf = new byte[body_len];
                     fixed (byte* dBytes = buf)
                     {
                         var len = GetResponseBody(response_handle, dBytes, buf.Length);
@@ -175,6 +180,7 @@ namespace AbyssCLI
         public class AbyssHost
         {
             public AbyssHost(string hash, string backend_root_dir) {
+                LocalHash = hash;
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
@@ -616,6 +622,8 @@ namespace AbyssCLI
                     Console.WriteLine($"Failed to call: {e.Message}");
                 }
             }
+
+            public readonly string LocalHash;
         }
     }
 }

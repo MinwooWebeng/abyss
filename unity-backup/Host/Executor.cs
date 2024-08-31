@@ -9,6 +9,10 @@ using UnityEngine;
 public class Executor : MonoBehaviour
 {
     [SerializeField]
+    private string local_hash = "mallang";
+    [SerializeField]
+    private string h3_root_dir;
+    [SerializeField]
     private GameObject objHolder;
     [SerializeField]
     private CommonShaderLoader commonShaderLoader;
@@ -19,15 +23,14 @@ public class Executor : MonoBehaviour
     [SerializeField]
     private bool executeActions;
 
-    // Start is called before the first frame update
-    void Start()
+    public void MoveWorld(string url)
     {
-        //Debug.Log("AbyssHost Dll Version:" + AbyssEngine.Host.GetVersion());
+        _abyss_host.CallFunc.MoveWorld(url);
     }
 
     void OnEnable()
     {
-        _abyss_host = new AbyssEngine.Host();
+        _abyss_host = new AbyssEngine.Host(local_hash, h3_root_dir);
 
         _game_objects = new();
         _components = new();
@@ -153,7 +156,7 @@ public class Executor : MonoBehaviour
     {
         if (_abyss_host.TryPopException(out Exception e))
         {
-            Debug.LogError(e.Message + "\nstacktrace: " + e.StackTrace);
+            Debug.Log(e.Message + "\nstacktrace: " + e.StackTrace);
         }
     }
 
@@ -226,7 +229,7 @@ public class Executor : MonoBehaviour
         switch (comp)
         {
             case AbyssEngine.Component.Image image:
-                mat.SetTexture(args.ParamName, image.UnityTexture2D);
+                mat.SetTexture(args.ParamName, image);
                 break;
             default:
                 throw new NotImplementedException();
@@ -252,7 +255,9 @@ public class Executor : MonoBehaviour
         var mesh = _components[args.MeshId] as AbyssEngine.Component.StaticMesh;
         mesh.InstantiateTracked(parent);
     }
-    private void DeleteStaticMesh(RenderAction.Types.DeleteStaticMesh args) { }
+    private void DeleteStaticMesh(RenderAction.Types.DeleteStaticMesh args) {
+        DeleteComponent(args.MeshId);
+    }
     private void CreateAnimation(RenderAction.Types.CreateAnimation args) { }
     private void DeleteAnimation(RenderAction.Types.DeleteAnimation args) { }
 

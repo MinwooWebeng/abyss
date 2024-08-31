@@ -82,6 +82,15 @@ func NewHost(ctx context.Context, local_identity string, peer_container *pcn.Pee
 			var abyst_hash = addr[:len(addr)-9]
 			//fmt.Println("Http3 Dial peer:", abyst_hash)
 
+			if abyst_hash == h.LocalIdentity {
+				//local request.
+				early_conn, err := h.QuicTransport.DialEarly(ctx, h.AhmpServer.Dialer.LocalAddress().Candidates[len(h.AhmpServer.Dialer.LocalAddress().Candidates)-1], tlsConf, quicConf)
+				if err != nil {
+					return nil, err
+				}
+				return early_conn, nil
+			}
+
 			peer, ok := h.AhmpServer.TryGetPeer(abyst_hash) //trim .abyst
 			if !ok {
 				//peer not found, unable to dial

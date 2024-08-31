@@ -1,0 +1,33 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "AbyssCLI.ABI";
+
+message Vec2 {
+	double x = 1;
+	double y = 2;
+}
+
+message Vec3 {
+	double x = 1;
+	double y = 2;
+	double z = 3;
+}
+
+message Quat {
+	double a = 1;
+	double b = 2;
+	double c = 3;
+	double d = 4;
+}
+
+message AnyVal {
+	oneof val {
+		bool bool = 1;
+		int32 int = 2;
+		double double = 3;
+		string string = 4;
+		Vec2 vec2 = 5;
+		Vec3 vec3 = 6;
+		Quat quat = 7;
+	}
+}

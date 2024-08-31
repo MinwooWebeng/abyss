@@ -1,38 +1,9 @@
 ﻿syntax = "proto3";
 
 import "mime.proto";
+import "commontype.proto";
 
 option csharp_namespace = "AbyssCLI.ABI";
-
-message Vec2 {
-	double x = 1;
-	double y = 2;
-}
-
-message Vec3 {
-	double x = 1;
-	double y = 2;
-	double z = 3;
-}
-
-message Quat {
-	double a = 1;
-	double b = 2;
-	double c = 3;
-	double d = 4;
-}
-
-message AnyVal {
-	oneof val {
-		bool bool = 1;
-		int32 int = 2;
-		double double = 3;
-		string string = 4;
-		Vec2 vec2 = 5;
-		Vec3 vec3 = 6;
-		Quat quat = 7;
-	}
-}
 
 message File {
 	MIME mime = 1;
@@ -149,26 +120,3 @@ message RenderAction {
 		DeleteAnimation delete_animation = 209;
 	}
 }
-
-	//enum ComponentType {
-	//	//Visual
-	//	Component_StaticMesh = 0;
-	//	Component_DynamicMesh = 1; //morph and skeletal
-	//	Component_Plane = 2;
-	//
-	//	//Physics
-	//	Component_Rigidbody = 100;
-	//	Component_DynamicSkeleton = 101;
-	//	Component_Collider = 110;
-	//
-	//	//Camera
-	//	Component_Camera = 100;
-	//	Component_Mirror = 101;
-	//
-	//	//Audio
-	//	Component_AudioListener = 110;
-	//	Component_AudioSource = 111;
-	//	Component_AudioEffectVolume = 112;
-	//}
-
-	//
