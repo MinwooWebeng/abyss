@@ -4,10 +4,10 @@ using System.Xml;
 
 namespace AbyssCLI.Aml
 {
-    internal class DocumentImpl(Contexted root, RenderActionWriter renderActionWriter, StreamWriter cerr, ResourceLoader resourceLoader, string raw_document) 
-        : DocumentContext(root, renderActionWriter, cerr, resourceLoader), Document
+    internal sealed class DocumentImpl : AmlNode
     {
-        protected override Task ActivateCallback(CancellationToken token)
+        public DocumentImpl(Contexted root, RenderActionWriter renderActionWriter, StreamWriter cerr, ResourceLoader resourceLoader, string raw_document) 
+            : base(root, renderActionWriter, cerr, resourceLoader)
         {
             XmlDocument doc = new();
             doc.LoadXml(raw_document);
@@ -21,47 +21,13 @@ namespace AbyssCLI.Aml
                 throw new Exception("<aml> not found");
 
             XmlNode head_node = aml_node.SelectSingleNode("head");
-            if (head_node != null)
-            {
-                _head = new(this, head_node, this);
-            }
-            else
-            {
-                _head = new(this, this);
-            }
-            _head.Activate();
-
+            Children.Add(new HeadImpl(this, head_node, this));
 
             var body_node = aml_node.SelectSingleNode("body");
-            if (body_node != null)
-            {
-                _body = new(this);
-            }
-            else
-            {
-                _body = new(this, body_node);
-            }
-            _body.Activate();
-
-            return Task.CompletedTask;
+            Children.Add(new BodyImpl(this, body_node));
         }
-        protected override void DeceaseCallback()
-        {
-            _head.Close();
-            _body.Close();
-        }
-        protected override async Task CleanupAsyncCallback()
-        {
-            //no cleanup required for document node
-            //await for head and body cleanup
-            await _head.CloseAsync();
-            await _body.CloseAsync();
-        }
-
-        private readonly string raw_document = raw_document;
-        public Head head { get { return _head; } }
-        private HeadImpl _head;
-        public Body body { get { return _body; } }
-        private BodyImpl _body;
+        
+        public HeadImpl Head => Children[0] as HeadImpl;
+        public BodyImpl Body => Children[1] as BodyImpl;
     }
 }

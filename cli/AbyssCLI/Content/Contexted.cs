@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AbyssCLI.Content
 {
-    internal class Contexted
+    public class Contexted
     {
         public Contexted()
         {
@@ -107,8 +107,7 @@ namespace AbyssCLI.Content
         //ErrorCallback must be thread safe
         protected virtual void DeceaseCallback() { return; }
         //DeceaseCallback is guaranteed to be called only once, only after ActivateCallback is finished or throwed
-        protected virtual void CleanupCallback() { CleanupAsyncCallback().RunSynchronously(); }
-        protected virtual Task CleanupAsyncCallback() { return Task.CompletedTask; }
+        protected virtual void CleanupCallback() { throw new NotImplementedException(); }
         //CleanupCallback is guaranteed to be called only once, after DeceaseCallback is finished.
         // **IMPORTANT** 
         // when overriding CleanupCallback,

@@ -5,7 +5,7 @@ using System;
 
 namespace AbyssCLI.ABI
 {
-    internal class RenderActionWriter
+    public class RenderActionWriter
     {
 		public RenderActionWriter(System.IO.Stream stream) { _out_stream = stream; }
 

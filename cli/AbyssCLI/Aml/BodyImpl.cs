@@ -1,32 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 
 namespace AbyssCLI.Aml
 {
-    internal class BodyImpl : DocumentContext, Body
+    internal sealed class BodyImpl : AmlNode
     {
-        //TODO: root element.
-        public BodyImpl(DocumentContext context)
-            : base(context)
-        {}
-        public BodyImpl(DocumentContext context, XmlNode xml_node)
+        public BodyImpl(AmlNode context, XmlNode xml_node)
             : base(context)
         {
-            id = xml_node.Attributes["id"]?.Value;
-            //TODO: add children
+            _root_elem = Content.RenderID.ElementId;
+            foreach (XmlNode child in xml_node?.ChildNodes)
+            {
+                switch (child.Name)
+                {
+                    case "o":
+                        Children.Add(new GroupImpl(this, _root_elem, child));
+                        break;
+                    default:
+                        throw new Exception("Invalid tag in <body>");
+                }
+            }
         }
-        public void appendChild(Selector child)
+        protected override Task ActivateSelfCallback(CancellationToken token)
         {
-            throw new NotImplementedException();
+            RenderActionWriter.CreateElement(0, _root_elem);
+            return Task.CompletedTask;
         }
-        public string tag => "body";
-        public string id { get; }
+        protected override void DeceaseSelfCallback()
+        {
+            RenderActionWriter.MoveElement(_root_elem, -1);
+        }
+        protected override void CleanupSelfCallback()
+        {
+            RenderActionWriter.DeleteElement(_root_elem);
+        }
+        public static string Tag => "body";
 
-        private List<Selector> _children = [];
+        private readonly int _root_elem;
 
     }
 }

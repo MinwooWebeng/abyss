@@ -34,6 +34,6 @@ namespace AbyssCLI.Content
         //}
         private readonly AbyssLib.AbyssHost host = host;
         private readonly HttpClient httpClient = new();
-        private readonly ConcurrentDictionary<string, int> media_cache; //registered when resource is requested.
+        //private readonly ConcurrentDictionary<string, int> media_cache; //registered when resource is requested.
     }
 }
