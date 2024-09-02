@@ -19,14 +19,12 @@ namespace AbyssCLI.Aml
             _render_elem = Content.RenderID.ElementId;
             foreach (XmlNode child in xml_this_node.ChildNodes)
             {
-                switch (child.Name)
+                Children.Add(child.Name switch
                 {
-                    case "o":
-                        Children.Add(new GroupImpl(this, _render_elem, child));
-                        break;
-                    default:
-                        throw new Exception("Invalid tag in <o" + (Id == null ? "" : (":" + Id)) + ">");
-                }
+                    "o" => new GroupImpl(this, _render_elem, child),
+                    "mesh" => new MeshImpl(this, _render_elem, child),
+                    _ => throw new Exception("Invalid tag in <o" + (Id == null ? "" : (":" + Id)) + ">"),
+                });
             }
         }
         protected override Task ActivateSelfCallback(CancellationToken token)

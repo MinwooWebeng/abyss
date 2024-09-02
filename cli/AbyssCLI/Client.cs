@@ -121,7 +121,7 @@ namespace AbyssCLI
             }
 
             //TODO: move this to AndHandleFunc.
-            var new_world = new World(_cout, _cerr, new ResourceLoader(_host), "wtf??", args.WorldUrl);
+            var new_world = new World(_cout, _cerr, new ResourceLoader(_host, "abyst:" + _host.LocalHash + "/", "abyst", _cout), "wtf??", args.WorldUrl);
             new_world.Activate(); //does not block
             _worlds["/"] = new_world;
         }

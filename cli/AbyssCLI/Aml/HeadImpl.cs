@@ -12,14 +12,11 @@ namespace AbyssCLI.Aml
 
             foreach (XmlNode child in head_node?.ChildNodes)
             {
-                switch (child.Name)
+                Children.Add(child.Name switch
                 {
-                    case "script":
-                        Children.Add(new ScriptImpl(this, child, document));
-                        break;
-                    default:
-                        throw new Exception("Invalid tag in <head>");
-                }
+                    "script" => new ScriptImpl(this, child, document),
+                    _ => throw new Exception("Invalid tag in <head>"),
+                });
             }
         }
         public static string Tag => "head";

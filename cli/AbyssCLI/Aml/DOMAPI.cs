@@ -50,5 +50,14 @@ namespace AbyssCLI.Aml
         public string id => _impl.Id;
         public static string tag => GroupImpl.Tag;
     }
+    public class Mesh
+    {
+        internal Mesh(MeshImpl impl) { _impl = impl; }
+        private readonly MeshImpl _impl;
+        public string id => _impl.Id;
+        public static string tag => MeshImpl.Tag;
+        public string src => _impl.Source;
+        public string type => _impl.MimeType;
+    }
 }
 #pragma warning restore IDE1006 //naming convension
