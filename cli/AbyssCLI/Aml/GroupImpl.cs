@@ -30,6 +30,7 @@ namespace AbyssCLI.Aml
         protected override Task ActivateSelfCallback(CancellationToken token)
         {
             RenderActionWriter.CreateElement(_render_parent, _render_elem);
+            RenderActionWriter.ElemSetPos(_render_elem, new ABI.Vec3() { X = Pos.x, Y = Pos.y, Z = Pos.z });
             return Task.CompletedTask;
         }
         protected override void DeceaseSelfCallback()

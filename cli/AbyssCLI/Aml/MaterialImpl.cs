@@ -18,7 +18,7 @@ namespace AbyssCLI.Aml
             Shader = xml_node.Attributes["shader"]?.Value;
             if (Shader == null) { throw new Exception("shader attribute is null in <Material" + (Id == null ? "" : (":" + Id)) + ">"); }
 
-            MaterialWaiter = new();
+            MaterialWaiterGroup = new();
             _parent_node = parent_node;
             foreach (XmlNode child in xml_node.ChildNodes)
             {
@@ -33,9 +33,12 @@ namespace AbyssCLI.Aml
         {
             var component_id = Content.RenderID.ComponentId;
             RenderActionWriter.CreateMaterialV(component_id, Shader);
-            MaterialWaiter.SetValue(component_id);
+            MaterialWaiterGroup.FinalizeValue(component_id);
 
-            var mesh_id = _parent_node.MeshWaiter.GetValue();
+            if(!_parent_node.MeshWaiterGroup.TryGetValueOrWaiter(out var mesh_id, out _parent_waiter))
+            {
+                mesh_id = _parent_waiter.GetValue();
+            }
             token.ThrowIfCancellationRequested();
 
             RenderActionWriter.StaticMeshSetMaterial(mesh_id, Pos, component_id);
@@ -43,26 +46,19 @@ namespace AbyssCLI.Aml
         }
         protected override void DeceaseSelfCallback()
         {
-            if (MaterialWaiter.IsFirstAccess())
-            {
-                MaterialWaiter.SetValue(-1);
-            }
-        }
-        protected override void CleanupSelfCallback()
-        {
-            var material_comp = MaterialWaiter.GetValue();
-            if (material_comp != -1)
-            {
-                RenderActionWriter.DeleteMaterial(material_comp);
-            }
+            _parent_waiter?.CancelWithValue(-1);
+            MaterialWaiterGroup.FinalizeValue(-1);
         }
         public static string Tag => "material";
         public string Id { get; }
         public int Pos { get; }
         public string Shader { get; }
         //TODO: src and mime for custom shader support.
-        public Waiter<int> MaterialWaiter;
+        public WaiterGroup<int> MaterialWaiterGroup; //actually, we don't need this for now.
+        //this is only usable after implementing third party shading support.
+        //shader compilation will be main wait target.
 
         private readonly MeshImpl _parent_node;
+        private Waiter<int> _parent_waiter;
     }
 }

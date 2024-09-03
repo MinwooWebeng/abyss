@@ -21,7 +21,7 @@ namespace AbyssCLI.Aml
             if (MimeType == null) { throw new Exception(
                 "type attribute is null in <mesh" + (Id == null ? "" : (":" + Id)) + ">"); }
 
-            MeshWaiter = new();
+            MeshWaiterGroup = new();
             _render_parent = render_parent;
             foreach (XmlNode child in xml_node?.ChildNodes)
             {
@@ -32,33 +32,40 @@ namespace AbyssCLI.Aml
                 });
             }
         }
-        protected override async Task ActivateSelfCallback(CancellationToken token)
+        protected override Task ActivateSelfCallback(CancellationToken token)
         {
             switch (MimeType)
             {
                 case "model/obj":
-                    var component_id = await ResourceLoader.GetFileAsync(Source, MIME.ModelObj);
-                    RenderActionWriter.ElemAttachStaticMesh(_render_parent, component_id);
-                    MeshWaiter.SetValue(component_id);
-                    return;
+                    if(!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ModelObj, out var resource, out _resource_waiter))
+                    {
+                        //resource not ready - wait for value;
+                        resource = _resource_waiter.GetValue();
+                    }
+                    if (resource.ComponentId != -1 && !token.IsCancellationRequested)
+                    {
+                        //side effect on renderer - do we need cleanup?
+                        RenderActionWriter.ElemAttachStaticMesh(_render_parent, resource.ComponentId);
+                    }
+                    MeshWaiterGroup.FinalizeValue(resource.ComponentId);
+                    return Task.CompletedTask;
                 default:
-                    MeshWaiter.SetValue(-1);
+                    MeshWaiterGroup.FinalizeValue(-1);
                     throw new Exception("unsupported type in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
             }
         }
         protected override void DeceaseSelfCallback()
         {
-            if(MeshWaiter.IsFirstAccess())
-            {
-                MeshWaiter.SetValue(-1);
-            }
+            _resource_waiter?.CancelWithValue(default);
+            MeshWaiterGroup.FinalizeValue(-1);
         }
         public static string Tag => "mesh";
         public string Id { get; }
         public string Source { get; }
         public string MimeType { get; }
-        public Waiter<int> MeshWaiter;
+        public WaiterGroup<int> MeshWaiterGroup;
 
         private readonly int _render_parent;
+        private Waiter<Content.ResourceLoader.FileResource> _resource_waiter;
     }
 }

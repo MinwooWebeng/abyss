@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using AbyssCLI.Tool;
+using System.Xml;
 
 namespace AbyssCLI.Aml
 {
@@ -24,24 +25,51 @@ namespace AbyssCLI.Aml
 
             _parent_material = parent_material;
         }
-        protected override async Task ActivateSelfCallback(CancellationToken token)
+        protected override Task ActivateSelfCallback(CancellationToken token)
         {
-            int component_id = MimeType switch
+            Content.ResourceLoader.FileResource resource;
+            switch (MimeType)
             {
-                "image/png" => await ResourceLoader.GetFileAsync(Source, MIME.ImagePng),
-                "image/jpg" or "image/jpeg" => await ResourceLoader.GetFileAsync(Source, MIME.ImageJpeg),
-                _ => throw new Exception("unsupported type in <image" + (Id == null ? "" : (":" + Id)) + ">"),
-            };
-            token.ThrowIfCancellationRequested();
-            if(component_id == -1) //failed to load resource.
-            {
-                return;
+                case "image/png":
+                    if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ImagePng, out resource, out _resource_waiter))
+                    {
+                        //resource not ready - wait for value;
+                        resource = _resource_waiter.GetValue();
+                    }
+                    break;
+                case "image/jpg" or "image/jpeg":
+                    if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ImageJpeg, out resource, out _resource_waiter))
+                    {
+                        //resource not ready - wait for value;
+                        resource = _resource_waiter.GetValue();
+                    }
+                    break;
+                default:
+                    return Task.CompletedTask;
             }
-            var material_id = _parent_material.MaterialWaiter.GetValue();
-            token.ThrowIfCancellationRequested();
-            RenderActionWriter.MaterialSetParamC(material_id, Role, component_id);
+
+            if (resource.ComponentId == -1 || token.IsCancellationRequested)
+            {
+                return Task.CompletedTask;
+            }
+
+            if (!_parent_material.MaterialWaiterGroup.TryGetValueOrWaiter(out var material_id, out var material_waiter))
+            {
+                material_id = material_waiter.GetValue();
+            }
+            if (material_id == -1 || token.IsCancellationRequested)
+            {
+                return Task.CompletedTask;
+            }
+
+            //side effect on renderer - do we need cleanup?
+            RenderActionWriter.MaterialSetParamC(material_id, Role, resource.ComponentId);
+            return Task.CompletedTask;
         }
-        //no cleanup - resourceLoader manages resource lifecycle.
+        protected override void DeceaseSelfCallback()
+        {
+            _resource_waiter?.CancelWithValue(default);
+        }
         public static string Tag => "img";
         public string Id { get; }
         public string Source { get; }
@@ -49,5 +77,6 @@ namespace AbyssCLI.Aml
         public string Role { get; }
 
         private readonly MaterialImpl _parent_material;
+        private Waiter<Content.ResourceLoader.FileResource> _resource_waiter;
     }
 }
