@@ -62,12 +62,12 @@ namespace AbyssCLI.Aml
         protected override void DeceaseSelfCallback()
         {
             _resource_waiter?.CancelWithValue(default);
-            MeshWaiterGroup.TryFinalizeValue(-1);
+            MeshWaiterGroup.TryFinalizeValue(0);
         }
         protected override void CleanupSelfCallback()
         {
             var component_id = MeshWaiterGroup.GetValue();
-            if (component_id != -1)
+            if (component_id != 0)
                 RenderActionWriter.DeleteStaticMesh(component_id);
         }
         public static string Tag => "mesh";

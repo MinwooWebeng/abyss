@@ -24,9 +24,10 @@ namespace AbyssCLI.Content
                 aml_file = await _resourceLoader.GetAbystFileAsync(URL);
             }
             else
-            {   //local content
-                aml_file = await _resourceLoader.GetLocalFileAsync(URL);
+            {   //local content-not allowed
+                throw new Exception("local address not allowed as world URL");
             }
+
             if (aml_file == null)
             {
                 throw new Exception("failed to load aml");
@@ -36,10 +37,13 @@ namespace AbyssCLI.Content
 
             //TODO: load
             _document = new DocumentImpl(this, _renderActionWriter, _cerr, _resourceLoader, aml_text);
-            await _document.Activate().ConfigureAwait(false);
+            _ = _document.Activate();
         }
-        protected override void ErrorCallback(Exception e) =>
-            _cerr.WriteLine(e.Message + ": " + e.StackTrace);
+        protected override void ErrorCallback(Exception e)
+        {
+            if (e is not TaskCanceledException and not OperationCanceledException)
+                _cerr.WriteLine(e.Message + ": " + e.StackTrace);
+        }
         protected override void DeceaseCallback()
         {
             _document.Close();

@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.ConstrainedExecution;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,8 +46,11 @@ namespace AbyssCLI.Aml
                 }
             }
         }
-        protected sealed override void ErrorCallback(Exception e) =>
-            ErrorStream.WriteLine(e.Message + ": " + e.StackTrace);
+        protected sealed override void ErrorCallback(Exception e)
+        {
+            if (e is not TaskCanceledException and not OperationCanceledException)
+                ErrorStream.WriteLine(e.Message + ": " + e.StackTrace);
+        }
         protected sealed override void DeceaseCallback()
         {
             DeceaseSelfCallback();

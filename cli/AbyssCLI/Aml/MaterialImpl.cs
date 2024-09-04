@@ -44,7 +44,7 @@ namespace AbyssCLI.Aml
                 mesh_id = _parent_waiter.GetValue();
             }
             token.ThrowIfCancellationRequested();
-            if(mesh_id == -1) //target mesh is not prepared
+            if(mesh_id == 0) //target mesh is not prepared
                 return Task.CompletedTask;
 
             RenderActionWriter.StaticMeshSetMaterial(mesh_id, Pos, component_id);
@@ -52,13 +52,13 @@ namespace AbyssCLI.Aml
         }
         protected override void DeceaseSelfCallback()
         {
-            _parent_waiter?.CancelWithValue(-1);
-            MaterialWaiterGroup.TryFinalizeValue(-1);
+            _parent_waiter?.CancelWithValue(0);
+            MaterialWaiterGroup.TryFinalizeValue(0);
         }
         protected override void CleanupSelfCallback()
         {
             var component_id = MaterialWaiterGroup.GetValue();
-            if (component_id != -1)
+            if (component_id != 0)
                 RenderActionWriter.DeleteMaterial(component_id);
         }
         public static string Tag => "material";

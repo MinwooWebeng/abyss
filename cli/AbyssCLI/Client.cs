@@ -31,19 +31,33 @@ namespace AbyssCLI
                 _host = new AbyssLib.AbyssHost(init_msg.Init.LocalHash, init_msg.Init.Http3RootDir);
                 _ = Task.Run(()=>
                 {
-                    while (true)
+                    try
                     {
-                        AndHandleFunc(_host.AndWaitEvent());
+                        while (true)
+                        {
+                            AndHandleFunc(_host.AndWaitEvent());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _cerr.WriteLine("AND fatal:" + ex.Message);
                     }
                 });
                 _ = Task.Run(()=>
                 {
-                    while (true)
+                    try
                     {
-                        var som_event = _host.SomWaitEvent();
-                        if (som_event.Type == AbyssLib.SomEventType.Invalid)
-                            return;
-                        SomHandleFunc(som_event);
+                        while (true)
+                        {
+                            var som_event = _host.SomWaitEvent();
+                            if (som_event.Type == AbyssLib.SomEventType.Invalid)
+                                return;
+                            SomHandleFunc(som_event);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _cerr.WriteLine("SOM fatal:" + ex.Message);
                     }
                 });
                 _ = Task.Run(ErrorHandleFunc);
@@ -86,24 +100,33 @@ namespace AbyssCLI
                     //do nothing?
                     break;
                 case AbyssLib.AndEventType.JoinSuccess:
-                    var new_world = new World(
-                        _cout, _cerr, 
-                        new ResourceLoader(_host, "abyst:" + _host.LocalHash + "/", "abyst", _cout), 
-                        and_event.UUID, 
-                        and_event.URL);
-
-                    lock (_worlds)
-                    {
-                        if(_worlds.TryGetValue(and_event.LocalPath, out _))
-                        {
-                            _cerr.WriteLine("fatal: world collision at " + and_event.LocalPath);
-                            return;
-                        }
-                        _worlds.Add(and_event.LocalPath, new_world);
+                    if(and_event.URL.StartsWith("http"))
+                    { //TODO
+                        return;
                     }
-                    new_world.Activate(); //does not block
+                    else if(and_event.URL.StartsWith("abyst"))
+                    {
+                        var base_addr = and_event.URL.Split('/', 2)[0];
+                        var new_world = new World(
+                            _cout, _cerr,
+                            new ResourceLoader(_host, base_addr + "/", "abyst", _cout),
+                            and_event.UUID,
+                            and_event.URL);
 
-                    break;
+                        lock (_worlds)
+                        {
+                            if (_worlds.TryGetValue(and_event.LocalPath, out _))
+                            {
+                                _cerr.WriteLine("fatal: world collision at " + and_event.LocalPath);
+                                return;
+                            }
+                            _worlds.Add(and_event.LocalPath, new_world);
+                        }
+                        new_world.Activate(); //does not block
+                        return;
+                    }
+                    //**** Do not allow local path for join success event.
+                    return;
                 case AbyssLib.AndEventType.PeerJoin:
                     break;
                 case AbyssLib.AndEventType.PeerLeave:
@@ -151,10 +174,30 @@ namespace AbyssCLI
         }
         private void MoveWorld(UIAction.Types.MoveWorld args)
         {
+            if(args.WorldUrl.StartsWith("abyst")) //this is not allowed.
+                return;
+
+            //join
             if (args.WorldUrl.StartsWith("abyss"))
             {
-                _cerr.WriteLine("peer join not supported yet");
+                lock (_worlds)
+                {
+                    if (_worlds.TryGetValue("/", out var old_world))
+                    {
+                        old_world.Close();
+                        _host.AndCloseWorld("/");
+                        _worlds.Remove("/");
+                    }
+                    _host.AndJoin("/", args.WorldUrl);
+                }
                 return;
+            }
+
+            //opening local world. URL can be web or local.
+            string world_URL = args.WorldUrl;
+            if(!args.WorldUrl.StartsWith("http"))
+            {
+                world_URL = "abyst:" + _host.LocalHash + "/" + world_URL.TrimStart('/');
             }
             lock(_worlds)
             {
@@ -164,9 +207,9 @@ namespace AbyssCLI
                     _host.AndCloseWorld("/");
                     _worlds.Remove("/");
                 }
-                if (_host.AndOpenWorld("/", args.WorldUrl) != 0)
+                if (_host.AndOpenWorld("/", world_URL) != 0)
                 {
-                    _cerr.WriteLine("failed to move world: " + args.WorldUrl);
+                    _cerr.WriteLine("failed to move world: " + world_URL);
                     return;
                 }
             }

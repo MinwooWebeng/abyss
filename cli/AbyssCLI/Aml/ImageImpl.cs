@@ -56,7 +56,7 @@ namespace AbyssCLI.Aml
                 material_id = material_waiter.GetValue();
             }
             token.ThrowIfCancellationRequested();
-            if (material_id == -1)
+            if (material_id == 0)
                 return Task.CompletedTask;
 
             _component_id = Content.RenderID.ComponentId;
@@ -70,7 +70,7 @@ namespace AbyssCLI.Aml
         }
         protected override void CleanupSelfCallback()
         {
-            if (_component_id != -1)
+            if (_component_id != 0)
                 RenderActionWriter.DeleteImage(_component_id);
         }
         public static string Tag => "img";

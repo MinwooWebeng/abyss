@@ -89,10 +89,18 @@ namespace AbyssCLI
                 this.Message = Message;
                 this.LocalPath = LocalPath;
                 this.PeerHash = PeerHash;
-                var world_info = System.Text.Json.JsonSerializer.Deserialize<AndWorldInfo>(WorldJson)
-                    ?? throw new Exception("invalid and message");
-                this.UUID = world_info.UUID;
-                this.URL = world_info.URL;
+                if(WorldJson != "")
+                {
+                    var world_info = System.Text.Json.JsonSerializer.Deserialize<AndWorldInfo>(WorldJson)
+                        ?? throw new Exception("failed to parse AND world info json");
+                    this.UUID = world_info.UUID;
+                    this.URL = world_info.URL;
+                }
+                else
+                {
+                    this.UUID = "";
+                    this.URL = "";
+                }
             }
             public AndEventType Type { get; }
             public int Status { get; }
