@@ -42,22 +42,33 @@ namespace AbyssCLI.Aml
                         //resource not ready - wait for value;
                         resource = _resource_waiter.GetValue();
                     }
-                    if (resource.ComponentId != -1 && !token.IsCancellationRequested)
-                    {
-                        //side effect on renderer - do we need cleanup?
-                        RenderActionWriter.ElemAttachStaticMesh(_render_parent, resource.ComponentId);
+                    token.ThrowIfCancellationRequested();
+                    if (!resource.IsValid)
+                        throw new Exception("failed to load " + Source + " in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
+
+                    var component_id = Content.RenderID.ComponentId;
+                    RenderActionWriter.CreateStaticMesh(component_id, resource.ABIFileInfo);
+                    if(!MeshWaiterGroup.TryFinalizeValue(component_id))
+                    { //decease called
+                        RenderActionWriter.DeleteStaticMesh(component_id);
+                        return Task.CompletedTask;
                     }
-                    MeshWaiterGroup.FinalizeValue(resource.ComponentId);
+                    RenderActionWriter.ElemAttachStaticMesh(_render_parent, component_id);
                     return Task.CompletedTask;
                 default:
-                    MeshWaiterGroup.FinalizeValue(-1);
                     throw new Exception("unsupported type in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
             }
         }
         protected override void DeceaseSelfCallback()
         {
             _resource_waiter?.CancelWithValue(default);
-            MeshWaiterGroup.FinalizeValue(-1);
+            MeshWaiterGroup.TryFinalizeValue(-1);
+        }
+        protected override void CleanupSelfCallback()
+        {
+            var component_id = MeshWaiterGroup.GetValue();
+            if (component_id != -1)
+                RenderActionWriter.DeleteStaticMesh(component_id);
         }
         public static string Tag => "mesh";
         public string Id { get; }

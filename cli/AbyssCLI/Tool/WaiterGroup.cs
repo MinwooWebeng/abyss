@@ -9,9 +9,9 @@ namespace AbyssCLI.Tool
 {
     class WaiterGroup<T>
     {
-        public void FinalizeValue(T value)
+        public bool TryFinalizeValue(T value)
         {
-            lock(_waiters)
+            lock (_waiters)
             {
                 if (!finished)
                 {
@@ -22,9 +22,10 @@ namespace AbyssCLI.Tool
                         waiter.SetterFinalize(value);
                     }
                     _waiters.Clear();
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
         public bool TryGetValueOrWaiter(out T value, out Waiter<T> waiter)
         {
@@ -43,6 +44,13 @@ namespace AbyssCLI.Tool
                 _waiters.Add(waiter);
                 return false;
             }
+        }
+        public T GetValue() => result;
+
+        [Obsolete]
+        public void FinalizeValue(T value)
+        {
+            TryFinalizeValue(value);
         }
         public bool IsFinalized { get { return finished; } }
         private T result;

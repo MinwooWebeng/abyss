@@ -5,7 +5,7 @@ using System;
 
 namespace AbyssCLI.ABI
 {
-    public class RenderActionWriter
+    internal class RenderActionWriter
     {
 		public RenderActionWriter(System.IO.Stream stream) { _out_stream = stream; }
 
@@ -224,6 +224,17 @@ public void DeleteAnimation
     DeleteAnimation = new DeleteAnimation
     {
         AnimationId = animation_id
+    }
+});
+public void LocalInfo
+(
+    string aurl
+)
+=> Write(new RenderAction()
+{
+    LocalInfo = new LocalInfo
+    {
+        Aurl = aurl
     }
 });
 

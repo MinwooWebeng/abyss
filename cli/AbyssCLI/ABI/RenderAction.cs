@@ -26,7 +26,7 @@ namespace AbyssCLI.ABI {
           string.Concat(
             "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8aEGNvbW1vbnR5cGUu",
             "cHJvdG8iSAoERmlsZRITCgRtaW1lGAEgASgOMgUuTUlNRRIRCgltbWFwX25h",
-            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSLQDwoMUmVuZGVy",
+            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSKbEAoMUmVuZGVy",
             "QWN0aW9uEjUKDmNyZWF0ZV9lbGVtZW50GAEgASgLMhsuUmVuZGVyQWN0aW9u",
             "LkNyZWF0ZUVsZW1lbnRIABIxCgxtb3ZlX2VsZW1lbnQYAiABKAsyGS5SZW5k",
             "ZXJBY3Rpb24uTW92ZUVsZW1lbnRIABI1Cg5kZWxldGVfZWxlbWVudBgDIAEo",
@@ -49,34 +49,36 @@ namespace AbyssCLI.ABI {
             "gQEgASgLMh4uUmVuZGVyQWN0aW9uLkRlbGV0ZVN0YXRpY01lc2hIABI6ChBj",
             "cmVhdGVfYW5pbWF0aW9uGMgBIAEoCzIdLlJlbmRlckFjdGlvbi5DcmVhdGVB",
             "bmltYXRpb25IABI6ChBkZWxldGVfYW5pbWF0aW9uGNEBIAEoCzIdLlJlbmRl",
-            "ckFjdGlvbi5EZWxldGVBbmltYXRpb25IABo2Cg1DcmVhdGVFbGVtZW50EhEK",
-            "CXBhcmVudF9pZBgBIAEoBRISCgplbGVtZW50X2lkGAIgASgFGjgKC01vdmVF",
-            "bGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUSFQoNbmV3X3BhcmVudF9pZBgC",
-            "IAEoBRojCg1EZWxldGVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUaNAoK",
-            "RWxlbVNldFBvcxISCgplbGVtZW50X2lkGAEgASgFEhIKA3BvcxgCIAEoCzIF",
-            "LlZlYzMaNAoLQ3JlYXRlSW1hZ2USEAoIaW1hZ2VfaWQYASABKAUSEwoEZmls",
-            "ZRgCIAEoCzIFLkZpbGUaHwoLRGVsZXRlSW1hZ2USEAoIaW1hZ2VfaWQYASAB",
-            "KAUaOwoPQ3JlYXRlTWF0ZXJpYWxWEhMKC21hdGVyaWFsX2lkGAEgASgFEhMK",
-            "C3NoYWRlcl9uYW1lGAIgASgJGjsKD0NyZWF0ZU1hdGVyaWFsRhITCgttYXRl",
-            "cmlhbF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChFNYXRlcmlh",
-            "bFNldFBhcmFtVhITCgttYXRlcmlhbF9pZBgBIAEoBRISCgpwYXJhbV9uYW1l",
-            "GAIgASgJEhYKBXBhcmFtGAMgASgLMgcuQW55VmFsGlIKEU1hdGVyaWFsU2V0",
-            "UGFyYW1DEhMKC21hdGVyaWFsX2lkGAEgASgFEhIKCnBhcmFtX25hbWUYAiAB",
-            "KAkSFAoMY29tcG9uZW50X2lkGAMgASgFGiUKDkRlbGV0ZU1hdGVyaWFsEhMK",
-            "C21hdGVyaWFsX2lkGAEgASgFGjgKEENyZWF0ZVN0YXRpY01lc2gSDwoHbWVz",
-            "aF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChVTdGF0aWNNZXNo",
-            "U2V0TWF0ZXJpYWwSDwoHbWVzaF9pZBgBIAEoBRIVCg1tYXRlcmlhbF9zbG90",
-            "GAIgASgFEhMKC21hdGVyaWFsX2lkGAMgASgFGjsKFEVsZW1BdHRhY2hTdGF0",
-            "aWNNZXNoEhIKCmVsZW1lbnRfaWQYASABKAUSDwoHbWVzaF9pZBgCIAEoBRoj",
-            "ChBEZWxldGVTdGF0aWNNZXNoEg8KB21lc2hfaWQYASABKAUaPAoPQ3JlYXRl",
-            "QW5pbWF0aW9uEhQKDGFuaW1hdGlvbl9pZBgBIAEoBRITCgRmaWxlGAIgASgL",
-            "MgUuRmlsZRonCg9EZWxldGVBbmltYXRpb24SFAoMYW5pbWF0aW9uX2lkGAEg",
-            "ASgFQgcKBWlubmVyQg+qAgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
+            "ckFjdGlvbi5EZWxldGVBbmltYXRpb25IABIuCgpsb2NhbF9pbmZvGOgHIAEo",
+            "CzIXLlJlbmRlckFjdGlvbi5Mb2NhbEluZm9IABo2Cg1DcmVhdGVFbGVtZW50",
+            "EhEKCXBhcmVudF9pZBgBIAEoBRISCgplbGVtZW50X2lkGAIgASgFGjgKC01v",
+            "dmVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUSFQoNbmV3X3BhcmVudF9p",
+            "ZBgCIAEoBRojCg1EZWxldGVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUa",
+            "NAoKRWxlbVNldFBvcxISCgplbGVtZW50X2lkGAEgASgFEhIKA3BvcxgCIAEo",
+            "CzIFLlZlYzMaNAoLQ3JlYXRlSW1hZ2USEAoIaW1hZ2VfaWQYASABKAUSEwoE",
+            "ZmlsZRgCIAEoCzIFLkZpbGUaHwoLRGVsZXRlSW1hZ2USEAoIaW1hZ2VfaWQY",
+            "ASABKAUaOwoPQ3JlYXRlTWF0ZXJpYWxWEhMKC21hdGVyaWFsX2lkGAEgASgF",
+            "EhMKC3NoYWRlcl9uYW1lGAIgASgJGjsKD0NyZWF0ZU1hdGVyaWFsRhITCgtt",
+            "YXRlcmlhbF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChFNYXRl",
+            "cmlhbFNldFBhcmFtVhITCgttYXRlcmlhbF9pZBgBIAEoBRISCgpwYXJhbV9u",
+            "YW1lGAIgASgJEhYKBXBhcmFtGAMgASgLMgcuQW55VmFsGlIKEU1hdGVyaWFs",
+            "U2V0UGFyYW1DEhMKC21hdGVyaWFsX2lkGAEgASgFEhIKCnBhcmFtX25hbWUY",
+            "AiABKAkSFAoMY29tcG9uZW50X2lkGAMgASgFGiUKDkRlbGV0ZU1hdGVyaWFs",
+            "EhMKC21hdGVyaWFsX2lkGAEgASgFGjgKEENyZWF0ZVN0YXRpY01lc2gSDwoH",
+            "bWVzaF9pZBgBIAEoBRITCgRmaWxlGAIgASgLMgUuRmlsZRpUChVTdGF0aWNN",
+            "ZXNoU2V0TWF0ZXJpYWwSDwoHbWVzaF9pZBgBIAEoBRIVCg1tYXRlcmlhbF9z",
+            "bG90GAIgASgFEhMKC21hdGVyaWFsX2lkGAMgASgFGjsKFEVsZW1BdHRhY2hT",
+            "dGF0aWNNZXNoEhIKCmVsZW1lbnRfaWQYASABKAUSDwoHbWVzaF9pZBgCIAEo",
+            "BRojChBEZWxldGVTdGF0aWNNZXNoEg8KB21lc2hfaWQYASABKAUaPAoPQ3Jl",
+            "YXRlQW5pbWF0aW9uEhQKDGFuaW1hdGlvbl9pZBgBIAEoBRITCgRmaWxlGAIg",
+            "ASgLMgUuRmlsZRonCg9EZWxldGVBbmltYXRpb24SFAoMYW5pbWF0aW9uX2lk",
+            "GAEgASgFGhkKCUxvY2FsSW5mbxIMCgRhdXJsGAEgASgJQgcKBWlubmVyQg+q",
+            "AgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.File), global::AbyssCLI.ABI.File.Parser, new[]{ "Mime", "MmapName", "Off", "Len" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation", "LocalInfo" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MoveElement), global::AbyssCLI.ABI.RenderAction.Types.MoveElement.Parser, new[]{ "ElementId", "NewParentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteElement), global::AbyssCLI.ABI.RenderAction.Types.DeleteElement.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos), global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos.Parser, new[]{ "ElementId", "Pos" }, null, null, null, null),
@@ -92,7 +94,8 @@ namespace AbyssCLI.ABI {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemAttachStaticMesh), global::AbyssCLI.ABI.RenderAction.Types.ElemAttachStaticMesh.Parser, new[]{ "ElementId", "MeshId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteStaticMesh), global::AbyssCLI.ABI.RenderAction.Types.DeleteStaticMesh.Parser, new[]{ "MeshId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateAnimation), global::AbyssCLI.ABI.RenderAction.Types.CreateAnimation.Parser, new[]{ "AnimationId", "File" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation), global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation.Parser, new[]{ "AnimationId" }, null, null, null, null)})
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation), global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation.Parser, new[]{ "AnimationId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.LocalInfo), global::AbyssCLI.ABI.RenderAction.Types.LocalInfo.Parser, new[]{ "Aurl" }, null, null, null, null)})
           }));
     }
     #endregion
@@ -502,6 +505,9 @@ namespace AbyssCLI.ABI {
         case InnerOneofCase.DeleteAnimation:
           DeleteAnimation = other.DeleteAnimation.Clone();
           break;
+        case InnerOneofCase.LocalInfo:
+          LocalInfo = other.LocalInfo.Clone();
+          break;
       }
 
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -717,6 +723,18 @@ namespace AbyssCLI.ABI {
       }
     }
 
+    /// <summary>Field number for the "local_info" field.</summary>
+    public const int LocalInfoFieldNumber = 1000;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::AbyssCLI.ABI.RenderAction.Types.LocalInfo LocalInfo {
+      get { return innerCase_ == InnerOneofCase.LocalInfo ? (global::AbyssCLI.ABI.RenderAction.Types.LocalInfo) inner_ : null; }
+      set {
+        inner_ = value;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.LocalInfo;
+      }
+    }
+
     private object inner_;
     /// <summary>Enum of possible cases for the "inner" oneof.</summary>
     public enum InnerOneofCase {
@@ -738,6 +756,7 @@ namespace AbyssCLI.ABI {
       DeleteStaticMesh = 129,
       CreateAnimation = 200,
       DeleteAnimation = 209,
+      LocalInfo = 1000,
     }
     private InnerOneofCase innerCase_ = InnerOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -785,6 +804,7 @@ namespace AbyssCLI.ABI {
       if (!object.Equals(DeleteStaticMesh, other.DeleteStaticMesh)) return false;
       if (!object.Equals(CreateAnimation, other.CreateAnimation)) return false;
       if (!object.Equals(DeleteAnimation, other.DeleteAnimation)) return false;
+      if (!object.Equals(LocalInfo, other.LocalInfo)) return false;
       if (InnerCase != other.InnerCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -810,6 +830,7 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.DeleteStaticMesh) hash ^= DeleteStaticMesh.GetHashCode();
       if (innerCase_ == InnerOneofCase.CreateAnimation) hash ^= CreateAnimation.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteAnimation) hash ^= DeleteAnimation.GetHashCode();
+      if (innerCase_ == InnerOneofCase.LocalInfo) hash ^= LocalInfo.GetHashCode();
       hash ^= (int) innerCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -897,6 +918,10 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(138, 13);
         output.WriteMessage(DeleteAnimation);
       }
+      if (innerCase_ == InnerOneofCase.LocalInfo) {
+        output.WriteRawTag(194, 62);
+        output.WriteMessage(LocalInfo);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -975,6 +1000,10 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(138, 13);
         output.WriteMessage(DeleteAnimation);
       }
+      if (innerCase_ == InnerOneofCase.LocalInfo) {
+        output.WriteRawTag(194, 62);
+        output.WriteMessage(LocalInfo);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1035,6 +1064,9 @@ namespace AbyssCLI.ABI {
       }
       if (innerCase_ == InnerOneofCase.DeleteAnimation) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(DeleteAnimation);
+      }
+      if (innerCase_ == InnerOneofCase.LocalInfo) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(LocalInfo);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1150,6 +1182,12 @@ namespace AbyssCLI.ABI {
             DeleteAnimation = new global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation();
           }
           DeleteAnimation.MergeFrom(other.DeleteAnimation);
+          break;
+        case InnerOneofCase.LocalInfo:
+          if (LocalInfo == null) {
+            LocalInfo = new global::AbyssCLI.ABI.RenderAction.Types.LocalInfo();
+          }
+          LocalInfo.MergeFrom(other.LocalInfo);
           break;
       }
 
@@ -1325,6 +1363,15 @@ namespace AbyssCLI.ABI {
             DeleteAnimation = subBuilder;
             break;
           }
+          case 8002: {
+            global::AbyssCLI.ABI.RenderAction.Types.LocalInfo subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.LocalInfo();
+            if (innerCase_ == InnerOneofCase.LocalInfo) {
+              subBuilder.MergeFrom(LocalInfo);
+            }
+            input.ReadMessage(subBuilder);
+            LocalInfo = subBuilder;
+            break;
+          }
         }
       }
     #endif
@@ -1495,6 +1542,15 @@ namespace AbyssCLI.ABI {
             }
             input.ReadMessage(subBuilder);
             DeleteAnimation = subBuilder;
+            break;
+          }
+          case 8002: {
+            global::AbyssCLI.ABI.RenderAction.Types.LocalInfo subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.LocalInfo();
+            if (innerCase_ == InnerOneofCase.LocalInfo) {
+              subBuilder.MergeFrom(LocalInfo);
+            }
+            input.ReadMessage(subBuilder);
+            LocalInfo = subBuilder;
             break;
           }
         }
@@ -5473,6 +5529,204 @@ namespace AbyssCLI.ABI {
                 break;
               case 8: {
                 AnimationId = input.ReadInt32();
+                break;
+              }
+            }
+          }
+        }
+        #endif
+
+      }
+
+      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+      public sealed partial class LocalInfo : pb::IMessage<LocalInfo>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
+        private static readonly pb::MessageParser<LocalInfo> _parser = new pb::MessageParser<LocalInfo>(() => new LocalInfo());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pb::MessageParser<LocalInfo> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[17]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public LocalInfo() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public LocalInfo(LocalInfo other) : this() {
+          aurl_ = other.aurl_;
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public LocalInfo Clone() {
+          return new LocalInfo(this);
+        }
+
+        /// <summary>Field number for the "aurl" field.</summary>
+        public const int AurlFieldNumber = 1;
+        private string aurl_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string Aurl {
+          get { return aurl_; }
+          set {
+            aurl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override bool Equals(object other) {
+          return Equals(other as LocalInfo);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool Equals(LocalInfo other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (Aurl != other.Aurl) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (Aurl.Length != 0) hash ^= Aurl.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
+          if (Aurl.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(Aurl);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (Aurl.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(Aurl);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public int CalculateSize() {
+          int size = 0;
+          if (Aurl.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(Aurl);
+          }
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(LocalInfo other) {
+          if (other == null) {
+            return;
+          }
+          if (other.Aurl.Length != 0) {
+            Aurl = other.Aurl;
+          }
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                Aurl = input.ReadString();
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                Aurl = input.ReadString();
                 break;
               }
             }

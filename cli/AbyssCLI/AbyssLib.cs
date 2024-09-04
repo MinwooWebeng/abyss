@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using static AbyssCLI.AbyssLib;
 
 #nullable enable
 namespace AbyssCLI
@@ -74,6 +75,11 @@ namespace AbyssCLI
             PeerJoin,   //3
             PeerLeave,  //4
         }
+        public class AndWorldInfo
+        {
+            public required string UUID { get; set; }
+            public required string URL { get; set; }
+        }
         public class AndEvent
         {
             public AndEvent(AndEventType Type, int Status, string Message, string LocalPath, string PeerHash, string WorldJson)
@@ -83,14 +89,18 @@ namespace AbyssCLI
                 this.Message = Message;
                 this.LocalPath = LocalPath;
                 this.PeerHash = PeerHash;
-                this.WorldJson = WorldJson;
+                var world_info = System.Text.Json.JsonSerializer.Deserialize<AndWorldInfo>(WorldJson)
+                    ?? throw new Exception("invalid and message");
+                this.UUID = world_info.UUID;
+                this.URL = world_info.URL;
             }
             public AndEventType Type { get; }
             public int Status { get; }
             public string Message { get; }
             public string LocalPath { get; }
             public string PeerHash { get; }
-            public string WorldJson { get; }
+            public string UUID { get; }
+            public string URL { get; }
         }
         public enum SomEventType
         {

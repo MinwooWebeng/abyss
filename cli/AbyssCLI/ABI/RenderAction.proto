@@ -96,6 +96,10 @@ message RenderAction {
 		int32 animation_id = 1;
 	}
 
+	message LocalInfo {
+		string aurl = 1;
+	}
+
 	oneof inner {
 		CreateElement create_element = 1;
 		MoveElement move_element = 2;
@@ -118,5 +122,7 @@ message RenderAction {
 		
 		CreateAnimation create_animation = 200;
 		DeleteAnimation delete_animation = 209;
+
+		LocalInfo local_info = 1000;
 	}
 }

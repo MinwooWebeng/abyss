@@ -17,9 +17,9 @@ namespace AbyssCLI.Content
     {
         public class FileResource
         {
-            public int ComponentId = -1; //primary id
             public MemoryMappedFile MMF = null; //TODO: remove componenet from renderer and close this.
             public AbyssCLI.ABI.File ABIFileInfo = null;
+            public bool IsValid = false; //must be only set from ResourceLoader
         }
         public bool TryGetFileOrWaiter(string Source, MIME MimeType, out FileResource resource, out Waiter<FileResource> waiter)
         {
@@ -73,10 +73,7 @@ namespace AbyssCLI.Content
             catch
             {
                 //TODO: log error.
-                dest.FinalizeValue(new FileResource()
-                {
-                    ComponentId = -1
-                });
+                dest.TryFinalizeValue(default);
                 return;
             }
 
@@ -99,27 +96,9 @@ namespace AbyssCLI.Content
                 Len = (uint)fileBytes.Length,
             };
 
-            switch (MimeType)
+            dest.TryFinalizeValue(new FileResource
             {
-                case MIME.ModelObj:
-                    _render_action_writer.CreateStaticMesh(component_id, abi_fileinfo);
-                    break;
-                case MIME.ImagePng or MIME.ImageJpeg:
-                    _render_action_writer.CreateImage(component_id, abi_fileinfo);
-                    break;
-                default:
-                    //TODO: log error.
-                    mmf.Dispose();
-                    dest.FinalizeValue(new FileResource()
-                    {
-                        ComponentId = -1
-                    });
-                    return;
-            };
-
-            dest.FinalizeValue(new FileResource
-            {
-                ComponentId = component_id,
+                IsValid = true,
                 MMF = mmf,
                 ABIFileInfo = abi_fileinfo,
             });

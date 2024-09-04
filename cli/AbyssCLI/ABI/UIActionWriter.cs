@@ -57,6 +57,17 @@ public void ShareContent
         Url = url
     }
 });
+public void ConnectPeer
+(
+    string aurl
+)
+=> Write(new UIAction()
+{
+    ConnectPeer = new ConnectPeer
+    {
+        Aurl = aurl
+    }
+});
 
 		public void Flush()
 		{

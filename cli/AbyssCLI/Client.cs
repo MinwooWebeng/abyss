@@ -1,7 +1,6 @@
 ﻿using AbyssCLI.ABI;
 using AbyssCLI.Content;
-using System.Collections.Concurrent;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace AbyssCLI
@@ -30,9 +29,26 @@ namespace AbyssCLI
                 }
 
                 _host = new AbyssLib.AbyssHost(init_msg.Init.LocalHash, init_msg.Init.Http3RootDir);
-                _ = Task.Run(AndHandleFunc);
-                _ = Task.Run(SomHandleFunc);
+                _ = Task.Run(()=>
+                {
+                    while (true)
+                    {
+                        AndHandleFunc(_host.AndWaitEvent());
+                    }
+                });
+                _ = Task.Run(()=>
+                {
+                    while (true)
+                    {
+                        var som_event = _host.SomWaitEvent();
+                        if (som_event.Type == AbyssLib.SomEventType.Invalid)
+                            return;
+                        SomHandleFunc(som_event);
+                    }
+                });
                 _ = Task.Run(ErrorHandleFunc);
+
+                _cout.LocalInfo(_host.LocalAddr());
 
                 await Task.Run(MainHandleFunc);
             }
@@ -55,21 +71,50 @@ namespace AbyssCLI
             }
             return UIAction.Parser.ParseFrom(data);
         }
-        private void AndHandleFunc()
+        private void AndHandleFunc(AbyssLib.AndEvent and_event)
         {
-            _cerr.WriteLine("AndHandle!");
-            while (true)
+            _cerr.WriteLine($"AND: {JsonSerializer.Serialize(and_event)}");
+            //{ "Type":2,
+            //"Status":200,"Message":"Open",
+            //"LocalPath":"/","PeerHash":"mallang",
+            //"WorldJson":"{\u0022UUID\u0022:\u0022b84bf1dd-f36a-4e4f-bd44-5567ea1553ac\u0022,
+            //\u0022URL\u0022:\u0022static/empty.aml\u0022}"}
+            switch (and_event.Type)
             {
-                var ev_a = _host.AndWaitEvent();
-                _cerr.WriteLine($"AND: {JsonSerializer.Serialize(ev_a)}");
+                case AbyssLib.AndEventType.JoinDenied:
+                case AbyssLib.AndEventType.JoinExpired:
+                    //do nothing?
+                    break;
+                case AbyssLib.AndEventType.JoinSuccess:
+                    var new_world = new World(
+                        _cout, _cerr, 
+                        new ResourceLoader(_host, "abyst:" + _host.LocalHash + "/", "abyst", _cout), 
+                        and_event.UUID, 
+                        and_event.URL);
+
+                    lock (_worlds)
+                    {
+                        if(_worlds.TryGetValue(and_event.LocalPath, out _))
+                        {
+                            _cerr.WriteLine("fatal: world collision at " + and_event.LocalPath);
+                            return;
+                        }
+                        _worlds.Add(and_event.LocalPath, new_world);
+                    }
+                    new_world.Activate(); //does not block
+
+                    break;
+                case AbyssLib.AndEventType.PeerJoin:
+                    break;
+                case AbyssLib.AndEventType.PeerLeave:
+                    break;
+                default:
+                    throw new Exception("terminating and handler");
             }
         }
-        private void SomHandleFunc()
+        private void SomHandleFunc(AbyssLib.SomEvent som_event)
         {
-            while (true)
-            {
-                _cerr.WriteLine($"SOM: {_host.SomWaitEvent()}");
-            }
+            _cerr.WriteLine($"SOM: {som_event}");
         }
         private void ErrorHandleFunc()
         {
@@ -96,6 +141,9 @@ namespace AbyssCLI
                     case UIAction.InnerOneofCase.ShareContent:
                         var content_id = ShareContent(message.ShareContent);
                         break;
+                    case UIAction.InnerOneofCase.ConnectPeer:
+                        _host.RequestConnect(message.ConnectPeer.Aurl);
+                        break;
                     default:
                         throw new Exception("fatal: received invalid UI Action");
                 }
@@ -105,25 +153,23 @@ namespace AbyssCLI
         {
             if (args.WorldUrl.StartsWith("abyss"))
             {
-                _cerr.WriteLine("peer join not supported");
+                _cerr.WriteLine("peer join not supported yet");
                 return;
             }
-            if(_worlds.TryGetValue("/", out var old_world))
+            lock(_worlds)
             {
-                old_world.Close();
-                _host.AndCloseWorld("/");
-                _worlds.Remove("/");
+                if (_worlds.TryGetValue("/", out var old_world))
+                {
+                    old_world.Close();
+                    _host.AndCloseWorld("/");
+                    _worlds.Remove("/");
+                }
+                if (_host.AndOpenWorld("/", args.WorldUrl) != 0)
+                {
+                    _cerr.WriteLine("failed to move world: " + args.WorldUrl);
+                    return;
+                }
             }
-            if (_host.AndOpenWorld("/", args.WorldUrl) != 0)
-            {
-                _cerr.WriteLine("failed to move world: " + args.WorldUrl);
-                return;
-            }
-
-            //TODO: move this to AndHandleFunc.
-            var new_world = new World(_cout, _cerr, new ResourceLoader(_host, "abyst:" + _host.LocalHash + "/", "abyst", _cout), "wtf??", args.WorldUrl);
-            new_world.Activate(); //does not block
-            _worlds["/"] = new_world;
         }
         private int ShareContent(UIAction.Types.ShareContent args)
         {
