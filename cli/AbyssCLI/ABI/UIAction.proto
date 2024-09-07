@@ -19,7 +19,6 @@ message UIAction {
 
 	// Address Bar Input
 	message ShareContent {
-		string world_uuid = 1;
 		string url = 2;
 	}
 

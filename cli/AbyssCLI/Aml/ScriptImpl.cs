@@ -5,7 +5,7 @@ namespace AbyssCLI.Aml
 {
     internal sealed class ScriptImpl : AmlNode
     {
-        public ScriptImpl(AmlNode context, XmlNode xml_node, DocumentImpl document) 
+        public ScriptImpl(AmlNode context, XmlNode xml_node, DocumentImpl document)
             : base(context)
         {
             _document = document;

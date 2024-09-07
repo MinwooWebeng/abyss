@@ -1,79 +1,74 @@
 ﻿using AbyssCLI.ABI;
 using AbyssCLI.Tool;
-using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.IO.MemoryMappedFiles;
-using System.Reflection.Metadata.Ecma335;
 using System.Text;
 
-namespace AbyssCLI.Content
+namespace AbyssCLI.Aml
 {
     //each content must have one MediaLoader
     //TODO: add CORS protection before adding cookie.
     internal class ResourceLoader(
-        AbyssCLI.AbyssLib.AbyssHost host, 
-        string abyst_prefix, string mmf_prefix, 
-        RenderActionWriter renderActionWriter)
+        AbyssLib.AbyssHost host,
+        StreamWriter cerr,
+        AbyssAddress origin)
     {
         public class FileResource
         {
             public MemoryMappedFile MMF = null; //TODO: remove componenet from renderer and close this.
-            public AbyssCLI.ABI.File ABIFileInfo = null;
+            public ABI.File ABIFileInfo = null;
             public bool IsValid = false; //must be only set from ResourceLoader
         }
-        public bool TryGetFileOrWaiter(string Source, MIME MimeType, out FileResource resource, out Waiter<FileResource> waiter)
+        public bool TryGetFileOrWaiter(string URL, MIME MimeType, out FileResource resource, out Waiter<FileResource> waiter)
         {
+            if (!_origin.TryParseMaybeRelativeAddress(URL, out var Source))
+                throw new Exception("invalid URL");
+
             WaiterGroup<FileResource> waiting_group;
-            lock(_media_cache)
+            lock (_media_cache)
             {
-                if (!_media_cache.TryGetValue(Source, out waiting_group)) {
+                if (!_media_cache.TryGetValue(Source.String, out waiting_group))
+                {
                     waiting_group = new();
                     _ = Loadresource(Source, MimeType, waiting_group); //do not wait.
-                    _media_cache.Add(Source, waiting_group);
+                    _media_cache.Add(Source.String, waiting_group);
                 }
             }
-            
+
             return waiting_group.TryGetValueOrWaiter(out resource, out waiter);
         }
-        public async Task<byte[]> GetHttpFileAsync(string url)
+        public async Task<byte[]> GetHttpFileAsync(Uri url)
         {
             var response = await _http_client.GetAsync(url);
             return response.IsSuccessStatusCode ? await response.Content.ReadAsByteArrayAsync() : null;
         }
         public async Task<byte[]> GetAbystFileAsync(string url)
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 var response = _host.HttpGet(url);
                 return response.GetStatus() == 200 ? response.GetBody() : throw new Exception(url + " : " + Encoding.UTF8.GetString(response.GetBody()));
             });
         }
-        public async Task<byte[]> GetLocalFileAsync(string url)
-        {
-            return await GetAbystFileAsync(_abyst_prefix + url.Trim().TrimStart('/'));
-        }
 
-        private async Task Loadresource(string Source, MIME MimeType, WaiterGroup<FileResource> dest)
+        private async Task Loadresource(AbyssAddress Source, MIME MimeType, WaiterGroup<FileResource> dest)
         {
             byte[] fileBytes;
             try
             {
-                if (Source.StartsWith("http"))
+                fileBytes = Source.Scheme switch
                 {
-                    fileBytes = await GetHttpFileAsync(Source);
-                }
-                else if (Source.StartsWith("abyst"))
-                {
-                    fileBytes = await GetAbystFileAsync(Source); //this may should be blocked.
-                }
-                else
-                {
-                    fileBytes = await GetLocalFileAsync(Source);
-                }
+                    AbyssAddress.EScheme.WWW => await GetHttpFileAsync(Source.WebAddress),
+                    AbyssAddress.EScheme.Abyst => await GetAbystFileAsync(Source.String),
+                    _ => throw new Exception("invalid address scheme"),
+                };
             }
-            catch
+            catch (Exception e)
             {
                 //TODO: log error.
-                dest.TryFinalizeValue(default);
+                _cerr.WriteLine("invalid address for resource: " + Source.String);
+                _cerr.WriteLine(e.Message);
+                _cerr.WriteLine(e.StackTrace);
+                dest.TryFinalizeValue(new FileResource());
                 return;
             }
 
@@ -88,7 +83,7 @@ namespace AbyssCLI.Content
             accessor.WriteArray(0, fileBytes, 0, fileBytes.Length);
             accessor.Flush();
             accessor.Dispose();
-            var abi_fileinfo = new AbyssCLI.ABI.File()
+            var abi_fileinfo = new ABI.File()
             {
                 Mime = MimeType,
                 MmapName = mmf_path,
@@ -105,9 +100,9 @@ namespace AbyssCLI.Content
         }
 
         private readonly AbyssLib.AbyssHost _host = host;
-        private readonly string _abyst_prefix = abyst_prefix;
-        private readonly string _mmf_path_prefix = mmf_prefix;
-        private readonly RenderActionWriter _render_action_writer = renderActionWriter;
+        private readonly StreamWriter _cerr = cerr;
+        private readonly AbyssAddress _origin = origin;
+        private readonly string _mmf_path_prefix = "abyst" + RanStr.RandomString(10);
         private readonly HttpClient _http_client = new();
         private readonly Dictionary<string, WaiterGroup<FileResource>> _media_cache = []; //registered when resource is requested.
     }

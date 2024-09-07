@@ -46,15 +46,24 @@ public void MoveWorld
 });
 public void ShareContent
 (
-    string world_uuid,
     string url
 )
 => Write(new UIAction()
 {
     ShareContent = new ShareContent
     {
-        WorldUuid = world_uuid,
         Url = url
+    }
+});
+public void ConnectPeer
+(
+    string aurl
+)
+=> Write(new UIAction()
+{
+    ConnectPeer = new ConnectPeer
+    {
+        Aurl = aurl
     }
 });
 

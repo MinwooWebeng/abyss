@@ -7,7 +7,7 @@ namespace AbyssCLI.Aml
         public BodyImpl(AmlNode context, XmlNode xml_node)
             : base(context)
         {
-            _root_elem = Content.RenderID.ElementId;
+            _root_elem = RenderID.ElementId;
             foreach (XmlNode child in xml_node?.ChildNodes)
             {
                 Children.Add(child.Name switch

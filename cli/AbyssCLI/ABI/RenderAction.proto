@@ -99,6 +99,17 @@ message RenderAction {
 	message LocalInfo {
 		string aurl = 1;
 	}
+	message InfoContentShared {
+		string content_uuid = 1;
+		string content_url = 2;
+		string sharer_hash = 3;
+		string world_uuid = 4;
+	}
+	message InfoContentDeleted {
+		string content_uuid = 1;
+		string sharer_hash = 3;
+		string world_uuid = 4;
+	}
 
 	oneof inner {
 		CreateElement create_element = 1;
@@ -124,5 +135,7 @@ message RenderAction {
 		DeleteAnimation delete_animation = 209;
 
 		LocalInfo local_info = 1000;
+		InfoContentShared info_content_shared = 1001;
+		InfoContentDeleted info_content_deleted = 1002;
 	}
 }

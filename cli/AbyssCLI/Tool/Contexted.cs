@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AbyssCLI.Content
+﻿namespace AbyssCLI.Tool
 {
     public class Contexted
     {
@@ -21,10 +15,10 @@ namespace AbyssCLI.Content
         }
         public Task Activate()
         {
-            return Task.Run(async() =>
+            return Task.Run(async () =>
             {
                 //prevent duplicated activation.
-                if(Interlocked.CompareExchange(ref _state, 1, 0) != 0)
+                if (Interlocked.CompareExchange(ref _state, 1, 0) != 0)
                     return;
 
                 try
@@ -51,7 +45,7 @@ namespace AbyssCLI.Content
         {
             CloseAsync();
         }
-        public Task<Exception> CloseAsync() 
+        public Task<Exception> CloseAsync()
         {
             return Task.Run(async () =>
             {
@@ -91,7 +85,7 @@ namespace AbyssCLI.Content
                 return;
             }
 
-            if(Interlocked.CompareExchange(ref _state, 2, 1) == 1)
+            if (Interlocked.CompareExchange(ref _state, 2, 1) == 1)
             {
                 DeceaseCallback();
                 _decease_sema.Release();

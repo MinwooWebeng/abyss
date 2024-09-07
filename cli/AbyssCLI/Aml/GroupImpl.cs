@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Xml;
+﻿using System.Xml;
 
 namespace AbyssCLI.Aml
 {
@@ -16,7 +15,7 @@ namespace AbyssCLI.Aml
             Pos = Aml.AmlValueParser.ParseVec3(xml_this_node.Attributes["pos"]?.Value);
             Rot = Aml.AmlValueParser.ParseVec4(xml_this_node.Attributes["rot"]?.Value);
             _render_parent = render_parent;
-            _render_elem = Content.RenderID.ElementId;
+            _render_elem = RenderID.ElementId;
             foreach (XmlNode child in xml_this_node.ChildNodes)
             {
                 Children.Add(child.Name switch

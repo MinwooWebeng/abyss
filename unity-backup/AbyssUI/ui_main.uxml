@@ -3,6 +3,9 @@
     <ui:VisualElement name="screen" style="height: 100%; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.81); width: 100%;">
         <ui:VisualElement name="background">
             <ui:TextField picking-mode="Ignore" value="abyst:local/home" name="address-bar" />
+            <ui:Label tabindex="-1" text="abyss:/" parse-escape-sequences="true" display-tooltip-when-elided="true" name="info" style="color: rgb(255, 255, 255);" />
+            <ui:TextField picking-mode="Ignore" value="abyst:local/home" name="sub-address-bar" />
+            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="info-more" style="color: rgb(255, 255, 255);" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

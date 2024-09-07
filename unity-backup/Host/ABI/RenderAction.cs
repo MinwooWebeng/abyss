@@ -26,7 +26,7 @@ namespace AbyssCLI.ABI {
           string.Concat(
             "ChJSZW5kZXJBY3Rpb24ucHJvdG8aCm1pbWUucHJvdG8aEGNvbW1vbnR5cGUu",
             "cHJvdG8iSAoERmlsZRITCgRtaW1lGAEgASgOMgUuTUlNRRIRCgltbWFwX25h",
-            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSLQDwoMUmVuZGVy",
+            "bWUYAiABKAkSCwoDb2ZmGAMgASgNEgsKA2xlbhgEIAEoDSLdEgoMUmVuZGVy",
             "QWN0aW9uEjUKDmNyZWF0ZV9lbGVtZW50GAEgASgLMhsuUmVuZGVyQWN0aW9u",
             "LkNyZWF0ZUVsZW1lbnRIABIxCgxtb3ZlX2VsZW1lbnQYAiABKAsyGS5SZW5k",
             "ZXJBY3Rpb24uTW92ZUVsZW1lbnRIABI1Cg5kZWxldGVfZWxlbWVudBgDIAEo",
@@ -49,7 +49,11 @@ namespace AbyssCLI.ABI {
             "gQEgASgLMh4uUmVuZGVyQWN0aW9uLkRlbGV0ZVN0YXRpY01lc2hIABI6ChBj",
             "cmVhdGVfYW5pbWF0aW9uGMgBIAEoCzIdLlJlbmRlckFjdGlvbi5DcmVhdGVB",
             "bmltYXRpb25IABI6ChBkZWxldGVfYW5pbWF0aW9uGNEBIAEoCzIdLlJlbmRl",
-            "ckFjdGlvbi5EZWxldGVBbmltYXRpb25IABo2Cg1DcmVhdGVFbGVtZW50EhEK",
+            "ckFjdGlvbi5EZWxldGVBbmltYXRpb25IABIuCgpsb2NhbF9pbmZvGOgHIAEo",
+            "CzIXLlJlbmRlckFjdGlvbi5Mb2NhbEluZm9IABI/ChNpbmZvX2NvbnRlbnRf",
+            "c2hhcmVkGOkHIAEoCzIfLlJlbmRlckFjdGlvbi5JbmZvQ29udGVudFNoYXJl",
+            "ZEgAEkEKFGluZm9fY29udGVudF9kZWxldGVkGOoHIAEoCzIgLlJlbmRlckFj",
+            "dGlvbi5JbmZvQ29udGVudERlbGV0ZWRIABo2Cg1DcmVhdGVFbGVtZW50EhEK",
             "CXBhcmVudF9pZBgBIAEoBRISCgplbGVtZW50X2lkGAIgASgFGjgKC01vdmVF",
             "bGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUSFQoNbmV3X3BhcmVudF9pZBgC",
             "IAEoBRojCg1EZWxldGVFbGVtZW50EhIKCmVsZW1lbnRfaWQYASABKAUaNAoK",
@@ -71,12 +75,17 @@ namespace AbyssCLI.ABI {
             "ChBEZWxldGVTdGF0aWNNZXNoEg8KB21lc2hfaWQYASABKAUaPAoPQ3JlYXRl",
             "QW5pbWF0aW9uEhQKDGFuaW1hdGlvbl9pZBgBIAEoBRITCgRmaWxlGAIgASgL",
             "MgUuRmlsZRonCg9EZWxldGVBbmltYXRpb24SFAoMYW5pbWF0aW9uX2lkGAEg",
-            "ASgFQgcKBWlubmVyQg+qAgxBYnlzc0NMSS5BQkliBnByb3RvMw=="));
+            "ASgFGhkKCUxvY2FsSW5mbxIMCgRhdXJsGAEgASgJGmcKEUluZm9Db250ZW50",
+            "U2hhcmVkEhQKDGNvbnRlbnRfdXVpZBgBIAEoCRITCgtjb250ZW50X3VybBgC",
+            "IAEoCRITCgtzaGFyZXJfaGFzaBgDIAEoCRISCgp3b3JsZF91dWlkGAQgASgJ",
+            "GlMKEkluZm9Db250ZW50RGVsZXRlZBIUCgxjb250ZW50X3V1aWQYASABKAkS",
+            "EwoLc2hhcmVyX2hhc2gYAyABKAkSEgoKd29ybGRfdXVpZBgEIAEoCUIHCgVp",
+            "bm5lckIPqgIMQWJ5c3NDTEkuQUJJYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::MimeReflection.Descriptor, global::AbyssCLI.ABI.CommontypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.File), global::AbyssCLI.ABI.File.Parser, new[]{ "Mime", "MmapName", "Off", "Len" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction), global::AbyssCLI.ABI.RenderAction.Parser, new[]{ "CreateElement", "MoveElement", "DeleteElement", "ElemSetPos", "CreateImage", "DeleteImage", "CreateMaterialV", "CreateMaterialF", "MaterialSetParamV", "MaterialSetParamC", "DeleteMaterial", "CreateStaticMesh", "StaticMeshSetMaterial", "ElemAttachStaticMesh", "DeleteStaticMesh", "CreateAnimation", "DeleteAnimation", "LocalInfo", "InfoContentShared", "InfoContentDeleted" }, new[]{ "Inner" }, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateElement), global::AbyssCLI.ABI.RenderAction.Types.CreateElement.Parser, new[]{ "ParentId", "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.MoveElement), global::AbyssCLI.ABI.RenderAction.Types.MoveElement.Parser, new[]{ "ElementId", "NewParentId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteElement), global::AbyssCLI.ABI.RenderAction.Types.DeleteElement.Parser, new[]{ "ElementId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos), global::AbyssCLI.ABI.RenderAction.Types.ElemSetPos.Parser, new[]{ "ElementId", "Pos" }, null, null, null, null),
@@ -92,7 +101,10 @@ namespace AbyssCLI.ABI {
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.ElemAttachStaticMesh), global::AbyssCLI.ABI.RenderAction.Types.ElemAttachStaticMesh.Parser, new[]{ "ElementId", "MeshId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteStaticMesh), global::AbyssCLI.ABI.RenderAction.Types.DeleteStaticMesh.Parser, new[]{ "MeshId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.CreateAnimation), global::AbyssCLI.ABI.RenderAction.Types.CreateAnimation.Parser, new[]{ "AnimationId", "File" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation), global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation.Parser, new[]{ "AnimationId" }, null, null, null, null)})
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation), global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation.Parser, new[]{ "AnimationId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.LocalInfo), global::AbyssCLI.ABI.RenderAction.Types.LocalInfo.Parser, new[]{ "Aurl" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared), global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared.Parser, new[]{ "ContentUuid", "ContentUrl", "SharerHash", "WorldUuid" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted), global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted.Parser, new[]{ "ContentUuid", "SharerHash", "WorldUuid" }, null, null, null, null)})
           }));
     }
     #endregion
@@ -502,6 +514,15 @@ namespace AbyssCLI.ABI {
         case InnerOneofCase.DeleteAnimation:
           DeleteAnimation = other.DeleteAnimation.Clone();
           break;
+        case InnerOneofCase.LocalInfo:
+          LocalInfo = other.LocalInfo.Clone();
+          break;
+        case InnerOneofCase.InfoContentShared:
+          InfoContentShared = other.InfoContentShared.Clone();
+          break;
+        case InnerOneofCase.InfoContentDeleted:
+          InfoContentDeleted = other.InfoContentDeleted.Clone();
+          break;
       }
 
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -717,6 +738,42 @@ namespace AbyssCLI.ABI {
       }
     }
 
+    /// <summary>Field number for the "local_info" field.</summary>
+    public const int LocalInfoFieldNumber = 1000;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::AbyssCLI.ABI.RenderAction.Types.LocalInfo LocalInfo {
+      get { return innerCase_ == InnerOneofCase.LocalInfo ? (global::AbyssCLI.ABI.RenderAction.Types.LocalInfo) inner_ : null; }
+      set {
+        inner_ = value;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.LocalInfo;
+      }
+    }
+
+    /// <summary>Field number for the "info_content_shared" field.</summary>
+    public const int InfoContentSharedFieldNumber = 1001;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared InfoContentShared {
+      get { return innerCase_ == InnerOneofCase.InfoContentShared ? (global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared) inner_ : null; }
+      set {
+        inner_ = value;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.InfoContentShared;
+      }
+    }
+
+    /// <summary>Field number for the "info_content_deleted" field.</summary>
+    public const int InfoContentDeletedFieldNumber = 1002;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted InfoContentDeleted {
+      get { return innerCase_ == InnerOneofCase.InfoContentDeleted ? (global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted) inner_ : null; }
+      set {
+        inner_ = value;
+        innerCase_ = value == null ? InnerOneofCase.None : InnerOneofCase.InfoContentDeleted;
+      }
+    }
+
     private object inner_;
     /// <summary>Enum of possible cases for the "inner" oneof.</summary>
     public enum InnerOneofCase {
@@ -738,6 +795,9 @@ namespace AbyssCLI.ABI {
       DeleteStaticMesh = 129,
       CreateAnimation = 200,
       DeleteAnimation = 209,
+      LocalInfo = 1000,
+      InfoContentShared = 1001,
+      InfoContentDeleted = 1002,
     }
     private InnerOneofCase innerCase_ = InnerOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -785,6 +845,9 @@ namespace AbyssCLI.ABI {
       if (!object.Equals(DeleteStaticMesh, other.DeleteStaticMesh)) return false;
       if (!object.Equals(CreateAnimation, other.CreateAnimation)) return false;
       if (!object.Equals(DeleteAnimation, other.DeleteAnimation)) return false;
+      if (!object.Equals(LocalInfo, other.LocalInfo)) return false;
+      if (!object.Equals(InfoContentShared, other.InfoContentShared)) return false;
+      if (!object.Equals(InfoContentDeleted, other.InfoContentDeleted)) return false;
       if (InnerCase != other.InnerCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -810,6 +873,9 @@ namespace AbyssCLI.ABI {
       if (innerCase_ == InnerOneofCase.DeleteStaticMesh) hash ^= DeleteStaticMesh.GetHashCode();
       if (innerCase_ == InnerOneofCase.CreateAnimation) hash ^= CreateAnimation.GetHashCode();
       if (innerCase_ == InnerOneofCase.DeleteAnimation) hash ^= DeleteAnimation.GetHashCode();
+      if (innerCase_ == InnerOneofCase.LocalInfo) hash ^= LocalInfo.GetHashCode();
+      if (innerCase_ == InnerOneofCase.InfoContentShared) hash ^= InfoContentShared.GetHashCode();
+      if (innerCase_ == InnerOneofCase.InfoContentDeleted) hash ^= InfoContentDeleted.GetHashCode();
       hash ^= (int) innerCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -897,6 +963,18 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(138, 13);
         output.WriteMessage(DeleteAnimation);
       }
+      if (innerCase_ == InnerOneofCase.LocalInfo) {
+        output.WriteRawTag(194, 62);
+        output.WriteMessage(LocalInfo);
+      }
+      if (innerCase_ == InnerOneofCase.InfoContentShared) {
+        output.WriteRawTag(202, 62);
+        output.WriteMessage(InfoContentShared);
+      }
+      if (innerCase_ == InnerOneofCase.InfoContentDeleted) {
+        output.WriteRawTag(210, 62);
+        output.WriteMessage(InfoContentDeleted);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -975,6 +1053,18 @@ namespace AbyssCLI.ABI {
         output.WriteRawTag(138, 13);
         output.WriteMessage(DeleteAnimation);
       }
+      if (innerCase_ == InnerOneofCase.LocalInfo) {
+        output.WriteRawTag(194, 62);
+        output.WriteMessage(LocalInfo);
+      }
+      if (innerCase_ == InnerOneofCase.InfoContentShared) {
+        output.WriteRawTag(202, 62);
+        output.WriteMessage(InfoContentShared);
+      }
+      if (innerCase_ == InnerOneofCase.InfoContentDeleted) {
+        output.WriteRawTag(210, 62);
+        output.WriteMessage(InfoContentDeleted);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1035,6 +1125,15 @@ namespace AbyssCLI.ABI {
       }
       if (innerCase_ == InnerOneofCase.DeleteAnimation) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(DeleteAnimation);
+      }
+      if (innerCase_ == InnerOneofCase.LocalInfo) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(LocalInfo);
+      }
+      if (innerCase_ == InnerOneofCase.InfoContentShared) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(InfoContentShared);
+      }
+      if (innerCase_ == InnerOneofCase.InfoContentDeleted) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(InfoContentDeleted);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1150,6 +1249,24 @@ namespace AbyssCLI.ABI {
             DeleteAnimation = new global::AbyssCLI.ABI.RenderAction.Types.DeleteAnimation();
           }
           DeleteAnimation.MergeFrom(other.DeleteAnimation);
+          break;
+        case InnerOneofCase.LocalInfo:
+          if (LocalInfo == null) {
+            LocalInfo = new global::AbyssCLI.ABI.RenderAction.Types.LocalInfo();
+          }
+          LocalInfo.MergeFrom(other.LocalInfo);
+          break;
+        case InnerOneofCase.InfoContentShared:
+          if (InfoContentShared == null) {
+            InfoContentShared = new global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared();
+          }
+          InfoContentShared.MergeFrom(other.InfoContentShared);
+          break;
+        case InnerOneofCase.InfoContentDeleted:
+          if (InfoContentDeleted == null) {
+            InfoContentDeleted = new global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted();
+          }
+          InfoContentDeleted.MergeFrom(other.InfoContentDeleted);
           break;
       }
 
@@ -1325,6 +1442,33 @@ namespace AbyssCLI.ABI {
             DeleteAnimation = subBuilder;
             break;
           }
+          case 8002: {
+            global::AbyssCLI.ABI.RenderAction.Types.LocalInfo subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.LocalInfo();
+            if (innerCase_ == InnerOneofCase.LocalInfo) {
+              subBuilder.MergeFrom(LocalInfo);
+            }
+            input.ReadMessage(subBuilder);
+            LocalInfo = subBuilder;
+            break;
+          }
+          case 8010: {
+            global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared();
+            if (innerCase_ == InnerOneofCase.InfoContentShared) {
+              subBuilder.MergeFrom(InfoContentShared);
+            }
+            input.ReadMessage(subBuilder);
+            InfoContentShared = subBuilder;
+            break;
+          }
+          case 8018: {
+            global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted();
+            if (innerCase_ == InnerOneofCase.InfoContentDeleted) {
+              subBuilder.MergeFrom(InfoContentDeleted);
+            }
+            input.ReadMessage(subBuilder);
+            InfoContentDeleted = subBuilder;
+            break;
+          }
         }
       }
     #endif
@@ -1495,6 +1639,33 @@ namespace AbyssCLI.ABI {
             }
             input.ReadMessage(subBuilder);
             DeleteAnimation = subBuilder;
+            break;
+          }
+          case 8002: {
+            global::AbyssCLI.ABI.RenderAction.Types.LocalInfo subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.LocalInfo();
+            if (innerCase_ == InnerOneofCase.LocalInfo) {
+              subBuilder.MergeFrom(LocalInfo);
+            }
+            input.ReadMessage(subBuilder);
+            LocalInfo = subBuilder;
+            break;
+          }
+          case 8010: {
+            global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.InfoContentShared();
+            if (innerCase_ == InnerOneofCase.InfoContentShared) {
+              subBuilder.MergeFrom(InfoContentShared);
+            }
+            input.ReadMessage(subBuilder);
+            InfoContentShared = subBuilder;
+            break;
+          }
+          case 8018: {
+            global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted subBuilder = new global::AbyssCLI.ABI.RenderAction.Types.InfoContentDeleted();
+            if (innerCase_ == InnerOneofCase.InfoContentDeleted) {
+              subBuilder.MergeFrom(InfoContentDeleted);
+            }
+            input.ReadMessage(subBuilder);
+            InfoContentDeleted = subBuilder;
             break;
           }
         }
@@ -5473,6 +5644,785 @@ namespace AbyssCLI.ABI {
                 break;
               case 8: {
                 AnimationId = input.ReadInt32();
+                break;
+              }
+            }
+          }
+        }
+        #endif
+
+      }
+
+      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+      public sealed partial class LocalInfo : pb::IMessage<LocalInfo>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
+        private static readonly pb::MessageParser<LocalInfo> _parser = new pb::MessageParser<LocalInfo>(() => new LocalInfo());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pb::MessageParser<LocalInfo> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[17]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public LocalInfo() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public LocalInfo(LocalInfo other) : this() {
+          aurl_ = other.aurl_;
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public LocalInfo Clone() {
+          return new LocalInfo(this);
+        }
+
+        /// <summary>Field number for the "aurl" field.</summary>
+        public const int AurlFieldNumber = 1;
+        private string aurl_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string Aurl {
+          get { return aurl_; }
+          set {
+            aurl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override bool Equals(object other) {
+          return Equals(other as LocalInfo);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool Equals(LocalInfo other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (Aurl != other.Aurl) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (Aurl.Length != 0) hash ^= Aurl.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
+          if (Aurl.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(Aurl);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (Aurl.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(Aurl);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public int CalculateSize() {
+          int size = 0;
+          if (Aurl.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(Aurl);
+          }
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(LocalInfo other) {
+          if (other == null) {
+            return;
+          }
+          if (other.Aurl.Length != 0) {
+            Aurl = other.Aurl;
+          }
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                Aurl = input.ReadString();
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                Aurl = input.ReadString();
+                break;
+              }
+            }
+          }
+        }
+        #endif
+
+      }
+
+      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+      public sealed partial class InfoContentShared : pb::IMessage<InfoContentShared>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
+        private static readonly pb::MessageParser<InfoContentShared> _parser = new pb::MessageParser<InfoContentShared>(() => new InfoContentShared());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pb::MessageParser<InfoContentShared> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[18]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public InfoContentShared() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public InfoContentShared(InfoContentShared other) : this() {
+          contentUuid_ = other.contentUuid_;
+          contentUrl_ = other.contentUrl_;
+          sharerHash_ = other.sharerHash_;
+          worldUuid_ = other.worldUuid_;
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public InfoContentShared Clone() {
+          return new InfoContentShared(this);
+        }
+
+        /// <summary>Field number for the "content_uuid" field.</summary>
+        public const int ContentUuidFieldNumber = 1;
+        private string contentUuid_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string ContentUuid {
+          get { return contentUuid_; }
+          set {
+            contentUuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        /// <summary>Field number for the "content_url" field.</summary>
+        public const int ContentUrlFieldNumber = 2;
+        private string contentUrl_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string ContentUrl {
+          get { return contentUrl_; }
+          set {
+            contentUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        /// <summary>Field number for the "sharer_hash" field.</summary>
+        public const int SharerHashFieldNumber = 3;
+        private string sharerHash_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string SharerHash {
+          get { return sharerHash_; }
+          set {
+            sharerHash_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        /// <summary>Field number for the "world_uuid" field.</summary>
+        public const int WorldUuidFieldNumber = 4;
+        private string worldUuid_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string WorldUuid {
+          get { return worldUuid_; }
+          set {
+            worldUuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override bool Equals(object other) {
+          return Equals(other as InfoContentShared);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool Equals(InfoContentShared other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (ContentUuid != other.ContentUuid) return false;
+          if (ContentUrl != other.ContentUrl) return false;
+          if (SharerHash != other.SharerHash) return false;
+          if (WorldUuid != other.WorldUuid) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (ContentUuid.Length != 0) hash ^= ContentUuid.GetHashCode();
+          if (ContentUrl.Length != 0) hash ^= ContentUrl.GetHashCode();
+          if (SharerHash.Length != 0) hash ^= SharerHash.GetHashCode();
+          if (WorldUuid.Length != 0) hash ^= WorldUuid.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
+          if (ContentUuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(ContentUuid);
+          }
+          if (ContentUrl.Length != 0) {
+            output.WriteRawTag(18);
+            output.WriteString(ContentUrl);
+          }
+          if (SharerHash.Length != 0) {
+            output.WriteRawTag(26);
+            output.WriteString(SharerHash);
+          }
+          if (WorldUuid.Length != 0) {
+            output.WriteRawTag(34);
+            output.WriteString(WorldUuid);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (ContentUuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(ContentUuid);
+          }
+          if (ContentUrl.Length != 0) {
+            output.WriteRawTag(18);
+            output.WriteString(ContentUrl);
+          }
+          if (SharerHash.Length != 0) {
+            output.WriteRawTag(26);
+            output.WriteString(SharerHash);
+          }
+          if (WorldUuid.Length != 0) {
+            output.WriteRawTag(34);
+            output.WriteString(WorldUuid);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public int CalculateSize() {
+          int size = 0;
+          if (ContentUuid.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(ContentUuid);
+          }
+          if (ContentUrl.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(ContentUrl);
+          }
+          if (SharerHash.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(SharerHash);
+          }
+          if (WorldUuid.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(WorldUuid);
+          }
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(InfoContentShared other) {
+          if (other == null) {
+            return;
+          }
+          if (other.ContentUuid.Length != 0) {
+            ContentUuid = other.ContentUuid;
+          }
+          if (other.ContentUrl.Length != 0) {
+            ContentUrl = other.ContentUrl;
+          }
+          if (other.SharerHash.Length != 0) {
+            SharerHash = other.SharerHash;
+          }
+          if (other.WorldUuid.Length != 0) {
+            WorldUuid = other.WorldUuid;
+          }
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                ContentUuid = input.ReadString();
+                break;
+              }
+              case 18: {
+                ContentUrl = input.ReadString();
+                break;
+              }
+              case 26: {
+                SharerHash = input.ReadString();
+                break;
+              }
+              case 34: {
+                WorldUuid = input.ReadString();
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                ContentUuid = input.ReadString();
+                break;
+              }
+              case 18: {
+                ContentUrl = input.ReadString();
+                break;
+              }
+              case 26: {
+                SharerHash = input.ReadString();
+                break;
+              }
+              case 34: {
+                WorldUuid = input.ReadString();
+                break;
+              }
+            }
+          }
+        }
+        #endif
+
+      }
+
+      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+      public sealed partial class InfoContentDeleted : pb::IMessage<InfoContentDeleted>
+      #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          , pb::IBufferMessage
+      #endif
+      {
+        private static readonly pb::MessageParser<InfoContentDeleted> _parser = new pb::MessageParser<InfoContentDeleted>(() => new InfoContentDeleted());
+        private pb::UnknownFieldSet _unknownFields;
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pb::MessageParser<InfoContentDeleted> Parser { get { return _parser; } }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public static pbr::MessageDescriptor Descriptor {
+          get { return global::AbyssCLI.ABI.RenderAction.Descriptor.NestedTypes[19]; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        pbr::MessageDescriptor pb::IMessage.Descriptor {
+          get { return Descriptor; }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public InfoContentDeleted() {
+          OnConstruction();
+        }
+
+        partial void OnConstruction();
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public InfoContentDeleted(InfoContentDeleted other) : this() {
+          contentUuid_ = other.contentUuid_;
+          sharerHash_ = other.sharerHash_;
+          worldUuid_ = other.worldUuid_;
+          _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public InfoContentDeleted Clone() {
+          return new InfoContentDeleted(this);
+        }
+
+        /// <summary>Field number for the "content_uuid" field.</summary>
+        public const int ContentUuidFieldNumber = 1;
+        private string contentUuid_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string ContentUuid {
+          get { return contentUuid_; }
+          set {
+            contentUuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        /// <summary>Field number for the "sharer_hash" field.</summary>
+        public const int SharerHashFieldNumber = 3;
+        private string sharerHash_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string SharerHash {
+          get { return sharerHash_; }
+          set {
+            sharerHash_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        /// <summary>Field number for the "world_uuid" field.</summary>
+        public const int WorldUuidFieldNumber = 4;
+        private string worldUuid_ = "";
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public string WorldUuid {
+          get { return worldUuid_; }
+          set {
+            worldUuid_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+          }
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override bool Equals(object other) {
+          return Equals(other as InfoContentDeleted);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public bool Equals(InfoContentDeleted other) {
+          if (ReferenceEquals(other, null)) {
+            return false;
+          }
+          if (ReferenceEquals(other, this)) {
+            return true;
+          }
+          if (ContentUuid != other.ContentUuid) return false;
+          if (SharerHash != other.SharerHash) return false;
+          if (WorldUuid != other.WorldUuid) return false;
+          return Equals(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override int GetHashCode() {
+          int hash = 1;
+          if (ContentUuid.Length != 0) hash ^= ContentUuid.GetHashCode();
+          if (SharerHash.Length != 0) hash ^= SharerHash.GetHashCode();
+          if (WorldUuid.Length != 0) hash ^= WorldUuid.GetHashCode();
+          if (_unknownFields != null) {
+            hash ^= _unknownFields.GetHashCode();
+          }
+          return hash;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public override string ToString() {
+          return pb::JsonFormatter.ToDiagnosticString(this);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void WriteTo(pb::CodedOutputStream output) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          output.WriteRawMessage(this);
+        #else
+          if (ContentUuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(ContentUuid);
+          }
+          if (SharerHash.Length != 0) {
+            output.WriteRawTag(26);
+            output.WriteString(SharerHash);
+          }
+          if (WorldUuid.Length != 0) {
+            output.WriteRawTag(34);
+            output.WriteString(WorldUuid);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(output);
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+          if (ContentUuid.Length != 0) {
+            output.WriteRawTag(10);
+            output.WriteString(ContentUuid);
+          }
+          if (SharerHash.Length != 0) {
+            output.WriteRawTag(26);
+            output.WriteString(SharerHash);
+          }
+          if (WorldUuid.Length != 0) {
+            output.WriteRawTag(34);
+            output.WriteString(WorldUuid);
+          }
+          if (_unknownFields != null) {
+            _unknownFields.WriteTo(ref output);
+          }
+        }
+        #endif
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public int CalculateSize() {
+          int size = 0;
+          if (ContentUuid.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(ContentUuid);
+          }
+          if (SharerHash.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(SharerHash);
+          }
+          if (WorldUuid.Length != 0) {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(WorldUuid);
+          }
+          if (_unknownFields != null) {
+            size += _unknownFields.CalculateSize();
+          }
+          return size;
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(InfoContentDeleted other) {
+          if (other == null) {
+            return;
+          }
+          if (other.ContentUuid.Length != 0) {
+            ContentUuid = other.ContentUuid;
+          }
+          if (other.SharerHash.Length != 0) {
+            SharerHash = other.SharerHash;
+          }
+          if (other.WorldUuid.Length != 0) {
+            WorldUuid = other.WorldUuid;
+          }
+          _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+        }
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        public void MergeFrom(pb::CodedInputStream input) {
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+          input.ReadRawMessage(this);
+        #else
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                break;
+              case 10: {
+                ContentUuid = input.ReadString();
+                break;
+              }
+              case 26: {
+                SharerHash = input.ReadString();
+                break;
+              }
+              case 34: {
+                WorldUuid = input.ReadString();
+                break;
+              }
+            }
+          }
+        #endif
+        }
+
+        #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+        void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+          uint tag;
+          while ((tag = input.ReadTag()) != 0) {
+          if ((tag & 7) == 4) {
+            // Abort on any end group tag.
+            return;
+          }
+          switch(tag) {
+              default:
+                _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+                break;
+              case 10: {
+                ContentUuid = input.ReadString();
+                break;
+              }
+              case 26: {
+                SharerHash = input.ReadString();
+                break;
+              }
+              case 34: {
+                WorldUuid = input.ReadString();
                 break;
               }
             }

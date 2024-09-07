@@ -1,5 +1,4 @@
 ﻿using AbyssCLI.Tool;
-using System.IO.MemoryMappedFiles;
 using System.Xml;
 
 namespace AbyssCLI.Aml
@@ -7,7 +6,7 @@ namespace AbyssCLI.Aml
     internal class MeshImpl : AmlNode
     {
         internal MeshImpl(AmlNode parent_node, int render_parent, XmlNode xml_node)
-            :base(parent_node)
+            : base(parent_node)
         {
             Id = xml_node.Attributes["id"]?.Value;
             if (Id != null)
@@ -15,11 +14,17 @@ namespace AbyssCLI.Aml
                 ElementDictionary[Id] = this;
             }
             Source = xml_node.Attributes["src"]?.Value;
-            if (Source == null) { throw new Exception(
-                "src attribute is null in <mesh" + (Id == null ? "" : (":" + Id)) + ">"); }
+            if (Source == null)
+            {
+                throw new Exception(
+                "src attribute is null in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
+            }
             MimeType = xml_node.Attributes["type"]?.Value;
-            if (MimeType == null) { throw new Exception(
-                "type attribute is null in <mesh" + (Id == null ? "" : (":" + Id)) + ">"); }
+            if (MimeType == null)
+            {
+                throw new Exception(
+                "type attribute is null in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
+            }
 
             MeshWaiterGroup = new();
             _render_parent = render_parent;
@@ -37,7 +42,7 @@ namespace AbyssCLI.Aml
             switch (MimeType)
             {
                 case "model/obj":
-                    if(!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ModelObj, out var resource, out _resource_waiter))
+                    if (!ResourceLoader.TryGetFileOrWaiter(Source, MIME.ModelObj, out var resource, out _resource_waiter))
                     {
                         //resource not ready - wait for value;
                         resource = _resource_waiter.GetValue();
@@ -46,9 +51,9 @@ namespace AbyssCLI.Aml
                     if (!resource.IsValid)
                         throw new Exception("failed to load " + Source + " in <mesh" + (Id == null ? "" : (":" + Id)) + ">");
 
-                    var component_id = Content.RenderID.ComponentId;
+                    var component_id = RenderID.ComponentId;
                     RenderActionWriter.CreateStaticMesh(component_id, resource.ABIFileInfo);
-                    if(!MeshWaiterGroup.TryFinalizeValue(component_id))
+                    if (!MeshWaiterGroup.TryFinalizeValue(component_id))
                     { //decease called
                         RenderActionWriter.DeleteStaticMesh(component_id);
                         return Task.CompletedTask;
@@ -61,7 +66,7 @@ namespace AbyssCLI.Aml
         }
         protected override void DeceaseSelfCallback()
         {
-            _resource_waiter?.CancelWithValue(default);
+            _resource_waiter?.CancelWithValue(new ResourceLoader.FileResource());
             MeshWaiterGroup.TryFinalizeValue(0);
         }
         protected override void CleanupSelfCallback()
@@ -77,6 +82,6 @@ namespace AbyssCLI.Aml
         public WaiterGroup<int> MeshWaiterGroup;
 
         private readonly int _render_parent;
-        private Waiter<Content.ResourceLoader.FileResource> _resource_waiter;
+        private Waiter<ResourceLoader.FileResource> _resource_waiter;
     }
 }

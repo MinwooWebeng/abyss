@@ -19,8 +19,11 @@ message UIAction {
 
 	// Address Bar Input
 	message ShareContent {
-		string world_uuid = 1;
 		string url = 2;
+	}
+
+	message ConnectPeer {
+		string aurl = 1;
 	}
 
 	oneof inner {
@@ -28,5 +31,7 @@ message UIAction {
 		Kill kill = 2;
 		MoveWorld move_world = 3;
 		ShareContent share_content = 4;
+
+		ConnectPeer connect_peer = 10;
 	}
 }

@@ -127,7 +127,7 @@ type LocalHost struct {
 
 func NewLocalHost() *LocalHost {
 	local_host := NewNeighborDiscoveryTestPeer()
-	ndh := NewNeighborDiscoveryHandler("local_host_hash")
+	ndh := NewNeighborDiscoveryHandler("local_host_hash", func(string, string) {})
 	ndh.ReserveConnectCallback(func(address any) {
 		local_host.Log("connect")
 	})

@@ -56,9 +56,9 @@ type ANDHandler struct {
 	mtx       sync.Mutex
 }
 
-func NewANDHandler(ctx context.Context, local_hash string, listener chan<- and.NeighborDiscoveryEvent) *ANDHandler {
+func NewANDHandler(ctx context.Context, local_hash string, listener chan<- and.NeighborDiscoveryEvent, on_join_callback func(string, string)) *ANDHandler {
 	result := &ANDHandler{
-		algorithm: and.NewNeighborDiscoveryHandler(local_hash),
+		algorithm: and.NewNeighborDiscoveryHandler(local_hash, on_join_callback),
 	}
 	result.algorithm.ReserveEventListener(listener)
 	result.algorithm.ReserveSNBTimer(func(duration time.Duration, wuid string) {

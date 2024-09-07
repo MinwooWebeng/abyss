@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
 
 public class CommonShaderLoader : MonoBehaviour //actually, material
@@ -35,10 +33,10 @@ public class CommonShaderLoader : MonoBehaviour //actually, material
                 var param_names = field.GetValue(this) as string[];
 
                 var id_map = new Dictionary<string, int>();
-                var propertyCount = ShaderUtil.GetPropertyCount(mat.shader);
+                var propertyCount = mat.shader.GetPropertyCount();
                 for (int i = 0; i < propertyCount && i < param_names.Length; i++)
                 {
-                    string propertyName = ShaderUtil.GetPropertyName(mat.shader, i);
+                    string propertyName = mat.shader.GetPropertyName(i);
                     int propertyID = Shader.PropertyToID(propertyName);
                     //Debug.Log($"Property ID: {propertyID} - Name: {propertyName}");
 
@@ -57,7 +55,7 @@ public class CommonShaderLoader : MonoBehaviour //actually, material
 
     public UnityEngine.Material Get(string name)
     {
-        if(_rumtime_map.TryGetValue(name, out Material mat))
+        if (_rumtime_map.TryGetValue(name, out Material mat))
         {
             return mat;
         }

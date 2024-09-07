@@ -53,9 +53,11 @@ type NeighborDiscoveryHandler struct {
 
 	join_targets     map[string]map[string]string //identity hash > set of join paths > local path - AC_JN, CC_JN //TODO: implement expiration timer
 	join_local_paths map[string]bool              //occupied local paths
+
+	on_join_callback func(string, string)
 }
 
-func NewNeighborDiscoveryHandler(local_hash string) *NeighborDiscoveryHandler {
+func NewNeighborDiscoveryHandler(local_hash string, on_join_callback func(string, string)) *NeighborDiscoveryHandler {
 	result := new(NeighborDiscoveryHandler)
 	result.snb_randsrc = distuv_rand.NewSource(uint64(time.Now().UTC().UnixNano()))
 	result.local_hash = local_hash
@@ -65,6 +67,7 @@ func NewNeighborDiscoveryHandler(local_hash string) *NeighborDiscoveryHandler {
 	result.candidate_sessions = make(map[string]*CandidateSession)
 	result.join_targets = make(map[string]map[string]string)
 	result.join_local_paths = make(map[string]bool)
+	result.on_join_callback = on_join_callback
 	return result
 }
 
@@ -201,6 +204,7 @@ func (h *NeighborDiscoveryHandler) Connected(peer INeighborDiscoveryPeerBase) er
 			session.snb_targets[peer_id_hash] = 3
 			h.SetSNBTimer(session)
 			h.event_listener <- NeighborDiscoveryEvent{PeerJoin, "", peer.GetHash(), peer, "", session.world, 0, ""}
+			h.on_join_callback(peer.GetHash(), session.world.GetUUID())
 		}
 	}
 
@@ -337,6 +341,7 @@ func (h *NeighborDiscoveryHandler) OnJN(peer INeighborDiscoveryPeerBase, path st
 
 	session.members[peer.GetHash()] = peer
 	h.event_listener <- NeighborDiscoveryEvent{PeerJoin, "", peer.GetHash(), peer, "", session.world, 0, ""}
+	h.on_join_callback(peer.GetHash(), session.world.GetUUID())
 	return peer.SendJOK(path, world, existing_member_addrs)
 }
 func (h *NeighborDiscoveryHandler) OnJOK(peer INeighborDiscoveryPeerBase, path string, world INeighborDiscoveryWorldBase, member_addrs []any) error {
@@ -363,6 +368,7 @@ func (h *NeighborDiscoveryHandler) OnJOK(peer INeighborDiscoveryPeerBase, path s
 	session.members[peer.GetHash()] = peer
 	for _, peer := range session.members {
 		h.event_listener <- NeighborDiscoveryEvent{PeerJoin, "", peer.GetHash(), peer, "", world, 0, ""}
+		h.on_join_callback(peer.GetHash(), session.world.GetUUID())
 	}
 
 	for _, addr := range member_addrs {
@@ -461,7 +467,8 @@ func (h *NeighborDiscoveryHandler) OnJNI(peer INeighborDiscoveryPeerBase, world_
 		session.members[joiner_hash] = joiner
 		session.snb_targets[joiner_hash] = 3
 		h.SetSNBTimer(session)
-		h.event_listener <- NeighborDiscoveryEvent{PeerJoin, "", peer.GetHash(), peer, "", session.world, 0, ""}
+		h.event_listener <- NeighborDiscoveryEvent{PeerJoin, "", joiner_hash, joiner, "", session.world, 0, ""}
+		h.on_join_callback(joiner_hash, session.world.GetUUID())
 		return joiner.SendMEM(session.world)
 	}
 
@@ -499,6 +506,7 @@ func (h *NeighborDiscoveryHandler) OnMEM(peer INeighborDiscoveryPeerBase, world_
 
 	session.members[peer.GetHash()] = peer
 	h.event_listener <- NeighborDiscoveryEvent{PeerJoin, "", peer.GetHash(), peer, "", session.world, 0, ""}
+	h.on_join_callback(peer.GetHash(), session.world.GetUUID())
 	return nil
 }
 func (h *NeighborDiscoveryHandler) OnSNB(peer INeighborDiscoveryPeerBase, world_uuid string, members_hash []string) error {

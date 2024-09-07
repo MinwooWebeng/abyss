@@ -6,7 +6,7 @@ namespace AbyssCLI.Aml
     internal class ImageImpl : AmlNode
     {
         public ImageImpl(MaterialImpl parent_material, XmlNode xml_node)
-            :base(parent_material)
+            : base(parent_material)
         {
             Id = xml_node.Attributes["id"]?.Value;
             if (Id != null)
@@ -14,14 +14,23 @@ namespace AbyssCLI.Aml
                 ElementDictionary[Id] = this;
             }
             Source = xml_node.Attributes["src"]?.Value;
-            if (Source == null) { throw new Exception(
-                "src attribute is null in <image" + (Id == null ? "" : (":" + Id)) + ">"); }
+            if (Source == null)
+            {
+                throw new Exception(
+                "src attribute is null in <image" + (Id == null ? "" : (":" + Id)) + ">");
+            }
             MimeType = xml_node.Attributes["type"]?.Value;
-            if (MimeType == null) { throw new Exception(
-                "type attribute is null in <image" + (Id == null ? "" : (":" + Id)) + ">"); }
+            if (MimeType == null)
+            {
+                throw new Exception(
+                "type attribute is null in <image" + (Id == null ? "" : (":" + Id)) + ">");
+            }
             Role = xml_node.Attributes["role"]?.Value;
-            if (Role == null) { throw new Exception(
-                "role attribute is null in <image" + (Id == null ? "" : (":" + Id)) + ">"); }
+            if (Role == null)
+            {
+                throw new Exception(
+                "role attribute is null in <image" + (Id == null ? "" : (":" + Id)) + ">");
+            }
 
             _parent_material = parent_material;
         }
@@ -59,7 +68,7 @@ namespace AbyssCLI.Aml
             if (material_id == 0)
                 return Task.CompletedTask;
 
-            _component_id = Content.RenderID.ComponentId;
+            _component_id = RenderID.ComponentId;
             RenderActionWriter.CreateImage(_component_id, _resource.ABIFileInfo);
             RenderActionWriter.MaterialSetParamC(material_id, Role, _component_id);
             return Task.CompletedTask;
@@ -80,8 +89,8 @@ namespace AbyssCLI.Aml
         public string Role { get; }
 
         private readonly MaterialImpl _parent_material;
-        private Waiter<Content.ResourceLoader.FileResource> _resource_waiter;
-        Content.ResourceLoader.FileResource _resource;
+        private Waiter<ResourceLoader.FileResource> _resource_waiter;
+        ResourceLoader.FileResource _resource;
         private int _component_id;
     }
 }

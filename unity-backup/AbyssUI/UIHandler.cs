@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,6 +9,9 @@ public class UIHandler : MonoBehaviour
 
     private VisualElement root;
     private TextField addressBar;
+    private Label localAddrLabel;
+    private TextField sub_addressBar;
+    private Label extraLabel; //TODO
     void Awake()
     {
         root = uiDocument.rootVisualElement;
@@ -19,6 +23,26 @@ public class UIHandler : MonoBehaviour
                 AddressBarSubmit(addressBar.value);
             }
         });
+        localAddrLabel = root.Query<VisualElement>("background").First().Query<Label>("info").First();
+        if (localAddrLabel == null)
+        {
+            Debug.LogError("addr label not found!");
+        }
+
+        // Define the log file path in the same directory as the executable
+        var logFilePath = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "game_log.txt");
+        executor.SetLocalAddrCallback = (addr) => { localAddrLabel.text = logFilePath + " " + addr; };
+        sub_addressBar = root.Query<VisualElement>("background").First().Query<TextField>("sub-address-bar").First();
+        sub_addressBar.RegisterCallback<KeyDownEvent>((x) =>
+        {
+            if (x.keyCode == KeyCode.Return)
+            {
+                SubAddressBarSubmit(sub_addressBar.value);
+            }
+        });
+
+        extraLabel = root.Query<VisualElement>("background").First().Query<Label>("info-more").First();
+        executor.SetAdditionalInfoCallback = (info) => { extraLabel.text = info; };
         Deactivate();
     }
     public void Activate()
@@ -34,5 +58,15 @@ public class UIHandler : MonoBehaviour
     void AddressBarSubmit(string address)
     {
         executor.MoveWorld(address);
+    }
+    void SubAddressBarSubmit(string address)
+    {
+        if (address.StartsWith("connect "))
+        {
+            var conn_addr = address["connect ".Length..];
+            executor.ConnectPeer(conn_addr);
+            return;
+        }
+        executor.LoadContent(address);
     }
 }

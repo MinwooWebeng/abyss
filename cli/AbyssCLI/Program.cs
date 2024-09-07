@@ -1,8 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using AbyssCLI;
-using AbyssCLI.ABI;
-using AbyssCLI.Aml;
-using System.Text.Json;
+using AbyssCLI.Client;
 class Program
 {
     public static async Task Main()

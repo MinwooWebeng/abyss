@@ -46,14 +46,12 @@ public void MoveWorld
 });
 public void ShareContent
 (
-    string world_uuid,
     string url
 )
 => Write(new UIAction()
 {
     ShareContent = new ShareContent
     {
-        WorldUuid = world_uuid,
         Url = url
     }
 });

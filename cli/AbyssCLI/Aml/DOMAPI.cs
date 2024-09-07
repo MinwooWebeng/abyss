@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-#pragma warning disable IDE1006 //naming convension
+﻿#pragma warning disable IDE1006 //naming convension
 namespace AbyssCLI.Aml
 {
     public class Document

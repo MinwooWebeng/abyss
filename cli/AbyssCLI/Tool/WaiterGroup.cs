@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AbyssCLI.Tool
+﻿namespace AbyssCLI.Tool
 {
     class WaiterGroup<T>
     {
@@ -29,7 +22,7 @@ namespace AbyssCLI.Tool
         }
         public bool TryGetValueOrWaiter(out T value, out Waiter<T> waiter)
         {
-            lock(_waiters)
+            lock (_waiters)
             {
                 if (finished)
                 {

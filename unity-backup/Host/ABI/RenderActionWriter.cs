@@ -226,6 +226,49 @@ public void DeleteAnimation
         AnimationId = animation_id
     }
 });
+public void LocalInfo
+(
+    string aurl
+)
+=> Write(new RenderAction()
+{
+    LocalInfo = new LocalInfo
+    {
+        Aurl = aurl
+    }
+});
+public void InfoContentShared
+(
+    string content_uuid,
+    string content_url,
+    string sharer_hash,
+    string world_uuid
+)
+=> Write(new RenderAction()
+{
+    InfoContentShared = new InfoContentShared
+    {
+        ContentUuid = content_uuid,
+        ContentUrl = content_url,
+        SharerHash = sharer_hash,
+        WorldUuid = world_uuid
+    }
+});
+public void InfoContentDeleted
+(
+    string content_uuid,
+    string sharer_hash,
+    string world_uuid
+)
+=> Write(new RenderAction()
+{
+    InfoContentDeleted = new InfoContentDeleted
+    {
+        ContentUuid = content_uuid,
+        SharerHash = sharer_hash,
+        WorldUuid = world_uuid
+    }
+});
 
 		public void Flush()
 		{

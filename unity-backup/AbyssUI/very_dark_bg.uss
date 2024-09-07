@@ -31,7 +31,7 @@
     border-bottom-left-radius: 7px;
 }
 
-#background > #address-bar {
+#background > TextField {
     height: 28px;
     margin-top: 6px;
     margin-right: 6px;
@@ -40,7 +40,7 @@
     width: auto;
 }
 
-#address-bar > #unity-text-input {
+#background > TextField > #unity-text-input {
     background-color: rgb(51, 43, 50);
     padding-top: 0;
     padding-right: 8px;
@@ -60,7 +60,7 @@
     border-bottom-color: rgb(0, 0, 0);
 }
 
-#address-bar > #unity-text-input > TextElement {
+#background > TextField > #unity-text-input > TextElement {
     color: rgb(255, 255, 255);
     padding-top: 0;
     padding-right: 0;

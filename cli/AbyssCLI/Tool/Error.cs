@@ -5,7 +5,7 @@
         string Message { get; }
     }
 
-    public class StringError: IError
+    public class StringError : IError
     {
         public StringError(string message)
         {

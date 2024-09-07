@@ -31,20 +31,20 @@ namespace AbyssCLI.Aml
         }
         protected override Task ActivateSelfCallback(CancellationToken token)
         {
-            var component_id = Content.RenderID.ComponentId;
+            var component_id = RenderID.ComponentId;
             RenderActionWriter.CreateMaterialV(component_id, Shader);
-            if(!MaterialWaiterGroup.TryFinalizeValue(component_id))
+            if (!MaterialWaiterGroup.TryFinalizeValue(component_id))
             {
                 RenderActionWriter.DeleteMaterial(component_id);
                 return Task.CompletedTask;
             }
 
-            if(!_parent_node.MeshWaiterGroup.TryGetValueOrWaiter(out var mesh_id, out _parent_waiter))
+            if (!_parent_node.MeshWaiterGroup.TryGetValueOrWaiter(out var mesh_id, out _parent_waiter))
             {
                 mesh_id = _parent_waiter.GetValue();
             }
             token.ThrowIfCancellationRequested();
-            if(mesh_id == 0) //target mesh is not prepared
+            if (mesh_id == 0) //target mesh is not prepared
                 return Task.CompletedTask;
 
             RenderActionWriter.StaticMeshSetMaterial(mesh_id, Pos, component_id);

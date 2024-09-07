@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-#pragma warning disable IDE1006 //naming convention
+﻿#pragma warning disable IDE1006 //naming convention
 namespace AbyssCLI.Aml
 {
     public struct vec3
@@ -50,7 +44,7 @@ namespace AbyssCLI.Aml
                 float y = float.Parse(components[1].Trim());
                 float z = float.Parse(components[2].Trim());
 
-                return new vec3() { x=x, y=y, z=z };
+                return new vec3() { x = x, y = y, z = z };
             }
             catch
             {

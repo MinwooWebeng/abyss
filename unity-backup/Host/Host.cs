@@ -1,7 +1,6 @@
 ﻿using AbyssCLI.ABI;
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -13,7 +12,7 @@ namespace AbyssEngine
         {
             //run host process with pipe
             _host_proc = new System.Diagnostics.Process();
-            _host_proc.StartInfo.FileName = "D:\\unity\\AbyssUI\\AbyssCLI\\AbyssCLI.exe";
+            _host_proc.StartInfo.FileName = ".\\AbyssCLI\\AbyssCLI.exe";
             _host_proc.StartInfo.UseShellExecute = false;
             _host_proc.StartInfo.CreateNoWindow = true;
             _host_proc.StartInfo.RedirectStandardInput = true;
@@ -64,7 +63,7 @@ namespace AbyssEngine
             {
                 try
                 {
-                    while(true)
+                    while (true)
                     {
                         var line = _host_proc.StandardError.ReadLine();
                         if (line == null)
@@ -107,7 +106,7 @@ namespace AbyssEngine
             return _error_queue.TryDequeue(out e);
         }
 
-        public AbyssCLI.ABI.UIActionWriter CallFunc {  get; private set; } //all protobuf message sender
+        public AbyssCLI.ABI.UIActionWriter CallFunc { get; private set; } //all protobuf message sender
 
         private readonly System.Diagnostics.Process _host_proc;
         private readonly ConcurrentQueue<RenderAction> _render_action_queue;

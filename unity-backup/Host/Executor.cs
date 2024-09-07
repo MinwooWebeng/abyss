@@ -1,9 +1,7 @@
 using AbyssCLI.ABI;
 using System;
 using System.Collections.Generic;
-using System.IO.MemoryMappedFiles;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 
 public class Executor : MonoBehaviour
@@ -23,13 +21,28 @@ public class Executor : MonoBehaviour
     [SerializeField]
     private bool executeActions;
 
+    public Action<string> SetLocalAddrCallback = (string _) => { };
+    public Action<string> SetAdditionalInfoCallback = (string _) => { };
+
     public void MoveWorld(string url)
     {
         _abyss_host.CallFunc.MoveWorld(url);
     }
+    public void LoadContent(string url)
+    {
+        _abyss_host.CallFunc.ShareContent(url);
+    }
+    public void ConnectPeer(string aurl)
+    {
+        _abyss_host.CallFunc.ConnectPeer(aurl);
+    }
 
     void OnEnable()
     {
+#if UNITY_EDITOR
+#else
+        local_hash = "build";
+#endif
         _abyss_host = new AbyssEngine.Host(local_hash, h3_root_dir);
 
         _game_objects = new();
@@ -78,65 +91,10 @@ public class Executor : MonoBehaviour
 
             try
             {
-                switch (render_action.InnerCase)
-                {
-                    case RenderAction.InnerOneofCase.CreateElement:
-                        CreateElement(render_action.CreateElement);
-                        break;
-                    case RenderAction.InnerOneofCase.MoveElement:
-                        MoveElement(render_action.MoveElement);
-                        break;
-                    case RenderAction.InnerOneofCase.DeleteElement:
-                        DeleteElement(render_action.DeleteElement);
-                        break;
-                    case RenderAction.InnerOneofCase.ElemSetPos:
-                        ElemSetPos(render_action.ElemSetPos);
-                        break;
-                    case RenderAction.InnerOneofCase.CreateImage:
-                        CreateImage(render_action.CreateImage);
-                        break;
-                    case RenderAction.InnerOneofCase.DeleteImage:
-                        DeleteImage(render_action.DeleteImage);
-                        break;
-                    case RenderAction.InnerOneofCase.CreateMaterialV:
-                        CreateMaterialV(render_action.CreateMaterialV);
-                        break;
-                    case RenderAction.InnerOneofCase.CreateMaterialF:
-                        CreateMaterialF(render_action.CreateMaterialF);
-                        break;
-                    case RenderAction.InnerOneofCase.MaterialSetParamV:
-                        MaterialSetParamV(render_action.MaterialSetParamV);
-                        break;
-                    case RenderAction.InnerOneofCase.MaterialSetParamC:
-                        MaterialSetParamC(render_action.MaterialSetParamC);
-                        break;
-                    case RenderAction.InnerOneofCase.DeleteMaterial:
-                        DeleteMaterial(render_action.DeleteMaterial);
-                        break;
-                    case RenderAction.InnerOneofCase.CreateStaticMesh:
-                        CreateStaticMesh(render_action.CreateStaticMesh);
-                        break;
-                    case RenderAction.InnerOneofCase.StaticMeshSetMaterial:
-                        StaticMeshSetMaterial(render_action.StaticMeshSetMaterial);
-                        break;
-                    case RenderAction.InnerOneofCase.ElemAttachStaticMesh:
-                        ElemAttachStaticMesh(render_action.ElemAttachStaticMesh);
-                        break;
-                    case RenderAction.InnerOneofCase.DeleteStaticMesh:
-                        DeleteStaticMesh(render_action.DeleteStaticMesh);
-                        break;
-                    case RenderAction.InnerOneofCase.CreateAnimation:
-                        CreateAnimation(render_action.CreateAnimation);
-                        break;
-                    case RenderAction.InnerOneofCase.DeleteAnimation:
-                        DeleteAnimation(render_action.DeleteAnimation);
-                        break;
-                    default:
-                        Debug.LogError("Executor: invalid RenderAction");
-                        return;
-                }
+                //Debug.Log("render action case: " + render_action.InnerCase);
+                ExecuteRequest(render_action);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.LogException(e);
                 executeActions = false;
@@ -149,14 +107,83 @@ public class Executor : MonoBehaviour
                 break;
             }
         }
-        if (i != 0)
-            Debug.Log("executed " + i + " calls, " + _abyss_host.GetLeftoverRenderActionCount() + " remaining");
+        //if (i != 0)
+        //    Debug.Log("executed " + i + " calls, " + _abyss_host.GetLeftoverRenderActionCount() + " remaining");
     }
     void FixedUpdate()
     {
         if (_abyss_host.TryPopException(out Exception e))
         {
             Debug.Log(e.Message + "\nstacktrace: " + e.StackTrace);
+        }
+    }
+    private void ExecuteRequest(RenderAction render_action)
+    {
+        switch (render_action.InnerCase)
+        {
+            case RenderAction.InnerOneofCase.CreateElement:
+                CreateElement(render_action.CreateElement);
+                return;
+            case RenderAction.InnerOneofCase.MoveElement:
+                MoveElement(render_action.MoveElement);
+                return;
+            case RenderAction.InnerOneofCase.DeleteElement:
+                DeleteElement(render_action.DeleteElement);
+                return;
+            case RenderAction.InnerOneofCase.ElemSetPos:
+                ElemSetPos(render_action.ElemSetPos);
+                return;
+            case RenderAction.InnerOneofCase.CreateImage:
+                CreateImage(render_action.CreateImage);
+                return;
+            case RenderAction.InnerOneofCase.DeleteImage:
+                DeleteImage(render_action.DeleteImage);
+                return;
+            case RenderAction.InnerOneofCase.CreateMaterialV:
+                CreateMaterialV(render_action.CreateMaterialV);
+                return;
+            case RenderAction.InnerOneofCase.CreateMaterialF:
+                CreateMaterialF(render_action.CreateMaterialF);
+                return;
+            case RenderAction.InnerOneofCase.MaterialSetParamV:
+                MaterialSetParamV(render_action.MaterialSetParamV);
+                return;
+            case RenderAction.InnerOneofCase.MaterialSetParamC:
+                MaterialSetParamC(render_action.MaterialSetParamC);
+                return;
+            case RenderAction.InnerOneofCase.DeleteMaterial:
+                DeleteMaterial(render_action.DeleteMaterial);
+                return;
+            case RenderAction.InnerOneofCase.CreateStaticMesh:
+                CreateStaticMesh(render_action.CreateStaticMesh);
+                return;
+            case RenderAction.InnerOneofCase.StaticMeshSetMaterial:
+                StaticMeshSetMaterial(render_action.StaticMeshSetMaterial);
+                return;
+            case RenderAction.InnerOneofCase.ElemAttachStaticMesh:
+                ElemAttachStaticMesh(render_action.ElemAttachStaticMesh);
+                return;
+            case RenderAction.InnerOneofCase.DeleteStaticMesh:
+                DeleteStaticMesh(render_action.DeleteStaticMesh);
+                return;
+            case RenderAction.InnerOneofCase.CreateAnimation:
+                CreateAnimation(render_action.CreateAnimation);
+                return;
+            case RenderAction.InnerOneofCase.DeleteAnimation:
+                DeleteAnimation(render_action.DeleteAnimation);
+                return;
+            case RenderAction.InnerOneofCase.LocalInfo:
+                SetLocalAddrCallback(render_action.LocalInfo.Aurl);
+                return;
+            case RenderAction.InnerOneofCase.InfoContentShared:
+                InfoContentShared(render_action.InfoContentShared);
+                return;
+            case RenderAction.InnerOneofCase.InfoContentDeleted:
+                InfoContentDeleted(render_action.InfoContentDeleted);
+                return;
+            default:
+                Debug.LogError("Executor: invalid RenderAction: " + render_action.InnerCase);
+                return;
         }
     }
 
@@ -243,7 +270,7 @@ public class Executor : MonoBehaviour
     {
         _components[args.MeshId] = new AbyssEngine.Component.StaticMesh(args.File, objHolder, "C" + args.MeshId.ToString());
     }
-    private void StaticMeshSetMaterial(RenderAction.Types.StaticMeshSetMaterial args) 
+    private void StaticMeshSetMaterial(RenderAction.Types.StaticMeshSetMaterial args)
     {
         var mesh = _components[args.MeshId] as AbyssEngine.Component.StaticMesh;
         var mat = _components[args.MaterialId] as AbyssEngine.Component.Material;
@@ -255,7 +282,8 @@ public class Executor : MonoBehaviour
         var mesh = _components[args.MeshId] as AbyssEngine.Component.StaticMesh;
         mesh.InstantiateTracked(parent);
     }
-    private void DeleteStaticMesh(RenderAction.Types.DeleteStaticMesh args) {
+    private void DeleteStaticMesh(RenderAction.Types.DeleteStaticMesh args)
+    {
         DeleteComponent(args.MeshId);
     }
     private void CreateAnimation(RenderAction.Types.CreateAnimation args) { }
@@ -267,6 +295,18 @@ public class Executor : MonoBehaviour
     {
         _components[component_id].Dispose();
         _components.Remove(component_id);
+    }
+
+    private Dictionary<string, string> soms = new();
+    private void InfoContentShared(RenderAction.Types.InfoContentShared args) 
+    {
+        soms[args.ContentUuid] = args.ContentUuid + " " + args.ContentUrl + " from " + args.SharerHash + " in " + args.WorldUuid;
+        SetAdditionalInfoCallback(string.Join("\n", soms.Values));
+    }
+    private void InfoContentDeleted(RenderAction.Types.InfoContentDeleted args)
+    {
+        soms.Remove(args.ContentUuid);
+        SetAdditionalInfoCallback(string.Join("\n", soms.Values));
     }
 
     private AbyssEngine.Host _abyss_host;

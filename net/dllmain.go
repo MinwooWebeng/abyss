@@ -77,9 +77,9 @@ func NewAbyssHost(hash *C.char, hash_len C.int, backend_root *C.char, backend_ro
 	go_hash := string(UnmarshalBytes(hash, hash_len))
 
 	peer_container := pcn.NewPeerContainer()
-	and_event_ch := make(chan and.NeighborDiscoveryEvent, 128)
-	and_handler := ahmp.NewANDHandler(ctx, go_hash, and_event_ch)
 	som_handler := ahmp.NewSOMHandler(peer_container)
+	and_event_ch := make(chan and.NeighborDiscoveryEvent, 128)
+	and_handler := ahmp.NewANDHandler(ctx, go_hash, and_event_ch, func(peer_hash string, world_uuid string) { som_handler.InitiateSOMService(peer_hash, world_uuid) })
 	player_backend, err := cpb.NewDefaultPlayerBackend(string(UnmarshalBytes(backend_root, backend_root_len)))
 	if err != nil {
 		return 0
@@ -306,7 +306,7 @@ func MakeSOMEventExport(som_ev *ahmp.SomEvent) C.uintptr_t {
 			functional.Accum_all(som_ev.SomObjects, 0, func(o *ws.SharedObject, accum int) int {
 				return accum + len(o.URL) + len(o.UUID.String())
 			})
-	case ahmp.SomDelete:
+	case ahmp.SomDelete, ahmp.SomDebug:
 		bodylen += 4 +
 			len(som_ev.PeerHash) +
 			len(som_ev.WorldUUID) +
@@ -368,7 +368,7 @@ func SOMGetEventBody(event_handle C.uintptr_t, buf *C.char, buflen C.int) C.int 
 			copy(rem[1:], []byte(uuid_str))
 			rem = rem[1+len(uuid_str):]
 		}
-	case ahmp.SomDelete:
+	case ahmp.SomDelete, ahmp.SomDebug:
 		rem[0] = byte(len(event.event.SomObjUUIDs))
 		rem := rem[1:]
 		for _, uuid := range event.event.SomObjUUIDs {

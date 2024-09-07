@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 
 namespace AbyssEngine.Component
 {
@@ -13,7 +11,7 @@ namespace AbyssEngine.Component
         }
         public void SetTexture(string paramName, Image image)
         {
-            UnityEngine.Debug.Log("nameID: " + _param_id_map[paramName]);
+            //UnityEngine.Debug.Log("nameID: " + _param_id_map[paramName]);
             UnityMaterial.SetTexture(_param_id_map[paramName], image.UnityTexture2D);
         }
 

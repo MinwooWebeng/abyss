@@ -18,6 +18,7 @@ const (
 	SomReNew SomEventType = iota
 	SomAppend
 	SomDelete
+	SomDebug //PeerHash is message.
 )
 
 type SomEvent struct {
@@ -186,6 +187,15 @@ func (m *SOMHandler) RegisterObject(object *ws.SharedObject) {
 }
 
 func (m *SOMHandler) ShareObject(peer_hash string, world_uuid string, object_uuids []string) error {
+	//debug
+	m.event_ch <- &SomEvent{
+		SomDebug,
+		"ShareObject called",
+		"",
+		[]*ws.SharedObject{},
+		[]string{},
+	}
+
 	peer, ok := m.peer_container.Get(peer_hash)
 	if !ok {
 		return errors.New("RequestSOMService: peer not connected")
@@ -209,12 +219,28 @@ func (m *SOMHandler) ShareObject(peer_hash string, world_uuid string, object_uui
 
 	serve_obj_group.objects = append(serve_obj_group.objects, registered_objects...)
 	if serve_obj_group.isActive {
+		//debug
+		m.event_ch <- &SomEvent{
+			SomDebug,
+			"ShareObject Active",
+			"",
+			[]*ws.SharedObject{},
+			[]string{},
+		}
 		return peer.SendSerializedMessageFrameSync(pcn.SOA, serializer.SerializeJoinRaw([]*serializer.SerializedNode{
 			serializer.SerializeString(world_uuid),
 			serializer.SerializeObjectArray(registered_objects, ws.SerializeSharedObject),
 		}))
 	}
 	//if not active, don't send SOA.
+	//debug
+	m.event_ch <- &SomEvent{
+		SomDebug,
+		"ShareObject Not active",
+		"",
+		[]*ws.SharedObject{},
+		[]string{},
+	}
 	return nil
 }
 
