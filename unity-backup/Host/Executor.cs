@@ -1,6 +1,7 @@
 using AbyssCLI.ABI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -41,7 +42,23 @@ public class Executor : MonoBehaviour
     {
 #if UNITY_EDITOR
 #else
-        local_hash = "build";
+        string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        System.Random random = new();
+        local_hash = new string(Enumerable.Repeat(chars, 4)
+                            .Select(s => s[random.Next(s.Length)]).ToArray());
+                            
+        // Get the directory of the executable
+        string exeDirectory = Directory.GetParent(Application.dataPath).FullName;
+
+        // Define the log file path in the same directory as the executable
+        logFilePath = Path.Combine(exeDirectory, local_hash);
+
+        // Open the file for writing
+        logWriter = new StreamWriter(logFilePath); // 'true' to append to the file if it exists
+        logWriter.AutoFlush = true; // Auto flush so data is written immediately to the file
+
+        // Subscribe to the log message event
+        Application.logMessageReceived += LogToFile;
 #endif
         _abyss_host = new AbyssEngine.Host(local_hash, h3_root_dir);
 
@@ -74,6 +91,18 @@ public class Executor : MonoBehaviour
 
         //field reset
         currentStep = 0;
+
+#if UNITY_EDITOR
+#else
+        Application.logMessageReceived -= LogToFile;
+
+        // Close the file when the application quits or object is destroyed
+        if (logWriter != null)
+        {
+            logWriter.Close();
+            logWriter = null;
+        }
+#endif
     }
 
     // Update is called once per frame
@@ -312,4 +341,26 @@ public class Executor : MonoBehaviour
     private AbyssEngine.Host _abyss_host;
     private Dictionary<int, GameObject> _game_objects;
     private Dictionary<int, AbyssEngine.Component.IComponent> _components;
+
+
+    //logger
+#if UNITY_EDITOR
+#else
+    private StreamWriter logWriter;
+    private string logFilePath;
+
+    // This will be called whenever a log message is generated
+    private void LogToFile(string logString, string stackTrace, LogType type)
+    {
+        string logEntry = $"{System.DateTime.Now}: [{type}] {logString}\n";
+
+        if (type == LogType.Exception || type == LogType.Error)
+        {
+            logEntry += $"{stackTrace}\n";
+        }
+
+        // Write the log entry to the file
+        logWriter.WriteLine(logEntry);
+    }
+#endif
 }

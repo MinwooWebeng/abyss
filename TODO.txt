@@ -1,0 +1,40 @@
+1. net
+* AHMP serialization
+    - standardize
+    - backward compatibility
+    - validity check
+* AHMP init
+    - version negotiation
+    - authentication
+        -- server-side QUIC cert <- private cert
+        -- client-side ZKP
+* [OnJN -> pre-accept|OnJNI -> pre-MEM|OnMEM -> MEM|OnJOK -> MEM] action 
+    - JOK/JDN decision making
+    - resource preparation
+        -- SOM initialization
+* mendatory Mutual MEM
+    - consider MEM as a sign of 'preparation finished'
+* SOM 
+    - synchronize
+    - more options
+        -- initial pos&rot
+    - integrate into AND? - maybe not
+* Web of Trust ?
+    - safe&efficient common peer search
+    - dynamic trustworthness change
+
+* design world&peer lifecycle again
+
+2. cli
+* send proper info message to rendering engine
+* javascript api
+    - aml edit
+    - xhr
+    - synced variable
+    - ownership?
+* client web server
+    - motion stream
+
+3. application
+* inventory UI
+* world content remove

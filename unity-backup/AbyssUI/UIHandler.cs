@@ -30,8 +30,7 @@ public class UIHandler : MonoBehaviour
         }
 
         // Define the log file path in the same directory as the executable
-        var logFilePath = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "game_log.txt");
-        executor.SetLocalAddrCallback = (addr) => { localAddrLabel.text = logFilePath + " " + addr; };
+        executor.SetLocalAddrCallback = (addr) => { localAddrLabel.text = addr; };
         sub_addressBar = root.Query<VisualElement>("background").First().Query<TextField>("sub-address-bar").First();
         sub_addressBar.RegisterCallback<KeyDownEvent>((x) =>
         {
