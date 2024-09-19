@@ -1,11 +1,8 @@
 ﻿using AbyssCLI.ABI;
+using AbyssCLI.Aml;
 using AbyssCLI.Tool;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Xml.Schema;
 using static AbyssCLI.AbyssLib;
-using static AbyssCLI.Client.Client;
 
 namespace AbyssCLI.Client
 {
@@ -202,10 +199,10 @@ namespace AbyssCLI.Client
                 _cerr.WriteLine("som for non-existing world: " + somEvent.WorldUUID);
                 return;
             }
-            Tuple<AbyssAddress, string>[] parsed_content_info;
+            Tuple<AbyssAddress, string, vec3>[] parsed_content_info;
             try
             {
-                parsed_content_info = somEvent.ObjectsInfo.Select(x => new Tuple<AbyssAddress, string>(new AbyssAddress(x.Item1), x.Item2)).ToArray();
+                parsed_content_info = somEvent.ObjectsInfo.Select(x => new Tuple<AbyssAddress, string, vec3>(new AbyssAddress(x.Item1), x.Item2, AmlValueParser.ParseVec3(x.Item3))).ToArray();
             }
             catch (Exception e)
             {
@@ -225,7 +222,7 @@ namespace AbyssCLI.Client
                 _cerr.WriteLine("som for non-existing world: " + somEvent.WorldUUID);
                 return;
             }
-            if (!world.TryAddPeerContent(somEvent.PeerHash, somEvent.ObjectsInfo[0].Item2, new AbyssAddress(somEvent.ObjectsInfo[0].Item1)))
+            if (!world.TryAddPeerContent(somEvent.PeerHash, somEvent.ObjectsInfo[0].Item2, new AbyssAddress(somEvent.ObjectsInfo[0].Item1), AmlValueParser.ParseVec3(somEvent.ObjectsInfo[0].Item3)))
             {
                 _cerr.WriteLine("failed to add peer contents: " + somEvent.PeerHash + somEvent.ObjectsInfo);
                 return;
@@ -291,7 +288,7 @@ namespace AbyssCLI.Client
                 return;
             }
             var content_uuid = Guid.NewGuid().ToString();
-            if (!old_world.TryAddLocalContent(content_uuid, content_url))
+            if (!old_world.TryAddLocalContent(content_uuid, content_url, args.InitialPosition))
             {
                 _cerr.WriteLine("failed to share local content:" + content_url);
                 return;

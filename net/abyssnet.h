@@ -91,7 +91,7 @@ extern __declspec(dllexport) void Join(uintptr_t host_handle, char* localpath, i
 extern __declspec(dllexport) uintptr_t SOMRequestService(uintptr_t host_handle, char* peer_hash, int peer_hash_len, char* world_uuid, int world_uuid_len);
 extern __declspec(dllexport) void SOMInitiateService(uintptr_t host_handle, char* peer_hash, int peer_hash_len, char* world_uuid, int world_uuid_len);
 extern __declspec(dllexport) void SOMTerminateService(uintptr_t host_handle, char* peer_hash, int peer_hash_len, char* world_uuid, int world_uuid_len);
-extern __declspec(dllexport) void SOMRegisterObject(uintptr_t host_handle, char* url, int url_len, char* object_uuid, int object_uuid_len);
+extern __declspec(dllexport) void SOMRegisterObject(uintptr_t host_handle, char* url, int url_len, char* object_uuid, int object_uuid_len, char* initial_pos, int initial_pos_len);
 extern __declspec(dllexport) uintptr_t SOMShareObject(uintptr_t host_handle, char* peer_hash, int peer_hash_len, char* world_uuid, int world_uuid_len, char* objects_uuid, int objects_uuid_len);
 extern __declspec(dllexport) void SOMCloseEvent(uintptr_t event_handle);
 extern __declspec(dllexport) int SOMGetEventBodyLength(uintptr_t event_handle);

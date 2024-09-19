@@ -7,7 +7,7 @@ namespace AbyssCLI.Aml
 {
     internal sealed class DocumentImpl(Contexted root,
         RenderActionWriter renderActionWriter, StreamWriter cerr,
-        ResourceLoader resourceLoader, AbyssAddress URL)
+        ResourceLoader resourceLoader, AbyssAddress URL, vec3 body_position)
         : AmlNode(root, renderActionWriter, cerr, resourceLoader)
     {
         protected override async Task ActivateSelfCallback(CancellationToken token)
@@ -37,7 +37,7 @@ namespace AbyssCLI.Aml
             Children.Add(new HeadImpl(this, head_node, this));
 
             var body_node = aml_node.SelectSingleNode("body");
-            Children.Add(new BodyImpl(this, body_node));
+            Children.Add(new BodyImpl(this, body_node, body_position));
         }
         private readonly AbyssAddress URL = URL;
 

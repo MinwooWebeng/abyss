@@ -20,6 +20,7 @@ message UIAction {
 	// Address Bar Input
 	message ShareContent {
 		string url = 2;
+		string initial_position = 3;
 	}
 
 	message ConnectPeer {

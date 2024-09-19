@@ -4,6 +4,19 @@ namespace AbyssCLI.Aml
     public struct vec3
     {
         public float x, y, z;
+        public vec3()
+        {
+            x = 0;
+            y = 0;
+            z = 0;
+        }
+        public vec3(int v1, int v2, int v3)
+        {
+            x = v1;
+            y = v2;
+            z = v3;
+        }
+
         public static vec3 add(vec3 lhs, vec3 rhs)
         {
             return new vec3()

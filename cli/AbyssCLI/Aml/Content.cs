@@ -5,7 +5,7 @@ using static AbyssCLI.AbyssLib;
 namespace AbyssCLI.Aml
 {
     internal class Content(AbyssLib.AbyssHost host, RenderActionWriter renderActionWriter, StreamWriter cerr,
-        string UUID, AbyssAddress URL)
+        string UUID, AbyssAddress URL, vec3 initial_position)
     {
         public void Activate() => _documentImpl.Activate();
         public void Close() => _documentImpl.Close();
@@ -16,6 +16,7 @@ namespace AbyssCLI.Aml
                 renderActionWriter,
                 cerr,
                 new ResourceLoader(host, cerr, URL),
-                URL);
+                URL,
+                initial_position);
     }
 }

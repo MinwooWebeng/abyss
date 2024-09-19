@@ -257,12 +257,13 @@ func SOMTerminateService(host_handle C.uintptr_t, peer_hash *C.char, peer_hash_l
 }
 
 //export SOMRegisterObject
-func SOMRegisterObject(host_handle C.uintptr_t, url *C.char, url_len C.int, object_uuid *C.char, object_uuid_len C.int) {
+func SOMRegisterObject(host_handle C.uintptr_t, url *C.char, url_len C.int, object_uuid *C.char, object_uuid_len C.int, initial_pos *C.char, initial_pos_len C.int) {
 	export := (cgo.Handle(host_handle)).Value().(*HostExport)
 
 	export.SOMHandler.RegisterObject(&ws.SharedObject{
-		URL:  string(UnmarshalBytes(url, url_len)),
-		UUID: uuid.MustParse(string(UnmarshalBytes(object_uuid, object_uuid_len))),
+		URL:             string(UnmarshalBytes(url, url_len)),
+		UUID:            uuid.MustParse(string(UnmarshalBytes(object_uuid, object_uuid_len))),
+		InitialPosition: string(UnmarshalBytes(initial_pos, initial_pos_len)),
 	})
 }
 
@@ -292,7 +293,7 @@ func MakeSOMEventExport(som_ev *ahmp.SomEvent) C.uintptr_t {
 
 	//1byte shared object count(max 255)
 
-	//n * 3byte(urllen(2), uuidlen(1)) - SO/SOA
+	//n * 4byte(urllen(2), uuidlen(1), poslen(1)) - SO/SOA
 	//or
 	//n * 1byte(uuidlen(1)) - SOD
 
@@ -302,9 +303,9 @@ func MakeSOMEventExport(som_ev *ahmp.SomEvent) C.uintptr_t {
 		bodylen += 4 +
 			len(som_ev.PeerHash) +
 			len(som_ev.WorldUUID) +
-			len(som_ev.SomObjects)*3 +
+			len(som_ev.SomObjects)*4 +
 			functional.Accum_all(som_ev.SomObjects, 0, func(o *ws.SharedObject, accum int) int {
-				return accum + len(o.URL) + len(o.UUID.String())
+				return accum + len(o.URL) + len(o.UUID.String()) + len(o.InitialPosition)
 			})
 	case ahmp.SomDelete, ahmp.SomDebug:
 		bodylen += 4 +
@@ -367,6 +368,12 @@ func SOMGetEventBody(event_handle C.uintptr_t, buf *C.char, buflen C.int) C.int 
 			rem[0] = byte(len(uuid_str))
 			copy(rem[1:], []byte(uuid_str))
 			rem = rem[1+len(uuid_str):]
+
+			initial_pos_str := o.InitialPosition
+
+			rem[0] = byte(len(initial_pos_str))
+			copy(rem[1:], []byte(initial_pos_str))
+			rem = rem[1+len(initial_pos_str):]
 		}
 	case ahmp.SomDelete, ahmp.SomDebug:
 		rem[0] = byte(len(event.event.SomObjUUIDs))

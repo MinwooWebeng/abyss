@@ -46,13 +46,15 @@ public void MoveWorld
 });
 public void ShareContent
 (
-    string url
+    string url,
+    string initial_position
 )
 => Write(new UIAction()
 {
     ShareContent = new ShareContent
     {
-        Url = url
+        Url = url,
+        InitialPosition = initial_position
     }
 });
 public void ConnectPeer

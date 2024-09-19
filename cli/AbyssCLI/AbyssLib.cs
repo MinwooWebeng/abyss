@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using AbyssCLI.Aml;
+using Microsoft.VisualBasic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -117,19 +118,19 @@ namespace AbyssCLI
             SomDelete,
             SomDebug
         }
-        public class SomEvent(AbyssLib.SomEventType type, string peer_hash, string world_uuid, Tuple<string, string>[] objects_info)
+        public class SomEvent(AbyssLib.SomEventType type, string peer_hash, string world_uuid, Tuple<string, string, string>[] objects_info)
         {
             public SomEventType Type { get; } = type;
             public string PeerHash { get; } = peer_hash;
             public string WorldUUID { get; } = world_uuid;
-            public Tuple<string /*url(empty on SOD)*/, string /*uuid*/>[] ObjectsInfo { get; } = objects_info;
+            public Tuple<string /*url(empty on SOD)*/, string /*uuid*/, string /*initial position*/>[] ObjectsInfo { get; } = objects_info;
             public override string ToString()
             {
                 return string.Concat(
                     Convert.ChangeType(Type, Enum.GetUnderlyingType(Type.GetType())).ToString(), " ",
                     PeerHash, " ",
                     WorldUUID, " [",
-                    Strings.Join(ObjectsInfo.Select(e => e.Item1 + "-" + e.Item2).ToArray(), ", "), "]"
+                    Strings.Join(ObjectsInfo.Select(e => e.Item1 + " ~ " + e.Item2 + " @ " + e.Item3).ToArray(), ", "), "]"
                 );
             }
         }
@@ -429,20 +430,24 @@ namespace AbyssCLI
                     }
                 }
             }
-            public void SomRegisterObject(string url, string object_uuid)
+            public void SomRegisterObject(string url, string object_uuid, string initial_position)
             {
                 unsafe
                 {
                     [DllImport("abyssnet.dll")]
-                    static extern void SOMRegisterObject(IntPtr host_handle, byte* url, int url_len, byte* object_uuid, int object_uuid_len);
+                    static extern void SOMRegisterObject(IntPtr host_handle, byte* url, int url_len, byte* object_uuid, int object_uuid_len, byte* initial_position, int initial_position_len);
 
                     var url_bytes = Encoding.UTF8.GetBytes(url);
                     var object_uuid_bytes = Encoding.UTF8.GetBytes(object_uuid);
+                    var initial_pos_bytes = Encoding.UTF8.GetBytes(initial_position);
                     fixed (byte* urb = url_bytes)
                     {
                         fixed (byte* oub = object_uuid_bytes)
                         {
-                            SOMRegisterObject(host_handle, urb, url_bytes.Length, oub, object_uuid_bytes.Length);
+                            fixed (byte* inp = initial_pos_bytes)
+                            {
+                                SOMRegisterObject(host_handle, urb, url_bytes.Length, oub, object_uuid_bytes.Length, inp, initial_pos_bytes.Length);
+                            }
                         }
                     }
                 }
@@ -516,7 +521,7 @@ namespace AbyssCLI
                         offset += world_uuid_len;
 
                         var object_count = buf[offset];
-                        var objects_info = new Tuple<string, string>[object_count];
+                        var objects_info = new Tuple<string, string, string>[object_count];
                         offset++;
                         switch (type)
                         {
@@ -538,7 +543,12 @@ namespace AbyssCLI
                                         var uuid = Encoding.UTF8.GetString(buf + offset, uuid_len);
                                         offset += uuid_len;
 
-                                        objects_info[i] = new Tuple<string, string>(url, uuid);
+                                        var init_pos_len = buf[offset];
+                                        offset++;
+                                        var init_pos = Encoding.UTF8.GetString(buf + offset, init_pos_len);
+                                        offset += uuid_len;
+
+                                        objects_info[i] = new Tuple<string, string, string>(url, uuid, init_pos);
                                     }
                                     break;
                                 }
@@ -551,7 +561,7 @@ namespace AbyssCLI
                                         var uuid = Encoding.UTF8.GetString(buf + offset, uuid_len);
                                         offset += uuid_len;
 
-                                        objects_info[i] = new Tuple<string, string>("", uuid);
+                                        objects_info[i] = new Tuple<string, string, string>("", uuid, "");
                                     }
                                     break;
                                 }

@@ -1,5 +1,5 @@
 1. net
-* AHMP serialization
+* AHMP serialization - cannot use protobuf
     - standardize
     - backward compatibility
     - validity check
@@ -16,25 +16,66 @@
     - consider MEM as a sign of 'preparation finished'
 * SOM 
     - synchronize
-    - more options
-        -- initial pos&rot
+    - more options?
     - integrate into AND? - maybe not
 * Web of Trust ?
     - safe&efficient common peer search
     - dynamic trustworthness change
+* Abyst
+    - follow golang http package
+* dll boundary
+    - switch to protobuf for serialization of complex data
 
 * design world&peer lifecycle again
 
 2. cli
 * send proper info message to rendering engine
 * javascript api
-    - aml edit
-    - xhr
+    - DOM edit
+    - XHR
     - synced variable
     - ownership?
+    - sleep
+    - AML-bound sub-world join
+        -- join policy
+    - abyss sub service
 * client web server
     - motion stream
+* greedy loading
+    - http
+    - abyst
+* authorization
+    - peer script access control
 
 3. application
 * inventory UI
+    - mac style bottom bar
+    - keyboard shortcut set
 * world content remove
+* resource cache
+* perspective interaction
+* OBJ
+    - validation
+    - live construction
+* FBX
+    - bone integration
+
+4. aml
+* lighting
+    - physical parameters
+    - log-scale lighting
+* collider
+    - event handler
+        -- collision
+        -- click
+
+5. ontology
+* address
+    - abyss: join
+    - abyst: p2p http
+    - abysr: p2p non-web origin
+
+================================
+============= DONE =============
+================================
+content initial position -> body pos

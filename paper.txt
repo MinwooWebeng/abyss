@@ -1,0 +1,88 @@
+Explain social VR
+    - What is social VR
+        -- application providing user interaction in virtual environment
+        -- modern realization of collaborative virtual environment
+    - How it works
+        -- platform provided SDK
+        -- platform serve user contents
+Explain problem I want to tackle
+    - Platform is bad
+        -- centralized, silo
+        -- limited modifiability due to EULA
+        -- forced features, security/safety bound to platform
+Propose solution for problem in general
+    - Platformless social VR
+        -- serve VR contents from web infrastructure
+        -- virtual space and user interation takes place in P2P network
+        -- users directly own and serve their data consisting self identity
+Previous researches on CVE
+    - DIVE
+        -- P2P interaction, decentralied content distribution
+        -- DIVE backbone
+        -- COVEN
+    - MASSIVE
+        -- nimbus (affecting range) and focus
+        -- exchange RFC interface, communicate in P2P
+Previous researches regarding construction of P2P network for CVE
+    - Most popular: distributed servers
+        -- minecraft server, starcraft server
+            ---- another centralization
+            ---- require large hardware, server node bottleneck
+    - SOTA: AoI based network, enabled by voronoi partitioning
+        -- not practical due to dynamicity of AoI in VR interaction
+            ---- ex: drone camera, laser pointer
+Explain My approach
+    - Serve contents from web server
+        -- web servers do not serve virtual space, just content
+        -- content like html-js format
+            ---- encompassing any possible resources
+    - Every client owns web server behind P2P network
+        -- to serve user contents
+    - advantage of using web architecture
+        -- flexibility 
+            ---- user-defined hardware -> embed into user-served contents
+            ---- reverse proxy for local web server
+    - Fully connected P2P network defines a shared virtual space
+        -- Construction of virtual space
+            ---- one URL (do not change after world creation) for world environment
+        -- may share more URL for contents, such as their avatars and props
+        -- user interaction emerged from the content peers share.
+            ---- ex: camera render from avatar content's eye is linked to 
+                user's VR HMD
+            ---- ex: user presses button, is a collider pushed by the user 
+                avatar's finger collider
+    - architecture
+        -- client multiplex connection from QUIC
+            ---- TLS ALPN - h3 => P2P web backend
+            ---- TLS ALPN - ahml => P2P Abyss host messaging protocol
+                >> peer authentication
+                >> peer discovery
+                >> content sharing
+Prevail misconception: fully connected network is not practical to maintain
+    - fully connected network has O(N^2) connections, O(N) connections per peer
+        assuming there is consistent interaction between two peers, each peer's
+        total throughput (bps) scales O(N)
+    - already social VR's complexity is O(n), even in commercial products
+    - But we couldn't find 'any' methods for constructing fully connected P2P network
+        without centralized entity
+    - by naive approach, which is 'mutual notification', an intuitive method that
+        a peer who noticed other two peers should discover each other then
+        tell them, results in O(N^2) complexity. 
+    - O(N) is optimal complexity, because churn complexity is O(N).
+Approach: One-shot joiner notification, adaptive supplementary propagation
+    - why snb count 3?
+    - why shape 1.3? why mean 300mS?
+    - why dwelling time? etc.
+Evaluation
+    - stability evaluation in natural peer distribution
+        -- different block rate?
+    - scalability evaluation in large worlds
+        -- linearly increase world size
+Demo:
+    - URL
+        -- world: abyss:hash:address candidates/path
+        -- P2P http: abyst:hash/path (require prior connection)
+    - world open/join
+Future works
+    - dynamically adjusting P2P communication throughput, by exploiting peers's 
+        interest and focus
